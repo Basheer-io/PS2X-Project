@@ -1,0 +1,27 @@
+# Architecture
+
+PS2 Home is a launcher. PCSX2 (user-installed) runs the games.
+
+## Layers
+```
+PS2Home.App  ──►  PS2Home.Core  ◄──  PS2Home.Infrastructure
+   (UI)        (models/logic)        (files, JSON, processes, OS)
+```
+- `Core` defines interfaces (e.g. `IGameScanner`, `IPcsx2Locator`, `IGameLauncher`, `ISettingsStore`) and pure logic (e.g. launch-argument building, game identity).
+- `Infrastructure` implements them. Linux/Windows differences live here behind small interfaces.
+- `App` wires things together (simple manual composition root is fine; add a DI container only if needed) and presents state.
+
+## Key decisions
+| Topic | Decision |
+|---|---|
+| Config location | `AppPaths`: XDG config on Linux, `%APPDATA%` on Windows |
+| Persistence | JSON first; SQLite only if the library outgrows it |
+| Game identity | Normalized full path initially; evaluate adding size+hash or disc serial in Phase 2 so per-game settings survive moves |
+| PCSX2 versions | Support current Qt-based PCSX2 (2.x). Document that legacy 1.6 is unsupported unless added deliberately |
+| PCSX2 install types | Windows portable/installed exe, Linux AppImage, Linux Flatpak (`flatpak run net.pcsx2.PCSX2`), distro/native binary. Model "how to launch PCSX2" as a command + leading arguments |
+| Process launching | `ArgumentList` only; capture exit code and stderr; log everything |
+| Native helper | Phase 5, optional; app must work without it |
+| Packaging targets (Phase 7) | Linux: AppImage and/or Flatpak (+ RPM for Fedora if wanted); Windows: zip first, installer later |
+
+## Non-goals
+Emulating PS2 hardware, bundling PCSX2, downloading games/BIOS, anything piracy related.

@@ -1,0 +1,24 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+TestResults/
+artifacts/
+publish/
+# Never commit these
+*.iso
+*.bin
+*.cue
+*.chd
+*.cso
+*.gz
+*.rom
+*.rom0
+*.rom1
+*.erom
+*.nvm
+*.mec
+*.zip
+.env

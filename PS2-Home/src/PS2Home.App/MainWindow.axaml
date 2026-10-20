@@ -1,0 +1,99 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+        x:Class="PS2Home.App.MainWindow"
+        Title="{Binding WindowTitle}"
+        Width="1100" Height="700" MinWidth="800" MinHeight="500"
+        Background="#0F1117">
+
+  <Window.DataContext>
+    <vm:MainViewModel/>
+  </Window.DataContext>
+
+  <Grid ColumnDefinitions="220,*">
+    <!-- Sidebar Navigation -->
+    <Border Grid.Column="0" Background="#161922" Padding="16">
+      <DockPanel>
+        <!-- App Title -->
+        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,24">
+          <TextBlock Text="PS2 Home" FontSize="22" FontWeight="Bold" Foreground="#E8E8E8"/>
+          <TextBlock Text="Your PS2 Homebrew Launcher" FontSize="12" Opacity="0.6" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+        </StackPanel>
+        
+        <!-- Navigation Buttons -->
+        <StackPanel Spacing="4" DockPanel.Dock="Top">
+          <Button Content="📚  Library" 
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Left"
+                  Padding="12,10"
+                  FontSize="14"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Foreground="#E8E8E8"
+                  Command="{Binding NavigateToLibraryCommand}"
+                  Classes="navButton"/>
+          
+          <Button Content="⚙️  Settings" 
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Left"
+                  Padding="12,10"
+                  FontSize="14"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Foreground="#E8E8E8"
+                  Command="{Binding NavigateToSettingsCommand}"
+                  Classes="navButton"/>
+          
+          <Button Content="🔧  Diagnostics" 
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Left"
+                  Padding="12,10"
+                  FontSize="14"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Foreground="#E8E8E8"
+                  Command="{Binding NavigateToDiagnosticsCommand}"
+                  Classes="navButton"/>
+        </StackPanel>
+        
+        <!-- Version Info at bottom -->
+        <TextBlock DockPanel.Dock="Bottom" 
+                   Text="v1.0.0" 
+                   FontSize="10" 
+                   Opacity="0.4" 
+                   Foreground="#E8E8E8"
+                   HorizontalAlignment="Center"
+                   Margin="0,24,0,0"/>
+      </DockPanel>
+    </Border>
+
+    <!-- Main Content Area -->
+    <Border Grid.Column="1" Padding="32" Background="#0F1117">
+      <ContentControl Content="{Binding CurrentView}" />
+    </Border>
+  </Grid>
+
+  <Window.Styles>
+    <Style Selector="Button.navButton">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border x:Name="Border" 
+                  Background="Transparent" 
+                  CornerRadius="6" 
+                  Padding="12,10">
+            <ContentPresenter Content="{TemplateBinding Content}" 
+                              VerticalAlignment="Center"/>
+          </Border>
+        </ControlTemplate>
+      </Setter>
+      <Style.Selectors>
+        <Style Selector=":pointerover /template/ Border#Border">
+          <Setter Property="Background" Value="#2A2F3E"/>
+        </Style>
+        <Style Selector=":pressed /template/ Border#Border">
+          <Setter Property="Background" Value="#3A3F4E"/>
+        </Style>
+      </Style.Selectors>
+    </Style>
+  </Window.Styles>
+</Window>

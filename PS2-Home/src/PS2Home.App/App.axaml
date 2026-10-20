@@ -1,0 +1,15 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:PS2Home.App.Converters"
+             x:Class="PS2Home.App.App"
+             RequestedThemeVariant="Dark">
+  <Application.Styles>
+    <FluentTheme />
+  </Application.Styles>
+
+  <Application.Resources>
+    <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+    <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
+    <converters:SubtractConverter x:Key="SubtractConverter"/>
+  </Application.Resources>
+</Application>

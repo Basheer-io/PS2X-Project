@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+             x:Class="PS2Home.App.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="24" Margin="0,0,0,24">
+      <!-- Header -->
+      <StackPanel Spacing="4">
+        <TextBlock Text="Settings" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
+        <TextBlock Text="Configure PS2 Home paths and behavior" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
+      </StackPanel>
+
+      <!-- PS2 Apps Path -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8" ColumnSpacing="12">
+          <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+            <TextBlock Text="PS2 Applications Folder" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+            <TextBlock Text="Root folder where PS2 homebrew apps are installed" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+          </StackPanel>
+          <Button Grid.Row="0" Grid.Column="1" Content="Browse..." Command="{Binding BrowsePs2AppsPathCommand}" Padding="16,8" Background="#2A2F3E" Foreground="#E8E8E8" BorderThickness="0" CornerRadius="6" VerticalAlignment="Center"/>
+          
+          <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding Ps2AppsPath}" IsReadOnly="True" Background="#0F1117" Foreground="#E8E8E8" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="4" Padding="12,8" FontFamily="Consolas, Monospace" FontSize="13"/>
+        </Grid>
+      </Border>
+
+      <!-- Cover Art Path -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8" ColumnSpacing="12">
+          <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+            <TextBlock Text="Cover Art Folder" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+            <TextBlock Text="Folder containing game/app cover art images" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+          </StackPanel>
+          <Button Grid.Row="0" Grid.Column="1" Content="Browse..." Command="{Binding BrowseCoverArtPathCommand}" Padding="16,8" Background="#2A2F3E" Foreground="#E8E8E8" BorderThickness="0" CornerRadius="6" VerticalAlignment="Center"/>
+          
+          <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding CoverArtPath}" IsReadOnly="True" Background="#0F1117" Foreground="#E8E8E8" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="4" Padding="12,8" FontFamily="Consolas, Monospace" FontSize="13"/>
+        </Grid>
+      </Border>
+
+      <!-- General Options -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <StackPanel Spacing="16">
+          <TextBlock Text="General" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          
+          <StackPanel Spacing="12">
+            <CheckBox Content="Auto-scan on startup" IsChecked="{Binding AutoScanOnStartup}" Foreground="#E8E8E8" FontSize="14"/>
+            <CheckBox Content="Show hidden applications" IsChecked="{Binding ShowHiddenApps}" Foreground="#E8E8E8" FontSize="14"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Appearance -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Appearance" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          
+          <StackPanel Spacing="12">
+            <StackPanel Spacing="8">
+              <TextBlock Text="Theme" FontSize="14" Foreground="#E8E8E8"/>
+              <ComboBox SelectedItem="{Binding Theme}" Background="#0F1117" Foreground="#E8E8E8" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="4" Padding="12,8">
+                <ComboBoxItem Content="Dark" Foreground="#E8E8E8"/>
+                <ComboBoxItem Content="Light" Foreground="#E8E8E8"/>
+                <ComboBoxItem Content="System" Foreground="#E8E8E8"/>
+              </ComboBox>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Action Buttons -->
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+        <Button Content="Reset to Defaults" Command="{Binding ResetToDefaultsCommand}" Padding="16,10" Background="Transparent" Foreground="#E8E8E8" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="6"/>
+        <Button Content="Save Settings" Command="{Binding SaveSettingsCommand}" Padding="24,10" Background="#00D4AA" Foreground="#0F1117" BorderThickness="0" CornerRadius="6" FontWeight="SemiBold"/>
+      </StackPanel>
+
+      <!-- Status Message -->
+      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Opacity="0.6" Foreground="#00D4AA" HorizontalAlignment="Center" Margin="0,16,0,0"/>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

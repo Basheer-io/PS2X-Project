@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\PS2Home.Core\PS2Home.Core.csproj" />
+  </ItemGroup>
+</Project>
