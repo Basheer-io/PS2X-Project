@@ -1,19 +1,31 @@
 name: CI
+
 on:
   push:
     branches: [main]
   pull_request:
 
 jobs:
-  build-test:
+  build-and-test:
+    name: Build & Test (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+            diag-bin: native/PS2Home.Native/build/ps2home-diag
+            diag-dest: ps2home-diag
+          - os: windows-latest
+            rid: win-x64
+            diag-bin: native/PS2Home.Native/build/Release/ps2home-diag.exe
+            diag-dest: ps2home-diag.exe
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
@@ -22,6 +34,43 @@ jobs:
           cmake -B native/PS2Home.Native/build -S native/PS2Home.Native -DCMAKE_BUILD_TYPE=Release
           cmake --build native/PS2Home.Native/build --config Release
 
-      - run: dotnet restore PS2Home.sln
-      - run: dotnet build PS2Home.sln --configuration Release --no-restore
-      - run: dotnet test PS2Home.sln --configuration Release --no-build
+      - name: Restore Dependencies
+        run: dotnet restore PS2Home.sln
+
+      - name: Build Solution (Release)
+        run: dotnet build PS2Home.sln --configuration Release --no-restore
+
+      - name: Run Test Suite
+        run: dotnet test PS2Home.sln --configuration Release --no-build --logger trx --results-directory TestResults
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.rid }}
+          path: TestResults/*.trx
+          retention-days: 7
+
+      - name: Publish Self-Contained App (${{ matrix.rid }})
+        run: |
+          dotnet publish src/PS2Home.App/PS2Home.App.csproj \
+            --configuration Release \
+            --runtime ${{ matrix.rid }} \
+            --self-contained true \
+            --output publish/${{ matrix.rid }}
+        shell: bash
+
+      - name: Bundle Native Helper (${{ matrix.rid }})
+        run: |
+          if [ -f "${{ matrix.diag-bin }}" ]; then
+            cp "${{ matrix.diag-bin }}" "publish/${{ matrix.rid }}/${{ matrix.diag-dest }}"
+          fi
+          cp README.md LICENSE THIRD-PARTY-NOTICES.md "publish/${{ matrix.rid }}/"
+        shell: bash
+
+      - name: Upload Build Artifact (${{ matrix.rid }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: ps2home-${{ matrix.rid }}
+          path: publish/${{ matrix.rid }}/
+          retention-days: 14

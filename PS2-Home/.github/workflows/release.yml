@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-artifacts:
+    name: Package Release (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+            archive-ext: tar.gz
+            diag-bin: native/PS2Home.Native/build/ps2home-diag
+            diag-dest: ps2home-diag
+          - os: windows-latest
+            rid: win-x64
+            archive-ext: zip
+            diag-bin: native/PS2Home.Native/build/Release/ps2home-diag.exe
+            diag-dest: ps2home-diag.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build Native Diagnostics Helper
+        run: |
+          cmake -B native/PS2Home.Native/build -S native/PS2Home.Native -DCMAKE_BUILD_TYPE=Release
+          cmake --build native/PS2Home.Native/build --config Release
+
+      - name: Run Test Suite
+        run: |
+          dotnet restore PS2Home.sln
+          dotnet test PS2Home.sln --configuration Release
+
+      - name: Publish Self-Contained App
+        run: |
+          dotnet publish src/PS2Home.App/PS2Home.App.csproj \
+            --configuration Release \
+            --runtime ${{ matrix.rid }} \
+            --self-contained true \
+            --output dist/ps2home-${{ matrix.rid }}
+        shell: bash
+
+      - name: Bundle Assets
+        run: |
+          if [ -f "${{ matrix.diag-bin }}" ]; then
+            cp "${{ matrix.diag-bin }}" "dist/ps2home-${{ matrix.rid }}/${{ matrix.diag-dest }}"
+          fi
+          cp README.md LICENSE THIRD-PARTY-NOTICES.md "dist/ps2home-${{ matrix.rid }}/"
+        shell: bash
+
+      - name: Archive Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cd dist
+          tar -czf "ps2home-${{ matrix.rid }}-${{ github.ref_name }}.tar.gz" "ps2home-${{ matrix.rid }}"
+          sha256sum "ps2home-${{ matrix.rid }}-${{ github.ref_name }}.tar.gz" > "ps2home-${{ matrix.rid }}-${{ github.ref_name }}.tar.gz.sha256"
+        shell: bash
+
+      - name: Archive Package (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Compress-Archive -Path "dist/ps2home-${{ matrix.rid }}/*" -DestinationPath "dist/ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip" -CompressionLevel Optimal
+          $hash = (Get-FileHash -Path "dist/ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip" -Algorithm SHA256).Hash
+          "$hash  ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip" | Out-File -FilePath "dist/ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip.sha256" -Encoding ascii
+        shell: pwsh
+
+      - name: Upload Release Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.rid }}
+          path: dist/*.*
+
+  publish-github-release:
+    name: Publish GitHub Release
+    needs: build-release-artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-files
+          merge-multiple: true
+
+      - name: Combine Checksums
+        run: |
+          cd release-files
+          cat *.sha256 > SHA256SUMS.txt
+          rm -f *.sha256
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-files/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true

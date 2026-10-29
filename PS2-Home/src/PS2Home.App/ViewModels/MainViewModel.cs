@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace PS2Home.App.ViewModels;
 
 /// <summary>
-/// Main window ViewModel handling navigation between Library, Settings, Diagnostics, and Controllers views.
+/// Main window ViewModel handling navigation between Library, Settings, Diagnostics, Controllers, and About views.
 /// </summary>
 public partial class MainViewModel : ViewModelBase
 {
@@ -12,32 +12,37 @@ public partial class MainViewModel : ViewModelBase
     private readonly SettingsViewModel _settingsViewModel;
     private readonly DiagnosticsViewModel _diagnosticsViewModel;
     private readonly ControllersViewModel _controllersViewModel;
+    private readonly AboutViewModel _aboutViewModel;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsLibraryActive))]
+    [NotifyPropertyChangedFor(nameof(IsControllersActive))]
     [NotifyPropertyChangedFor(nameof(IsSettingsActive))]
     [NotifyPropertyChangedFor(nameof(IsDiagnosticsActive))]
-    [NotifyPropertyChangedFor(nameof(IsControllersActive))]
+    [NotifyPropertyChangedFor(nameof(IsAboutActive))]
     private ViewModelBase _currentView;
 
     [ObservableProperty]
     private string _windowTitle = "PS2 Home";
 
     public bool IsLibraryActive => CurrentView == _libraryViewModel;
+    public bool IsControllersActive => CurrentView == _controllersViewModel;
     public bool IsSettingsActive => CurrentView == _settingsViewModel;
     public bool IsDiagnosticsActive => CurrentView == _diagnosticsViewModel;
-    public bool IsControllersActive => CurrentView == _controllersViewModel;
+    public bool IsAboutActive => CurrentView == _aboutViewModel;
 
     public MainViewModel(
         LibraryViewModel libraryViewModel,
         SettingsViewModel settingsViewModel,
         DiagnosticsViewModel diagnosticsViewModel,
-        ControllersViewModel controllersViewModel)
+        ControllersViewModel controllersViewModel,
+        AboutViewModel aboutViewModel)
     {
         _libraryViewModel = libraryViewModel;
         _settingsViewModel = settingsViewModel;
         _diagnosticsViewModel = diagnosticsViewModel;
         _controllersViewModel = controllersViewModel;
+        _aboutViewModel = aboutViewModel;
 
         _currentView = libraryViewModel;
         _windowTitle = "PS2 Home - Library";
@@ -69,5 +74,12 @@ public partial class MainViewModel : ViewModelBase
     {
         CurrentView = _diagnosticsViewModel;
         WindowTitle = "PS2 Home - Diagnostics";
+    }
+
+    [RelayCommand]
+    private void NavigateToAbout()
+    {
+        CurrentView = _aboutViewModel;
+        WindowTitle = "PS2 Home - About";
     }
 }

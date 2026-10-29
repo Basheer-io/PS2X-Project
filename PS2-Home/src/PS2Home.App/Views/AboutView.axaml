@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+             x:Class="PS2Home.App.Views.AboutView"
+             x:DataType="vm:AboutViewModel">
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="24" MaxWidth="800" HorizontalAlignment="Left">
+
+      <!-- Header Card -->
+      <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="12" Padding="28">
+        <StackPanel Spacing="16">
+          <Grid ColumnDefinitions="Auto,*">
+            <Border Grid.Column="0" Width="64" Height="64" Background="#2A2F3E" CornerRadius="16" Margin="0,0,20,0">
+              <TextBlock Text="🎮" FontSize="34" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+              <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="{Binding AppName}" FontSize="24" FontWeight="Bold" Foreground="#E8E8E8"/>
+                <Border Background="#00D4AA" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Version}" FontSize="12" FontWeight="Bold" Foreground="#0F1117"/>
+                </Border>
+                <Border Background="#2A2F3E" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding License}" FontSize="12" Foreground="#A0A5B5"/>
+                </Border>
+              </StackPanel>
+              <TextBlock Text="{Binding Tagline}" FontSize="14" Opacity="0.75" Foreground="#E8E8E8"/>
+              <TextBlock Text="{Binding Copyright}" FontSize="12" Opacity="0.5" Foreground="#E8E8E8"/>
+            </StackPanel>
+          </Grid>
+
+          <!-- Links -->
+          <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0">
+            <Button Content="🌐 GitHub Repository"
+                    Command="{Binding OpenGitHubCommand}"
+                    Background="#00D4AA"
+                    Foreground="#0F1117"
+                    FontWeight="SemiBold"
+                    Padding="14,8"
+                    CornerRadius="6"/>
+
+            <Button Content="🎮 PCSX2 Website"
+                    Command="{Binding OpenPcsx2Command}"
+                    Background="#2A2F3E"
+                    Foreground="#E8E8E8"
+                    Padding="14,8"
+                    CornerRadius="6"/>
+
+            <Button Content="📖 BIOS Dumping Guide"
+                    Command="{Binding OpenBiosGuideCommand}"
+                    Background="#2A2F3E"
+                    Foreground="#E8E8E8"
+                    Padding="14,8"
+                    CornerRadius="6"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Legal & Trademark Disclaimer Card -->
+      <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="8" Padding="20">
+        <StackPanel Spacing="12">
+          <TextBlock Text="⚖️ Trademark &amp; Non-Affiliation Disclaimer" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBlock Text="PS2 Home is an independent open-source project and is not affiliated with, authorized, maintained, sponsored, or endorsed by Sony Interactive Entertainment Inc. or the PCSX2 development team."
+                     FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
+          <TextBlock Text="'PlayStation', 'PS2', 'DualShock', and 'DualSense' are registered trademarks or trademarks of Sony Interactive Entertainment Inc. All product and company names are trademarks™ or registered® trademarks of their respective holders."
+                     FontSize="12" Foreground="#A0A5B5" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Anti-Piracy / Ethical Statement -->
+      <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="8" Padding="20">
+        <StackPanel Spacing="12">
+          <TextBlock Text="🛡️ Anti-Piracy Notice" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBlock Text="PS2 Home strictly adheres to digital preservation and legal homebrew ethics. PS2 Home does not include, bundle, download, or link to copyrighted game disc images, BIOS dumps, or PCSX2 binaries."
+                     FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
+          <TextBlock Text="Users are solely responsible for dumping their own BIOS from their physical PlayStation 2 console and using legally obtained disc backups."
+                     FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Third-Party Open Source Components -->
+      <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="8" Padding="20">
+        <StackPanel Spacing="14">
+          <TextBlock Text="📦 Open-Source Dependencies" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+
+          <Grid ColumnDefinitions="*,150,150" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
+            <!-- Headers -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Component" FontWeight="Bold" Foreground="#E8E8E8" FontSize="13"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Role" FontWeight="Bold" Foreground="#E8E8E8" FontSize="13"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="License" FontWeight="Bold" Foreground="#E8E8E8" FontSize="13"/>
+
+            <!-- Avalonia -->
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Avalonia UI" Foreground="#00D4AA" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Cross-Platform GUI" Foreground="#A0A5B5" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="MIT" Foreground="#E8E8E8" FontSize="13"/>
+
+            <!-- CommunityToolkit -->
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="CommunityToolkit.Mvvm" Foreground="#00D4AA" FontSize="13"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="MVVM Architecture" Foreground="#A0A5B5" FontSize="13"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="MIT" Foreground="#E8E8E8" FontSize="13"/>
+
+            <!-- Microsoft DI -->
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Microsoft.Extensions.DI" Foreground="#00D4AA" FontSize="13"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Dependency Injection" Foreground="#A0A5B5" FontSize="13"/>
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="MIT" Foreground="#E8E8E8" FontSize="13"/>
+
+            <!-- Inter Font -->
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Inter Typeface" Foreground="#00D4AA" FontSize="13"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Typography" Foreground="#A0A5B5" FontSize="13"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="SIL OFL 1.1" Foreground="#E8E8E8" FontSize="13"/>
+          </Grid>
+
+          <TextBlock Text="For complete legal details and copyright notices, see THIRD-PARTY-NOTICES.md."
+                     FontSize="12" Opacity="0.6" Foreground="#E8E8E8" Margin="0,4,0,0"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Status Feedback -->
+      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#00D4AA"
+                 IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

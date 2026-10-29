@@ -72,6 +72,11 @@
                   Classes="nav-button"
                   Classes.active="{Binding IsDiagnosticsActive}"
                   Command="{Binding NavigateToDiagnosticsCommand}"/>
+
+          <Button Content="ℹ️  About"
+                  Classes="nav-button"
+                  Classes.active="{Binding IsAboutActive}"
+                  Command="{Binding NavigateToAboutCommand}"/>
         </StackPanel>
 
         <TextBlock DockPanel.Dock="Bottom"
