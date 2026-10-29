@@ -213,26 +213,6 @@ public partial class SettingsViewModel : ViewModelBase
             return;
         }
 
-        [RelayCommand]
-        public async Task OpenPcsx2Async()
-        {
-            if (SelectedInstallation == null || !SelectedInstallation.IsValid)
-            {
-                StatusMessage = "Select or validate a PCSX2 installation first";
-                return;
-            }
-
-            try
-            {
-                await _gameLauncher.LaunchEmulatorAsync(SelectedInstallation);
-                StatusMessage = "PCSX2 opened successfully";
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = $"Could not open PCSX2: {ex.Message}";
-            }
-        }
-
         IsValidating = true;
         StatusMessage = "Validating binary...";
 
@@ -267,6 +247,26 @@ public partial class SettingsViewModel : ViewModelBase
         finally
         {
             IsValidating = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task OpenPcsx2Async()
+    {
+        if (SelectedInstallation == null || !SelectedInstallation.IsValid)
+        {
+            StatusMessage = "Select or validate a PCSX2 installation first";
+            return;
+        }
+
+        try
+        {
+            await _gameLauncher.LaunchEmulatorAsync(SelectedInstallation);
+            StatusMessage = "PCSX2 opened successfully";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Could not open PCSX2: {ex.Message}";
         }
     }
 
