@@ -36,6 +36,8 @@
                      FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
           <TextBlock Text="Never download or share BIOS files. PCSX2 requires a BIOS dump from your own console."
                      FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+          <TextBlock Text="Next step: open Settings → add your game folder → scan the Library."
+                     FontSize="13" FontWeight="SemiBold" Foreground="#00D4AA" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>
 

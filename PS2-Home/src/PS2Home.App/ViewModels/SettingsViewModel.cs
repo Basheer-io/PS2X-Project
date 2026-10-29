@@ -73,6 +73,23 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private string _pcsx2VersionText = string.Empty;
 
+    partial void OnSelectedInstallationChanged(Pcsx2Installation? value)
+    {
+        if (value == null)
+        {
+            IsPcsx2Configured = false;
+            Pcsx2StatusText = "PCSX2 not configured";
+            Pcsx2VersionText = string.Empty;
+            return;
+        }
+
+        IsPcsx2Configured = value.IsValid;
+        Pcsx2StatusText = value.IsValid
+            ? $"Configured: {value.DisplayName}"
+            : "Selected PCSX2 installation needs verification";
+        Pcsx2VersionText = value.Version ?? string.Empty;
+    }
+
     public SettingsViewModel() : this(
         new PS2Home.Infrastructure.JsonSettingsStore(),
         new PS2Home.Infrastructure.Pcsx2Locator(),
