@@ -93,6 +93,8 @@ Check the [troubleshooting guide](docs/troubleshooting.md). If that doesn't help
 
 ---
 
+[![Architecture diagram of basheer-io/ps2x-project](https://gitdiagram.com/basheer-io/ps2x-project/diagram.png)](https://gitdiagram.com/basheer-io/ps2x-project?utm_source=readme&utm_medium=picture)
+
 *Made for people who still love their PS2 libraries.*
 
 ## Process has just started still underdeveloped .
