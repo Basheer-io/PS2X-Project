@@ -21,7 +21,7 @@ PS2Home.App  ──►  PS2Home.Core  ◄──  PS2Home.Infrastructure
 | PCSX2 versions | Support current Qt-based PCSX2 (2.x). Document that legacy 1.6 is unsupported unless added deliberately |
 | PCSX2 install types | Windows portable/installed exe, Linux AppImage, Linux Flatpak (`flatpak run net.pcsx2.PCSX2`), distro/native binary. Model "how to launch PCSX2" as a command + leading arguments (`Pcsx2Installation`) |
 | Process launching | `ArgumentList` only; `UseShellExecute = false`; enforce timeouts (e.g. 2s for version query); capture exit code and stderr; log everything |
-| Native helper | Phase 5, optional; app must work without it |
+| Native helper | Phase 5: C++ standalone CLI (`ps2home-diag`) probing Vulkan & CPU vector extensions; app continues gracefully if absent |
 | Packaging targets (Phase 7) | Linux: AppImage and/or Flatpak (+ RPM for Fedora if wanted); Windows: zip first, installer later |
 
 ## PCSX2 Discovery

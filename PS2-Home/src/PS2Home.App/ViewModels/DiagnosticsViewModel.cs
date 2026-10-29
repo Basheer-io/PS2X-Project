@@ -7,12 +7,13 @@ using PS2Home.Core;
 namespace PS2Home.App.ViewModels;
 
 /// <summary>
-/// Diagnostics view model - shows system info, environment verification, launch history, logs, and self-tests.
+/// Diagnostics view model - shows system info, hardware capability probes, logs, and self-tests.
 /// </summary>
 public partial class DiagnosticsViewModel : ViewModelBase
 {
     private readonly IPcsx2Locator _pcsx2Locator;
     private readonly ILaunchLogger _launchLogger;
+    private readonly INativeDiagnostics _nativeDiagnostics;
 
     [ObservableProperty]
     private ObservableCollection<string> _logEntries = [];
@@ -29,30 +30,54 @@ public partial class DiagnosticsViewModel : ViewModelBase
     [ObservableProperty]
     private string _statusMessage = "Diagnostics ready";
 
+    // Native hardware capability fields
+    [ObservableProperty]
+    private bool _hasNativeData = false;
+
+    [ObservableProperty]
+    private string _cpuFeaturesSummary = "Probing...";
+
+    [ObservableProperty]
+    private string _vulkanStatusSummary = "Probing...";
+
+    [ObservableProperty]
+    private bool _isVulkanSupported = false;
+
+    [ObservableProperty]
+    private bool _isCpuAvx2Supported = false;
+
     public DiagnosticsViewModel() : this(
         new PS2Home.Infrastructure.Pcsx2Locator(),
-        new PS2Home.Infrastructure.LaunchLogger())
+        new PS2Home.Infrastructure.LaunchLogger(),
+        new PS2Home.Infrastructure.NativeDiagnostics())
     {
     }
 
-    public DiagnosticsViewModel(IPcsx2Locator pcsx2Locator, ILaunchLogger launchLogger)
+    public DiagnosticsViewModel(
+        IPcsx2Locator pcsx2Locator,
+        ILaunchLogger launchLogger,
+        INativeDiagnostics nativeDiagnostics)
     {
         _pcsx2Locator = pcsx2Locator;
         _launchLogger = launchLogger;
+        _nativeDiagnostics = nativeDiagnostics;
+
         CollectSystemInfo();
+        _ = ProbeHardwareAsync();
         AddLogEntry("Diagnostics view initialized");
     }
 
     [RelayCommand]
-    private void RefreshSystemInfo()
+    public async Task RefreshSystemInfoAsync()
     {
         CollectSystemInfo();
-        AddLogEntry("System info refreshed");
+        await ProbeHardwareAsync();
+        AddLogEntry("System info and hardware probes refreshed");
         StatusMessage = "System info updated";
     }
 
     [RelayCommand]
-    private void ClearLogs()
+    public void ClearLogs()
     {
         LogEntries.Clear();
         AddLogEntry("Logs cleared");
@@ -60,7 +85,7 @@ public partial class DiagnosticsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task RunSelfTestAsync()
+    public async Task RunSelfTestAsync()
     {
         AddLogEntry("Running self-test...");
         AddLogEntry("✓ Core assembly loaded");
@@ -89,6 +114,35 @@ public partial class DiagnosticsViewModel : ViewModelBase
 
         try
         {
+            var native = await _nativeDiagnostics.QueryDiagnosticsAsync();
+            if (native.IsAvailable)
+            {
+                var sse = native.Cpu?.HasSse41 == true ? "SSE4.1 ✓" : "SSE4.1 ✗";
+                var avx = native.Cpu?.HasAvx2 == true ? "AVX2 ✓" : "AVX2 ✗";
+                var aes = native.Cpu?.HasAes == true ? "AES ✓" : "AES ✗";
+                AddLogEntry($"✓ Native CPU check: {sse}, {avx}, {aes}");
+
+                if (native.Gpu?.Supported == true)
+                {
+                    AddLogEntry($"✓ Native Vulkan check: Supported ({native.Gpu.DeviceName} - {native.Gpu.DeviceType}, API v{native.Gpu.ApiVersion})");
+                }
+                else
+                {
+                    AddLogEntry("! Native Vulkan check: Vulkan driver not detected or no physical devices available");
+                }
+            }
+            else
+            {
+                AddLogEntry($"ℹ Native helper status: {string.Join("; ", native.Errors)}");
+            }
+        }
+        catch (Exception ex)
+        {
+            AddLogEntry($"ℹ Native probe error: {ex.Message}");
+        }
+
+        try
+        {
             var recentLaunches = await _launchLogger.GetRecentLogsAsync(5);
             if (recentLaunches.Count > 0)
             {
@@ -106,7 +160,7 @@ public partial class DiagnosticsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task ExportRedactedLogsAsync()
+    public async Task ExportRedactedLogsAsync()
     {
         try
         {
@@ -125,18 +179,55 @@ public partial class DiagnosticsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenLogFolder()
+    public void OpenLogFolder()
     {
         AddLogEntry("Open log folder requested");
         StatusMessage = "Logs directory recorded";
     }
 
     [RelayCommand]
-    private void CopyLogsToClipboard()
+    public void CopyLogsToClipboard()
     {
         var allLogs = string.Join(Environment.NewLine, LogEntries);
         AddLogEntry($"Copied {LogEntries.Count} log lines");
         StatusMessage = "Logs formatted for clipboard";
+    }
+
+    private async Task ProbeHardwareAsync()
+    {
+        try
+        {
+            var result = await _nativeDiagnostics.QueryDiagnosticsAsync();
+            HasNativeData = result.IsAvailable;
+
+            if (result.IsAvailable)
+            {
+                if (result.Cpu != null)
+                {
+                    IsCpuAvx2Supported = result.Cpu.HasAvx2;
+                    CpuFeaturesSummary = $"SSE4.1: {(result.Cpu.HasSse41 ? "Yes" : "No")} | AVX2: {(result.Cpu.HasAvx2 ? "Yes" : "No")} | AES: {(result.Cpu.HasAes ? "Yes" : "No")}";
+                }
+
+                if (result.Gpu != null)
+                {
+                    IsVulkanSupported = result.Gpu.Supported;
+                    VulkanStatusSummary = result.Gpu.Supported
+                        ? $"{result.Gpu.DeviceName} ({result.Gpu.DeviceType}, v{result.Gpu.ApiVersion})"
+                        : "Vulkan driver not detected";
+                }
+            }
+            else
+            {
+                CpuFeaturesSummary = "Native helper unavailable";
+                VulkanStatusSummary = "Native helper unavailable";
+            }
+        }
+        catch
+        {
+            HasNativeData = false;
+            CpuFeaturesSummary = "Query failed";
+            VulkanStatusSummary = "Query failed";
+        }
     }
 
     private void CollectSystemInfo()

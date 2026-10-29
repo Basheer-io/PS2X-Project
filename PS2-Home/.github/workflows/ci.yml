@@ -16,6 +16,12 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+
+      - name: Build Native Diagnostics Helper
+        run: |
+          cmake -B native/PS2Home.Native/build -S native/PS2Home.Native -DCMAKE_BUILD_TYPE=Release
+          cmake --build native/PS2Home.Native/build --config Release
+
       - run: dotnet restore PS2Home.sln
       - run: dotnet build PS2Home.sln --configuration Release --no-restore
       - run: dotnet test PS2Home.sln --configuration Release --no-build

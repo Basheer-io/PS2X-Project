@@ -58,6 +58,45 @@
         </Border>
       </Grid>
 
+      <!-- Native Hardware Capabilities Card -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <StackPanel Spacing="16">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="Hardware Capability Probe (Native)" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+              <TextBlock Text="Low-level CPU vector extensions and Vulkan graphics driver status" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+            </StackPanel>
+            <Border Grid.Column="1"
+                    Background="{Binding HasNativeData, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
+                    CornerRadius="12" Padding="10,4" VerticalAlignment="Center">
+              <TextBlock Text="{Binding HasNativeData, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Probe Active|Fallback Mode'}"
+                         FontSize="10" FontWeight="Bold"
+                         Foreground="{Binding HasNativeData, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#0F1117|#A0A5B5'}"/>
+            </Border>
+          </Grid>
+
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+            <!-- CPU Vector Extensions -->
+            <Border Grid.Column="0" Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12">
+              <StackPanel Spacing="6">
+                <TextBlock Text="CPU Instructions (EE/VU Recompiler)" FontSize="13" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+                <TextBlock Text="{Binding CpuFeaturesSummary}" FontSize="12" Foreground="#00D4AA" FontFamily="Consolas, Monospace"/>
+              </StackPanel>
+            </Border>
+
+            <!-- Vulkan Driver -->
+            <Border Grid.Column="1" Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12">
+              <StackPanel Spacing="6">
+                <TextBlock Text="Vulkan Graphics Driver (PCSX2 Backend)" FontSize="13" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+                <TextBlock Text="{Binding VulkanStatusSummary}" FontSize="12"
+                           Foreground="{Binding IsVulkanSupported, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
+                           FontFamily="Consolas, Monospace" TextTrimming="CharacterEllipsis"/>
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Border>
+
       <!-- System Environment Details -->
       <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
         <StackPanel Spacing="12">

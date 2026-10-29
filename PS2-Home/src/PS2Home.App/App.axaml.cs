@@ -20,6 +20,7 @@ public partial class App : Application
         // Core & Infrastructure services
         services.AddSingleton<IProcessRunner, DefaultProcessRunner>();
         services.AddSingleton<IPcsx2Locator, Pcsx2Locator>();
+        services.AddSingleton<INativeDiagnostics, NativeDiagnostics>();
         services.AddSingleton<ILaunchLogger, LaunchLogger>();
         services.AddSingleton<IGameLauncher, GameLauncher>();
         services.AddSingleton<ISettingsStore, JsonSettingsStore>();
