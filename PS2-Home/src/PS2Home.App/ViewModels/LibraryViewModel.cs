@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PS2Home.Core;
 using System.Collections.ObjectModel;
 
 namespace PS2Home.App.ViewModels;
@@ -26,15 +27,39 @@ public partial class AppItemViewModel : ObservableObject
 
     [ObservableProperty]
     private string _status = "Not scanned";
+
+    public static AppItemViewModel FromGameInfo(GameInfo info) => new()
+    {
+        Name = info.Name,
+        ConfigFolderName = info.ConfigFolderName,
+        Tagline = info.Tagline,
+        CoverArtPath = info.CoverArtPath,
+        IsInstalled = info.IsInstalled,
+        Status = info.Status
+    };
+
+    public GameInfo ToGameInfo() => new(
+        Name,
+        ConfigFolderName,
+        Tagline,
+        CoverArtPath,
+        IsInstalled,
+        Status);
 }
 
 /// <summary>
-/// Library view model - displays installed PS2 applications/games as cards.
+/// Library view model - displays installed PS2 applications/games as cards with filtering.
 /// </summary>
 public partial class LibraryViewModel : ViewModelBase
 {
+    private readonly IGameLibrary _gameLibrary;
+    private readonly List<AppItemViewModel> _allApps = [];
+
     [ObservableProperty]
     private ObservableCollection<AppItemViewModel> _apps = [];
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
 
     [ObservableProperty]
     private bool _isLoading = false;
@@ -43,29 +68,98 @@ public partial class LibraryViewModel : ViewModelBase
     private string _statusMessage = "Ready";
 
     [ObservableProperty]
+    private string? _errorMessage;
+
+    [ObservableProperty]
     private int _totalApps = 0;
 
     [ObservableProperty]
     private int _installedApps = 0;
 
-    public LibraryViewModel()
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+    public bool IsEmpty => !IsLoading && !HasError && Apps.Count == 0;
+    public bool HasApps => !IsLoading && !HasError && Apps.Count > 0;
+    public bool HasSearchQuery => !string.IsNullOrWhiteSpace(SearchText);
+
+    public LibraryViewModel() : this(new SampleGameLibrary())
     {
-        LoadSampleData();
+    }
+
+    public LibraryViewModel(IGameLibrary gameLibrary)
+    {
+        _gameLibrary = gameLibrary;
+        _ = RefreshLibraryAsync();
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        OnPropertyChanged(nameof(HasSearchQuery));
+        ApplyFilter();
+    }
+
+    partial void OnIsLoadingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsEmpty));
+        OnPropertyChanged(nameof(HasApps));
+    }
+
+    partial void OnErrorMessageChanged(string? value)
+    {
+        OnPropertyChanged(nameof(HasError));
+        OnPropertyChanged(nameof(IsEmpty));
+        OnPropertyChanged(nameof(HasApps));
     }
 
     [RelayCommand]
-    private async Task RefreshLibraryAsync()
+    public async Task RefreshLibraryAsync()
     {
         IsLoading = true;
+        ErrorMessage = null;
         StatusMessage = "Scanning for PS2 applications...";
-        
-        // Simulate scanning delay
-        await Task.Delay(1000);
-        
-        LoadSampleData();
-        
-        IsLoading = false;
-        StatusMessage = $"Found {TotalApps} applications ({InstalledApps} installed)";
+
+        try
+        {
+            // Small simulated delay for responsive UI demonstration
+            await Task.Delay(300);
+
+            var games = await _gameLibrary.GetAllGamesAsync();
+            _allApps.Clear();
+            _allApps.AddRange(games.Select(AppItemViewModel.FromGameInfo));
+
+            TotalApps = _allApps.Count;
+            InstalledApps = _allApps.Count(a => a.IsInstalled);
+
+            ApplyFilter();
+            StatusMessage = $"Found {TotalApps} applications ({InstalledApps} installed)";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to load library: {ex.Message}";
+            StatusMessage = "Error scanning library";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    public void ClearSearch()
+    {
+        SearchText = string.Empty;
+    }
+
+    [RelayCommand]
+    public void ToggleErrorState()
+    {
+        if (HasError)
+        {
+            ErrorMessage = null;
+        }
+        else
+        {
+            ErrorMessage = "Simulated library error for UI testing.";
+        }
     }
 
     [RelayCommand]
@@ -73,79 +167,21 @@ public partial class LibraryViewModel : ViewModelBase
     {
         if (app == null) return;
         StatusMessage = $"Launching {app.Name}...";
-        // TODO: Implement actual launch via Infrastructure layer
     }
 
-    private void LoadSampleData()
+    private void ApplyFilter()
     {
-        Apps.Clear();
-        
-        // Sample PS2 homebrew applications
-        var sampleApps = new[]
-        {
-            new AppItemViewModel 
-            { 
-                Name = "Open PS2 Loader (OPL)", 
-                ConfigFolderName = "OPL", 
-                Tagline = "Play games from HDD, SMB, or USB",
-                CoverArtPath = string.Empty,
-                IsInstalled = true,
-                Status = "Installed"
-            },
-            new AppItemViewModel 
-            { 
-                Name = "FreeMCBoot Installer", 
-                ConfigFolderName = "FMCB", 
-                Tagline = "Softmod installer for PS2",
-                CoverArtPath = string.Empty,
-                IsInstalled = true,
-                Status = "Installed"
-            },
-            new AppItemViewModel 
-            { 
-                Name = "wLaunchELF", 
-                ConfigFolderName = "WLELF", 
-                Tagline = "File manager and ELF launcher",
-                CoverArtPath = string.Empty,
-                IsInstalled = false,
-                Status = "Not installed"
-            },
-            new AppItemViewModel 
-            { 
-                Name = "Simple Media System (SMS)", 
-                ConfigFolderName = "SMS", 
-                Tagline = "Media player for PS2",
-                CoverArtPath = string.Empty,
-                IsInstalled = false,
-                Status = "Not installed"
-            },
-            new AppItemViewModel 
-            { 
-                Name = "PS2 Browser", 
-                ConfigFolderName = "PSBROWSER", 
-                Tagline = "Homebrew web browser",
-                CoverArtPath = string.Empty,
-                IsInstalled = false,
-                Status = "Not installed"
-            },
-            new AppItemViewModel 
-            { 
-                Name = "Cheat Code Manager (CCAPI)", 
-                ConfigFolderName = "CCAPI", 
-                Tagline = "Cheat code management tool",
-                CoverArtPath = string.Empty,
-                IsInstalled = false,
-                Status = "Not installed"
-            }
-        };
+        var gameInfos = _allApps.Select(a => a.ToGameInfo());
+        var filteredInfos = GameFilter.Apply(gameInfos, SearchText);
+        var filteredSet = new HashSet<string>(filteredInfos.Select(g => g.Name));
 
-        foreach (var app in sampleApps)
+        Apps.Clear();
+        foreach (var app in _allApps.Where(a => filteredSet.Contains(a.Name)))
         {
             Apps.Add(app);
         }
 
-        TotalApps = Apps.Count;
-        InstalledApps = Apps.Count(a => a.IsInstalled);
-        StatusMessage = $"Found {TotalApps} applications ({InstalledApps} installed)";
+        OnPropertyChanged(nameof(IsEmpty));
+        OnPropertyChanged(nameof(HasApps));
     }
 }

@@ -1,0 +1,118 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+             x:Class="PS2Home.App.Views.DiagnosticsView"
+             x:DataType="vm:DiagnosticsViewModel">
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="24" Margin="0,0,0,24">
+      <!-- Header -->
+      <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Text="Diagnostics" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
+          <TextBlock Text="System information, health checks, and application logs" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+          <Button Content="🔄 Refresh Info"
+                  Command="{Binding RefreshSystemInfoCommand}"
+                  Padding="14,8"
+                  Background="#2A2F3E"
+                  Foreground="#E8E8E8"
+                  BorderThickness="0"
+                  CornerRadius="6"/>
+          <Button Content="⚡ Run Self-Test"
+                  Command="{Binding RunSelfTestCommand}"
+                  Padding="14,8"
+                  Background="#00D4AA"
+                  Foreground="#0F1117"
+                  FontWeight="SemiBold"
+                  BorderThickness="0"
+                  CornerRadius="6"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- System Summary Cards -->
+      <Grid ColumnDefinitions="*,*,*" HorizontalAlignment="Stretch">
+        <Border Grid.Column="0" Background="#161922" CornerRadius="8" Padding="16" Margin="0,0,8,0" BorderThickness="1" BorderBrush="#2A2F3E">
+          <StackPanel Spacing="4">
+            <TextBlock Text="App Version" FontSize="12" Opacity="0.6" Foreground="#E8E8E8"/>
+            <TextBlock Text="{Binding AppVersion}" FontSize="20" FontWeight="Bold" Foreground="#00D4AA"/>
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Background="#161922" CornerRadius="8" Padding="16" Margin="4,0,4,0" BorderThickness="1" BorderBrush="#2A2F3E">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Memory Usage" FontSize="12" Opacity="0.6" Foreground="#E8E8E8"/>
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <TextBlock Text="{Binding MemoryUsage}" FontSize="20" FontWeight="Bold" Foreground="#00D4AA"/>
+              <TextBlock Text="MB" FontSize="14" Opacity="0.7" Foreground="#E8E8E8" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <Border Grid.Column="2" Background="#161922" CornerRadius="8" Padding="16" Margin="8,0,0,0" BorderThickness="1" BorderBrush="#2A2F3E">
+          <StackPanel Spacing="4">
+            <TextBlock Text="Health Status" FontSize="12" Opacity="0.6" Foreground="#E8E8E8"/>
+            <TextBlock Text="{Binding StatusMessage}" FontSize="15" FontWeight="SemiBold" Foreground="#E8E8E8" TextTrimming="CharacterEllipsis"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- System Environment Details -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <StackPanel Spacing="12">
+          <TextBlock Text="Environment Information" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBox Text="{Binding SystemInfo}"
+                   IsReadOnly="True"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   FontFamily="Consolas, Monospace"
+                   FontSize="12"
+                   Background="#0F1117"
+                   Foreground="#00D4AA"
+                   BorderThickness="1"
+                   BorderBrush="#2A2F3E"
+                   CornerRadius="6"
+                   Padding="12"
+                   MinHeight="140"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Activity Logs -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <StackPanel Spacing="12">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="Session Logs" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8" VerticalAlignment="Center"/>
+            <Button Grid.Column="1"
+                    Content="Clear Logs"
+                    Command="{Binding ClearLogsCommand}"
+                    Padding="12,6"
+                    Background="Transparent"
+                    Foreground="#A0A5B5"
+                    BorderThickness="1"
+                    BorderBrush="#2A2F3E"
+                    CornerRadius="6"
+                    FontSize="12"/>
+          </Grid>
+
+          <Border Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12" MinHeight="160" MaxHeight="260">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <ItemsControl ItemsSource="{Binding LogEntries}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               FontFamily="Consolas, Monospace"
+                               FontSize="12"
+                               Foreground="#E8E8E8"
+                               Margin="0,2"/>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Border>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

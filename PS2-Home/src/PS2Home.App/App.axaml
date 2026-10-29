@@ -1,15 +1,46 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:PS2Home.App.Converters"
+             xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+             xmlns:views="clr-namespace:PS2Home.App.Views"
              x:Class="PS2Home.App.App"
              RequestedThemeVariant="Dark">
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>
 
+  <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:LibraryViewModel}">
+      <views:LibraryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+      <views:SettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DiagnosticsViewModel}">
+      <views:DiagnosticsView />
+    </DataTemplate>
+  </Application.DataTemplates>
+
   <Application.Resources>
     <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
     <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
     <converters:SubtractConverter x:Key="SubtractConverter"/>
+
+    <!-- Theme Colors -->
+    <Color x:Key="ColorAppBackground">#0F1117</Color>
+    <Color x:Key="ColorCardBackground">#161922</Color>
+    <Color x:Key="ColorBorder">#2A2F3E</Color>
+    <Color x:Key="ColorAccent">#00D4AA</Color>
+    <Color x:Key="ColorError">#FF6B6B</Color>
+    <Color x:Key="ColorTextPrimary">#E8E8E8</Color>
+    <Color x:Key="ColorTextMuted">#A0A5B5</Color>
+
+    <SolidColorBrush x:Key="BrushAppBackground" Color="{StaticResource ColorAppBackground}"/>
+    <SolidColorBrush x:Key="BrushCardBackground" Color="{StaticResource ColorCardBackground}"/>
+    <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource ColorBorder}"/>
+    <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource ColorAccent}"/>
+    <SolidColorBrush x:Key="BrushError" Color="{StaticResource ColorError}"/>
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource ColorTextPrimary}"/>
+    <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}"/>
   </Application.Resources>
 </Application>

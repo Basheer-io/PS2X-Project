@@ -6,27 +6,62 @@
 
   <DockPanel>
     <!-- Header -->
-    <Border DockPanel.Dock="Top" Margin="0,0,0,24">
+    <Border DockPanel.Dock="Top" Margin="0,0,0,16">
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
         <StackPanel Grid.Column="0" Spacing="4">
           <TextBlock Text="Library" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
           <TextBlock Text="{Binding StatusMessage}" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
         </StackPanel>
-        <Button Grid.Column="1" 
-                Content="🔄 Refresh" 
-                Command="{Binding RefreshLibraryCommand}"
-                Padding="16,8"
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button Content="⚠️ Toggle Error"
+                  Command="{Binding ToggleErrorStateCommand}"
+                  Padding="12,8"
+                  Background="#2A2F3E"
+                  Foreground="#A0A5B5"
+                  FontSize="12"
+                  BorderThickness="0"
+                  CornerRadius="6"
+                  ToolTip.Tip="Demonstrates error state UI"/>
+          <Button Content="🔄 Refresh"
+                  Command="{Binding RefreshLibraryCommand}"
+                  Padding="16,8"
+                  Background="#2A2F3E"
+                  Foreground="#E8E8E8"
+                  BorderThickness="0"
+                  CornerRadius="6"
+                  IsEnabled="{Binding !IsLoading}"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- Search Box -->
+    <Border DockPanel.Dock="Top" Margin="0,0,0,16">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBox Grid.Column="0"
+                 Text="{Binding SearchText}"
+                 Watermark="🔍 Search applications by name or tagline (e.g. OPL, FMCB, ELF)..."
+                 Background="#161922"
+                 Foreground="#E8E8E8"
+                 BorderBrush="#2A2F3E"
+                 BorderThickness="1"
+                 CornerRadius="6"
+                 Padding="12,10"
+                 FontSize="13"/>
+        <Button Grid.Column="1"
+                Content="✕ Clear"
+                Command="{Binding ClearSearchCommand}"
+                IsVisible="{Binding HasSearchQuery}"
+                Margin="8,0,0,0"
+                Padding="12,8"
                 Background="#2A2F3E"
                 Foreground="#E8E8E8"
                 BorderThickness="0"
-                CornerRadius="6"
-                HorizontalAlignment="Right"
-                IsEnabled="{Binding !IsLoading}"/>
+                CornerRadius="6"/>
       </Grid>
     </Border>
 
     <!-- Loading State -->
-    <Border DockPanel.Dock="Top" 
+    <Border DockPanel.Dock="Top"
             IsVisible="{Binding IsLoading}"
             Margin="0,0,0,16"
             Padding="24"
@@ -38,31 +73,68 @@
       </StackPanel>
     </Border>
 
+    <!-- Error State -->
+    <Border DockPanel.Dock="Top"
+            IsVisible="{Binding HasError}"
+            Margin="0,0,0,16"
+            Padding="20"
+            Background="#2B141B"
+            BorderBrush="#FF6B6B"
+            BorderThickness="1"
+            CornerRadius="8">
+      <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Text="⚠️ Error Loading Library" FontSize="16" FontWeight="Bold" Foreground="#FF6B6B"/>
+          <TextBlock Text="{Binding ErrorMessage}" FontSize="13" Foreground="#E8E8E8"/>
+        </StackPanel>
+        <Button Grid.Column="1"
+                Content="Retry"
+                Command="{Binding RefreshLibraryCommand}"
+                Padding="16,8"
+                Background="#FF6B6B"
+                Foreground="#0F1117"
+                FontWeight="SemiBold"
+                BorderThickness="0"
+                CornerRadius="6"/>
+      </Grid>
+    </Border>
+
     <!-- Empty State -->
-    <Border DockPanel.Dock="Top" 
-            IsVisible="{Binding !IsLoading && TotalApps == 0}"
+    <Border DockPanel.Dock="Top"
+            IsVisible="{Binding IsEmpty}"
             Padding="48"
             Background="#161922"
             CornerRadius="8">
       <StackPanel Spacing="16" HorizontalAlignment="Center">
         <TextBlock Text="📭" FontSize="48" HorizontalAlignment="Center"/>
         <TextBlock Text="No PS2 Applications Found" FontSize="20" FontWeight="SemiBold" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
-        <TextBlock Text="Click Refresh to scan for installed homebrew applications" FontSize="14" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center" TextAlignment="Center"/>
-        <Button Content="🔄 Scan Now" 
-                Command="{Binding RefreshLibraryCommand}"
-                Padding="24,12"
-                Background="#00D4AA"
-                Foreground="#0F1117"
-                BorderThickness="0"
-                CornerRadius="6"
-                FontWeight="SemiBold"
-                HorizontalAlignment="Center"/>
+        <TextBlock Text="No applications match your search or have been detected in the library."
+                   FontSize="14" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center" TextAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+          <Button Content="✕ Clear Filter"
+                  Command="{Binding ClearSearchCommand}"
+                  IsVisible="{Binding HasSearchQuery}"
+                  Padding="16,10"
+                  Background="#2A2F3E"
+                  Foreground="#E8E8E8"
+                  BorderThickness="0"
+                  CornerRadius="6"
+                  FontWeight="SemiBold"/>
+          <Button Content="🔄 Rescan"
+                  Command="{Binding RefreshLibraryCommand}"
+                  Padding="16,10"
+                  Background="#00D4AA"
+                  Foreground="#0F1117"
+                  BorderThickness="0"
+                  CornerRadius="6"
+                  FontWeight="SemiBold"/>
+        </StackPanel>
       </StackPanel>
     </Border>
 
     <!-- Apps Grid -->
-    <ScrollViewer DockPanel.Dock="Top" 
-                  IsVisible="{Binding !IsLoading && TotalApps > 0}"
+    <ScrollViewer DockPanel.Dock="Top"
+                  IsVisible="{Binding HasApps}"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
       <ItemsControl ItemsSource="{Binding Apps}">
@@ -73,15 +145,15 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate x:DataType="vm:AppItemViewModel">
-            <Border Width="260" Height="340" 
-                    Background="#161922" 
-                    CornerRadius="12" 
+            <Border Width="260" Height="340"
+                    Background="#161922"
+                    CornerRadius="12"
                     BorderThickness="1"
                     BorderBrush="#2A2F3E"
                     ClipToBounds="True">
               <Grid RowDefinitions="180,*,Auto">
                 <!-- Cover Art / Placeholder -->
-                <Border Grid.Row="0" 
+                <Border Grid.Row="0"
                         Background="#0F1117"
                         CornerRadius="12,12,0,0">
                   <Grid>
@@ -91,7 +163,7 @@
                     <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="12"
                             Background="{Binding IsInstalled, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
                             CornerRadius="12" Padding="8,4">
-                      <TextBlock Text="{Binding IsInstalled, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Installed|Not Installed'}" 
+                      <TextBlock Text="{Binding IsInstalled, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Installed|Not Installed'}"
                                  FontSize="10" FontWeight="Bold" Foreground="#0F1117"/>
                     </Border>
                   </Grid>
@@ -106,7 +178,7 @@
 
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="16,0,16,16" HorizontalAlignment="Stretch">
-                  <Button Content="{Binding IsInstalled, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Launch|Install'}" 
+                  <Button Content="{Binding IsInstalled, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Launch|Install'}"
                           Command="{Binding $parent[UserControl].DataContext.LaunchAppCommand}"
                           CommandParameter="{Binding}"
                           HorizontalAlignment="Stretch"
@@ -119,7 +191,7 @@
                           FontWeight="SemiBold"
                           FontSize="13"
                           IsEnabled="{Binding IsInstalled}"/>
-                  <Button Content="⋮" 
+                  <Button Content="⋮"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Center"
                           Padding="0,10"
