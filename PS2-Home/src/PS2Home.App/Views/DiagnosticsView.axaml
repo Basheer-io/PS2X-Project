@@ -83,16 +83,25 @@
         <StackPanel Spacing="12">
           <Grid ColumnDefinitions="*,Auto">
             <TextBlock Grid.Column="0" Text="Session Logs" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8" VerticalAlignment="Center"/>
-            <Button Grid.Column="1"
-                    Content="Clear Logs"
-                    Command="{Binding ClearLogsCommand}"
-                    Padding="12,6"
-                    Background="Transparent"
-                    Foreground="#A0A5B5"
-                    BorderThickness="1"
-                    BorderBrush="#2A2F3E"
-                    CornerRadius="6"
-                    FontSize="12"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+              <Button Content="📄 Export Launch Logs"
+                      Command="{Binding ExportRedactedLogsCommand}"
+                      Padding="12,6"
+                      Background="#2A2F3E"
+                      Foreground="#00D4AA"
+                      BorderThickness="0"
+                      CornerRadius="6"
+                      FontSize="12"/>
+              <Button Content="Clear Logs"
+                      Command="{Binding ClearLogsCommand}"
+                      Padding="12,6"
+                      Background="Transparent"
+                      Foreground="#A0A5B5"
+                      BorderThickness="1"
+                      BorderBrush="#2A2F3E"
+                      CornerRadius="6"
+                      FontSize="12"/>
+            </StackPanel>
           </Grid>
 
           <Border Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12" MinHeight="160" MaxHeight="260">

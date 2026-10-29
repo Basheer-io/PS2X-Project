@@ -7,7 +7,7 @@ PS2 Home is a launcher. PCSX2 (user-installed) runs the games.
 PS2Home.App  ──►  PS2Home.Core  ◄──  PS2Home.Infrastructure
    (UI)        (models/logic)        (files, JSON, processes, OS)
 ```
-- `Core` defines interfaces (`IGameScanner`, `IPcsx2Locator`, `IProcessRunner`, `ISettingsStore`, `ILibraryStore`) and pure logic (game identity, installation modeling).
+- `Core` defines interfaces (`IGameScanner`, `IPcsx2Locator`, `IProcessRunner`, `IGameLauncher`, `ILaunchLogger`, `ISettingsStore`, `ILibraryStore`) and pure logic (game identity, CLI argument building).
 - `Infrastructure` implements them. Linux/Windows differences live here behind small interfaces.
 - `App` wires things together (DI container with `Microsoft.Extensions.DependencyInjection`) and presents state.
 
@@ -35,6 +35,14 @@ PS2Home.App  ──►  PS2Home.Core  ◄──  PS2Home.Infrastructure
    - Local AppData (`%LOCALAPPDATA%\Programs\PCSX2\pcsx2-qt.exe`).
    - PATH lookup.
 Full-disk searches are strictly avoided to ensure fast startup and respect user storage.
+
+## Game Launching & Process Lifecycle
+- CLI invocation uses `Pcsx2ArgumentBuilder` composing:
+  `[LeadingArguments] [-batch] [-fullscreen] [-nogui] [--] [GamePath]`
+- `IGameLauncher` invokes PCSX2 strictly with `ProcessStartInfo.ArgumentList` and `UseShellExecute = false`.
+- The option terminator (`--`) protects filenames starting with dashes or containing special characters.
+- `GameSession` monitors runtime duration and flags fast failure (exit code != 0 in under 3 seconds), capturing stderr for user diagnostics.
+- Launches are recorded to `AppPaths.GetConfigDirectory()/logs/launch.log` with user home paths redacted (`~`) and a 1 MB size cap with `.old` rotation.
 
 ## Non-goals
 Emulating PS2 hardware, bundling PCSX2, downloading games/BIOS, anything piracy related.

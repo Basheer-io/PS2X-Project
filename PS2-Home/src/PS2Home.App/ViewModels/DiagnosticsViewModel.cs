@@ -7,11 +7,12 @@ using PS2Home.Core;
 namespace PS2Home.App.ViewModels;
 
 /// <summary>
-/// Diagnostics view model - shows system info, environment verification, logs, and self-tests.
+/// Diagnostics view model - shows system info, environment verification, launch history, logs, and self-tests.
 /// </summary>
 public partial class DiagnosticsViewModel : ViewModelBase
 {
     private readonly IPcsx2Locator _pcsx2Locator;
+    private readonly ILaunchLogger _launchLogger;
 
     [ObservableProperty]
     private ObservableCollection<string> _logEntries = [];
@@ -28,13 +29,16 @@ public partial class DiagnosticsViewModel : ViewModelBase
     [ObservableProperty]
     private string _statusMessage = "Diagnostics ready";
 
-    public DiagnosticsViewModel() : this(new PS2Home.Infrastructure.Pcsx2Locator())
+    public DiagnosticsViewModel() : this(
+        new PS2Home.Infrastructure.Pcsx2Locator(),
+        new PS2Home.Infrastructure.LaunchLogger())
     {
     }
 
-    public DiagnosticsViewModel(IPcsx2Locator pcsx2Locator)
+    public DiagnosticsViewModel(IPcsx2Locator pcsx2Locator, ILaunchLogger launchLogger)
     {
         _pcsx2Locator = pcsx2Locator;
+        _launchLogger = launchLogger;
         CollectSystemInfo();
         AddLogEntry("Diagnostics view initialized");
     }
@@ -83,9 +87,41 @@ public partial class DiagnosticsViewModel : ViewModelBase
             AddLogEntry($"✗ PCSX2 probe encountered error: {ex.Message}");
         }
 
+        try
+        {
+            var recentLaunches = await _launchLogger.GetRecentLogsAsync(5);
+            if (recentLaunches.Count > 0)
+            {
+                AddLogEntry($"ℹ Recent launches recorded: {recentLaunches.Count} events in launch.log");
+            }
+        }
+        catch
+        {
+            // Ignore log reading errors in self-test
+        }
+
         AddLogEntry("ℹ Note: Ensure your PS2 BIOS is placed in the PCSX2 bios folder per pcsx2.net/docs/setup/bios/");
         AddLogEntry("Self-test completed successfully");
         StatusMessage = "Self-test finished";
+    }
+
+    [RelayCommand]
+    private async Task ExportRedactedLogsAsync()
+    {
+        try
+        {
+            var exported = await _launchLogger.ExportRedactedLogsAsync();
+            AddLogEntry("=== Exported Redacted Launch Logs ===");
+            foreach (var line in exported.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+            {
+                AddLogEntry(line.TrimEnd('\r'));
+            }
+            StatusMessage = "Exported redacted logs to session view";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Failed to export logs: {ex.Message}";
+        }
     }
 
     [RelayCommand]

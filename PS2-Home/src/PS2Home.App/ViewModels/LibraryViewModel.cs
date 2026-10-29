@@ -35,6 +35,12 @@ public partial class AppItemViewModel : ObservableObject
     private bool _isMissing = false;
 
     [ObservableProperty]
+    private bool _isRunning = false;
+
+    [ObservableProperty]
+    private bool _isLaunching = false;
+
+    [ObservableProperty]
     private long _fileSizeBytes = 0;
 
     [ObservableProperty]
@@ -43,6 +49,37 @@ public partial class AppItemViewModel : ObservableObject
     public string FormattedSize => FileSizeBytes > 0
         ? $"{(double)FileSizeBytes / (1024 * 1024 * 1024):0.0} GB"
         : string.Empty;
+
+    public string LaunchButtonText
+    {
+        get
+        {
+            if (IsRunning) return "🎮 Running";
+            if (IsLaunching) return "⏳ Starting...";
+            if (IsMissing) return "Unavailable";
+            return "▶ Launch";
+        }
+    }
+
+    public bool CanLaunch => !IsMissing && !IsRunning && !IsLaunching;
+
+    partial void OnIsRunningChanged(bool value)
+    {
+        OnPropertyChanged(nameof(LaunchButtonText));
+        OnPropertyChanged(nameof(CanLaunch));
+    }
+
+    partial void OnIsLaunchingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(LaunchButtonText));
+        OnPropertyChanged(nameof(CanLaunch));
+    }
+
+    partial void OnIsMissingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(LaunchButtonText));
+        OnPropertyChanged(nameof(CanLaunch));
+    }
 
     public static AppItemViewModel FromGameEntry(GameEntry entry) => new()
     {
@@ -90,14 +127,18 @@ public partial class AppItemViewModel : ObservableObject
 }
 
 /// <summary>
-/// Library view model - manages game scanning, progress reporting, cancellation, and search filtering.
+/// Library view model - manages game scanning, progress reporting, cancellation, search filtering, and process launching.
 /// </summary>
 public partial class LibraryViewModel : ViewModelBase
 {
     private readonly IGameLibrary _gameLibrary;
     private readonly ISettingsStore _settingsStore;
+    private readonly IGameLauncher _gameLauncher;
+    private readonly ILaunchLogger _launchLogger;
     private readonly List<AppItemViewModel> _allApps = [];
     private CancellationTokenSource? _scanCts;
+    private IGameSession? _activeSession;
+    private AppItemViewModel? _activeGame;
 
     [ObservableProperty]
     private ObservableCollection<AppItemViewModel> _apps = [];
@@ -134,14 +175,24 @@ public partial class LibraryViewModel : ViewModelBase
     public bool HasApps => !IsLoading && !IsScanning && !HasError && Apps.Count > 0;
     public bool HasSearchQuery => !string.IsNullOrWhiteSpace(SearchText);
 
-    public LibraryViewModel() : this(new SampleGameLibrary(), new PS2Home.Infrastructure.JsonSettingsStore())
+    public LibraryViewModel() : this(
+        new SampleGameLibrary(),
+        new PS2Home.Infrastructure.JsonSettingsStore(),
+        new PS2Home.Infrastructure.GameLauncher(new PS2Home.Infrastructure.LaunchLogger()),
+        new PS2Home.Infrastructure.LaunchLogger())
     {
     }
 
-    public LibraryViewModel(IGameLibrary gameLibrary, ISettingsStore settingsStore)
+    public LibraryViewModel(
+        IGameLibrary gameLibrary,
+        ISettingsStore settingsStore,
+        IGameLauncher gameLauncher,
+        ILaunchLogger launchLogger)
     {
         _gameLibrary = gameLibrary;
         _settingsStore = settingsStore;
+        _gameLauncher = gameLauncher;
+        _launchLogger = launchLogger;
         _ = LoadInitialLibraryAsync();
     }
 
@@ -285,7 +336,7 @@ public partial class LibraryViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void LaunchApp(AppItemViewModel? app)
+    public async Task LaunchAppAsync(AppItemViewModel? app)
     {
         if (app == null) return;
         if (app.IsMissing)
@@ -293,7 +344,85 @@ public partial class LibraryViewModel : ViewModelBase
             StatusMessage = $"Cannot launch {app.Name}: file does not exist at {app.FullPath}";
             return;
         }
-        StatusMessage = $"Launching {app.Name}... (Phase 4)";
+
+        if (_activeSession != null && _activeSession.State == GameLaunchState.Running)
+        {
+            StatusMessage = $"Another game is already running ({_activeGame?.Name ?? "Session"}). Close it before launching another.";
+            return;
+        }
+
+        var settings = await _settingsStore.LoadSettingsAsync();
+        var pcsx2 = settings.Pcsx2;
+        if (pcsx2 == null || string.IsNullOrWhiteSpace(pcsx2.Command))
+        {
+            ErrorMessage = "PCSX2 is not configured. Please select or detect your PCSX2 installation in Settings.";
+            StatusMessage = "PCSX2 not configured";
+            return;
+        }
+
+        app.IsLaunching = true;
+        StatusMessage = $"Starting {app.Name}...";
+
+        try
+        {
+            var request = new LaunchRequest
+            {
+                Installation = pcsx2,
+                GamePath = app.FullPath,
+                Fullscreen = true,
+                BatchMode = true,
+                NoGui = false
+            };
+
+            var session = await _gameLauncher.LaunchGameAsync(request);
+            _activeSession = session;
+            _activeGame = app;
+
+            app.IsLaunching = false;
+            app.IsRunning = true;
+            StatusMessage = $"Playing: {app.Name}";
+
+            // Monitor exit asynchronously without blocking UI
+            _ = HandleSessionExitAsync(app, session);
+        }
+        catch (Exception ex)
+        {
+            app.IsLaunching = false;
+            app.IsRunning = false;
+            ErrorMessage = $"Failed to launch {app.Name}: {ex.Message}";
+            StatusMessage = "Launch failed";
+        }
+    }
+
+    private async Task HandleSessionExitAsync(AppItemViewModel app, IGameSession session)
+    {
+        try
+        {
+            var result = await session.WaitForExitAsync();
+            app.IsRunning = false;
+
+            if (_activeGame == app)
+            {
+                _activeGame = null;
+                _activeSession = null;
+            }
+
+            if (result.FastFailure)
+            {
+                ErrorMessage = $"'{app.Name}' closed immediately (Exit code: {result.ExitCode}). " +
+                               (!string.IsNullOrWhiteSpace(result.ErrorSummary) ? $"\nDetails: {result.ErrorSummary}" : "");
+                StatusMessage = $"Process exited quickly ({result.ExitCode})";
+            }
+            else
+            {
+                StatusMessage = $"Finished playing {app.Name} ({result.Duration.TotalMinutes:0.0} min)";
+            }
+        }
+        catch (Exception ex)
+        {
+            app.IsRunning = false;
+            StatusMessage = $"Session ended: {ex.Message}";
+        }
     }
 
     private void UpdateCounts()

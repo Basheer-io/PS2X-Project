@@ -102,7 +102,7 @@
       </StackPanel>
     </Border>
 
-    <!-- Error State -->
+    <!-- Error State / Crash Banner -->
     <Border DockPanel.Dock="Top"
             IsVisible="{Binding HasError}"
             Margin="0,0,0,16"
@@ -113,12 +113,12 @@
             CornerRadius="8">
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
         <StackPanel Grid.Column="0" Spacing="4">
-          <TextBlock Text="⚠️ Error Loading Library" FontSize="16" FontWeight="Bold" Foreground="#FF6B6B"/>
-          <TextBlock Text="{Binding ErrorMessage}" FontSize="13" Foreground="#E8E8E8"/>
+          <TextBlock Text="⚠️ Notice / Error" FontSize="16" FontWeight="Bold" Foreground="#FF6B6B"/>
+          <TextBlock Text="{Binding ErrorMessage}" FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
         </StackPanel>
         <Button Grid.Column="1"
-                Content="Retry"
-                Command="{Binding RescanLibraryCommand}"
+                Content="Dismiss"
+                Command="{Binding ToggleErrorStateCommand}"
                 Padding="16,8"
                 Background="#FF6B6B"
                 Foreground="#0F1117"
@@ -178,7 +178,7 @@
                     Background="#161922"
                     CornerRadius="12"
                     BorderThickness="1"
-                    BorderBrush="#2A2F3E"
+                    BorderBrush="{Binding IsRunning, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
                     ClipToBounds="True">
               <Grid RowDefinitions="180,*,Auto">
                 <!-- Cover Art / Placeholder -->
@@ -189,7 +189,7 @@
                     <!-- Disc Icon -->
                     <TextBlock Text="💿" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.3"/>
 
-                    <!-- Missing / Status Badge -->
+                    <!-- Running / Missing / Status Badge -->
                     <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="12"
                             Background="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
                             CornerRadius="12" Padding="8,4">
@@ -214,19 +214,19 @@
 
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="16,0,16,16" HorizontalAlignment="Stretch">
-                  <Button Content="{Binding !IsMissing, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Launch|Unavailable'}"
+                  <Button Content="{Binding LaunchButtonText}"
                           Command="{Binding $parent[UserControl].DataContext.LaunchAppCommand}"
                           CommandParameter="{Binding}"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Center"
                           Padding="0,10"
-                          Background="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
-                          Foreground="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#0F1117|#A0A5B5'}"
+                          Background="{Binding CanLaunch, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
+                          Foreground="{Binding CanLaunch, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#0F1117|#A0A5B5'}"
                           BorderThickness="0"
                           CornerRadius="6"
                           FontWeight="SemiBold"
                           FontSize="13"
-                          IsEnabled="{Binding !IsMissing}"/>
+                          IsEnabled="{Binding CanLaunch}"/>
                   <Button Content="⋮"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Center"
