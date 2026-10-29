@@ -13,6 +13,7 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly ISettingsStore _settingsStore;
     private readonly IPcsx2Locator _pcsx2Locator;
     private readonly ISettingsBackupService _backupService;
+    private readonly IGameLauncher _gameLauncher;
 
     [ObservableProperty]
     private ObservableCollection<string> _gameFolders = [];
@@ -77,18 +78,21 @@ public partial class SettingsViewModel : ViewModelBase
         new PS2Home.Infrastructure.Pcsx2Locator(),
         new PS2Home.Infrastructure.SettingsBackupService(
             new PS2Home.Infrastructure.JsonSettingsStore(),
-            new PS2Home.Infrastructure.JsonLibraryStore()))
+            new PS2Home.Infrastructure.JsonLibraryStore()),
+        new PS2Home.Infrastructure.GameLauncher(new PS2Home.Infrastructure.LaunchLogger()))
     {
     }
 
     public SettingsViewModel(
         ISettingsStore settingsStore,
         IPcsx2Locator pcsx2Locator,
-        ISettingsBackupService backupService)
+        ISettingsBackupService backupService,
+        IGameLauncher gameLauncher)
     {
         _settingsStore = settingsStore;
         _pcsx2Locator = pcsx2Locator;
         _backupService = backupService;
+        _gameLauncher = gameLauncher;
         _ = LoadSettingsAsync();
     }
 
@@ -207,6 +211,26 @@ public partial class SettingsViewModel : ViewModelBase
         {
             StatusMessage = "Please enter an executable path to validate";
             return;
+        }
+
+        [RelayCommand]
+        public async Task OpenPcsx2Async()
+        {
+            if (SelectedInstallation == null || !SelectedInstallation.IsValid)
+            {
+                StatusMessage = "Select or validate a PCSX2 installation first";
+                return;
+            }
+
+            try
+            {
+                await _gameLauncher.LaunchEmulatorAsync(SelectedInstallation);
+                StatusMessage = "PCSX2 opened successfully";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Could not open PCSX2: {ex.Message}";
+            }
         }
 
         IsValidating = true;

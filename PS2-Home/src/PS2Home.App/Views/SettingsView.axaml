@@ -41,7 +41,7 @@
           </Border>
 
           <!-- Auto-Detection Trigger -->
-          <Grid ColumnDefinitions="*,Auto">
+          <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
             <TextBlock Grid.Column="0" Text="Detected Installations" FontSize="14" FontWeight="SemiBold" Foreground="#E8E8E8" VerticalAlignment="Center"/>
             <Button Grid.Column="1"
                     Content="🔍 Scan for PCSX2"
@@ -50,6 +50,16 @@
                     Padding="14,8"
                     Background="#2A2F3E"
                     Foreground="#E8E8E8"
+                    BorderThickness="0"
+                    CornerRadius="6"/>
+            <Button Grid.Column="2"
+                    Content="▶ Open PCSX2"
+                    Command="{Binding OpenPcsx2Command}"
+                    IsEnabled="{Binding IsPcsx2Configured}"
+                    Padding="14,8"
+                    Background="#00D4AA"
+                    Foreground="#0F1117"
+                    FontWeight="SemiBold"
                     BorderThickness="0"
                     CornerRadius="6"/>
           </Grid>
