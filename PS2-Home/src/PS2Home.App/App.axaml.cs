@@ -18,6 +18,8 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         // Core & Infrastructure services
+        services.AddSingleton<IProcessRunner, DefaultProcessRunner>();
+        services.AddSingleton<IPcsx2Locator, Pcsx2Locator>();
         services.AddSingleton<ISettingsStore, JsonSettingsStore>();
         services.AddSingleton<ILibraryStore, JsonLibraryStore>();
         services.AddSingleton<IGameScanner, FileSystemGameScanner>();

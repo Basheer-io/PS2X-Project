@@ -6,11 +6,12 @@ using System.Collections.ObjectModel;
 namespace PS2Home.App.ViewModels;
 
 /// <summary>
-/// Settings view model - manages application configuration and persistent storage.
+/// Settings view model - manages game folders, PCSX2 detection, setup validation, and persistence.
 /// </summary>
 public partial class SettingsViewModel : ViewModelBase
 {
     private readonly ISettingsStore _settingsStore;
+    private readonly IPcsx2Locator _pcsx2Locator;
 
     [ObservableProperty]
     private ObservableCollection<string> _gameFolders = [];
@@ -34,15 +35,43 @@ public partial class SettingsViewModel : ViewModelBase
     private string _theme = "Dark";
 
     [ObservableProperty]
-    private string _statusMessage = "Settings loaded";
+    private string _statusMessage = "Settings ready";
 
-    public SettingsViewModel() : this(new PS2Home.Infrastructure.JsonSettingsStore())
+    // PCSX2 Setup Assistant
+    [ObservableProperty]
+    private ObservableCollection<Pcsx2Installation> _detectedInstallations = [];
+
+    [ObservableProperty]
+    private Pcsx2Installation? _selectedInstallation;
+
+    [ObservableProperty]
+    private string _customPcsx2Path = string.Empty;
+
+    [ObservableProperty]
+    private bool _isDetecting = false;
+
+    [ObservableProperty]
+    private bool _isValidating = false;
+
+    [ObservableProperty]
+    private bool _isPcsx2Configured = false;
+
+    [ObservableProperty]
+    private string _pcsx2StatusText = "PCSX2 not configured";
+
+    [ObservableProperty]
+    private string _pcsx2VersionText = string.Empty;
+
+    public SettingsViewModel() : this(
+        new PS2Home.Infrastructure.JsonSettingsStore(),
+        new PS2Home.Infrastructure.Pcsx2Locator())
     {
     }
 
-    public SettingsViewModel(ISettingsStore settingsStore)
+    public SettingsViewModel(ISettingsStore settingsStore, IPcsx2Locator pcsx2Locator)
     {
         _settingsStore = settingsStore;
+        _pcsx2Locator = pcsx2Locator;
         _ = LoadSettingsAsync();
     }
 
@@ -62,6 +91,21 @@ public partial class SettingsViewModel : ViewModelBase
             AutoScanOnStartup = settings.AutoScanOnStartup;
             ShowHiddenApps = settings.ShowHiddenApps;
             Theme = settings.Theme;
+
+            if (settings.Pcsx2 != null && !string.IsNullOrWhiteSpace(settings.Pcsx2.Command))
+            {
+                SelectedInstallation = settings.Pcsx2;
+                CustomPcsx2Path = settings.Pcsx2.Kind != Pcsx2InstallKind.Flatpak ? settings.Pcsx2.Command : string.Empty;
+                IsPcsx2Configured = settings.Pcsx2.IsValid;
+                Pcsx2StatusText = settings.Pcsx2.IsValid ? $"Configured: {settings.Pcsx2.DisplayName}" : "Saved PCSX2 path needs verification";
+                Pcsx2VersionText = settings.Pcsx2.Version ?? string.Empty;
+            }
+            else
+            {
+                // Automatically run discovery on first setup
+                _ = DetectPcsx2Async();
+            }
+
             StatusMessage = "Settings loaded";
         }
         catch (Exception ex)
@@ -81,15 +125,105 @@ public partial class SettingsViewModel : ViewModelBase
                 CoverArtFolder = CoverArtPath,
                 AutoScanOnStartup = AutoScanOnStartup,
                 ShowHiddenApps = ShowHiddenApps,
-                Theme = Theme
+                Theme = Theme,
+                Pcsx2 = SelectedInstallation
             };
 
             await _settingsStore.SaveSettingsAsync(settings);
-            StatusMessage = "Settings saved successfully";
+            StatusMessage = "Settings and PCSX2 configuration saved successfully";
         }
         catch (Exception ex)
         {
             StatusMessage = $"Error saving settings: {ex.Message}";
+        }
+    }
+
+    [RelayCommand]
+    public async Task DetectPcsx2Async()
+    {
+        if (IsDetecting) return;
+
+        IsDetecting = true;
+        StatusMessage = "Searching for PCSX2 installations...";
+
+        try
+        {
+            var found = await _pcsx2Locator.DetectInstallationsAsync();
+            DetectedInstallations.Clear();
+
+            foreach (var item in found)
+            {
+                DetectedInstallations.Add(item);
+            }
+
+            if (DetectedInstallations.Count > 0)
+            {
+                SelectedInstallation = DetectedInstallations[0];
+                IsPcsx2Configured = true;
+                Pcsx2StatusText = $"Found: {SelectedInstallation.DisplayName}";
+                Pcsx2VersionText = SelectedInstallation.Version ?? "Version unknown";
+                StatusMessage = $"Detected {DetectedInstallations.Count} PCSX2 installation(s)";
+            }
+            else
+            {
+                IsPcsx2Configured = false;
+                Pcsx2StatusText = "PCSX2 not detected. You can specify the executable path below.";
+                StatusMessage = "No PCSX2 installations detected in common locations";
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Detection failed: {ex.Message}";
+        }
+        finally
+        {
+            IsDetecting = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task ValidateCustomPathAsync()
+    {
+        if (string.IsNullOrWhiteSpace(CustomPcsx2Path))
+        {
+            StatusMessage = "Please enter an executable path to validate";
+            return;
+        }
+
+        IsValidating = true;
+        StatusMessage = "Validating binary...";
+
+        try
+        {
+            var kind = CustomPcsx2Path.EndsWith(".AppImage", StringComparison.OrdinalIgnoreCase)
+                ? Pcsx2InstallKind.AppImage
+                : Pcsx2InstallKind.Executable;
+
+            var install = Pcsx2Installation.CreateExecutable(CustomPcsx2Path.Trim(), kind);
+            var validation = await _pcsx2Locator.ValidateInstallationAsync(install);
+
+            if (validation.IsValid)
+            {
+                SelectedInstallation = install with { Version = validation.Version, IsValid = true };
+                IsPcsx2Configured = true;
+                Pcsx2StatusText = $"Valid: {SelectedInstallation.DisplayName}";
+                Pcsx2VersionText = validation.Version ?? "Valid";
+                StatusMessage = "PCSX2 executable validated successfully";
+            }
+            else
+            {
+                IsPcsx2Configured = false;
+                Pcsx2StatusText = $"Invalid: {validation.ErrorMessage}";
+                StatusMessage = validation.ErrorMessage ?? "Validation failed";
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Validation error: {ex.Message}";
+        }
+        finally
+        {
+            IsValidating = false;
         }
     }
 

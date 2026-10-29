@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+             xmlns:core="clr-namespace:PS2Home.Core;assembly=PS2Home.Core"
              x:Class="PS2Home.App.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
@@ -8,9 +9,111 @@
     <StackPanel Spacing="24" Margin="0,0,0,24">
       <!-- Header -->
       <StackPanel Spacing="4">
-        <TextBlock Text="Settings" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
-        <TextBlock Text="Configure library game folders and scanner preferences" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
+        <TextBlock Text="Settings &amp; Setup Assistant" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
+        <TextBlock Text="Configure PCSX2 emulator integration, game directories, and preferences" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
       </StackPanel>
+
+      <!-- PCSX2 Setup Assistant Card -->
+      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+        <StackPanel Spacing="16">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="PCSX2 Integration" FontSize="18" FontWeight="Bold" Foreground="#E8E8E8"/>
+              <TextBlock Text="PS2 Home launches your games using your installed PCSX2 emulator" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+            </StackPanel>
+
+            <!-- Status Badge -->
+            <Border Grid.Column="1"
+                    Background="{Binding IsPcsx2Configured, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
+                    CornerRadius="12" Padding="12,6" VerticalAlignment="Center">
+              <TextBlock Text="{Binding IsPcsx2Configured, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Ready|Setup Required'}"
+                         FontSize="11" FontWeight="Bold" Foreground="#0F1117"/>
+            </Border>
+          </Grid>
+
+          <!-- Status / Version readout -->
+          <Border Background="#0F1117" CornerRadius="6" BorderBrush="#2A2F3E" BorderThickness="1" Padding="12">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding Pcsx2StatusText}" FontSize="13" Foreground="#E8E8E8" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding Pcsx2VersionText}" FontSize="12" Foreground="#00D4AA" FontFamily="Consolas, Monospace"
+                         IsVisible="{Binding Pcsx2VersionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+            </StackPanel>
+          </Border>
+
+          <!-- Auto-Detection Trigger -->
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="Detected Installations" FontSize="14" FontWeight="SemiBold" Foreground="#E8E8E8" VerticalAlignment="Center"/>
+            <Button Grid.Column="1"
+                    Content="🔍 Scan for PCSX2"
+                    Command="{Binding DetectPcsx2Command}"
+                    IsEnabled="{Binding !IsDetecting}"
+                    Padding="14,8"
+                    Background="#2A2F3E"
+                    Foreground="#E8E8E8"
+                    BorderThickness="0"
+                    CornerRadius="6"/>
+          </Grid>
+
+          <!-- Installations Dropdown -->
+          <ComboBox ItemsSource="{Binding DetectedInstallations}"
+                    SelectedItem="{Binding SelectedInstallation}"
+                    HorizontalAlignment="Stretch"
+                    Background="#0F1117"
+                    Foreground="#E8E8E8"
+                    BorderBrush="#2A2F3E"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="10,8">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="core:Pcsx2Installation">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+                  <TextBlock Text="{Binding Version}" Foreground="#00D4AA" FontFamily="Consolas, Monospace" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+
+          <!-- Manual Path Override -->
+          <StackPanel Spacing="6">
+            <TextBlock Text="Or specify custom binary / AppImage path:" FontSize="13" Opacity="0.8" Foreground="#E8E8E8"/>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+              <TextBox Grid.Column="0"
+                       Text="{Binding CustomPcsx2Path}"
+                       Watermark="/usr/bin/pcsx2-qt, ~/Applications/PCSX2.AppImage, or C:\PCSX2\pcsx2-qt.exe..."
+                       Background="#0F1117"
+                       Foreground="#E8E8E8"
+                       BorderBrush="#2A2F3E"
+                       BorderThickness="1"
+                       CornerRadius="6"
+                       Padding="12,8"
+                       FontFamily="Consolas, Monospace"
+                       FontSize="13"/>
+              <Button Grid.Column="1"
+                      Content="✓ Test Binary"
+                      Command="{Binding ValidateCustomPathCommand}"
+                      IsEnabled="{Binding !IsValidating}"
+                      Padding="16,8"
+                      Background="#00D4AA"
+                      Foreground="#0F1117"
+                      FontWeight="SemiBold"
+                      BorderThickness="0"
+                      CornerRadius="6"/>
+            </Grid>
+          </StackPanel>
+
+          <!-- BIOS Guidance Box -->
+          <Border Background="#1C1826" BorderBrush="#8A63D2" BorderThickness="1" CornerRadius="6" Padding="14">
+            <StackPanel Spacing="6">
+              <TextBlock Text="ℹ️ PlayStation 2 BIOS Requirement" FontSize="14" FontWeight="Bold" Foreground="#BFA6F2"/>
+              <TextBlock Text="PCSX2 requires a genuine BIOS dump from your own PlayStation 2 console to run commercial games. PS2 Home does not and will never distribute, bundle, or download BIOS files."
+                         FontSize="12" Opacity="0.85" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+              <TextBlock Text="Learn how to legally dump your PS2 BIOS at: https://pcsx2.net/docs/setup/bios/"
+                         FontSize="12" Foreground="#8A63D2" TextWrapping="Wrap" FontFamily="Consolas, Monospace"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
 
       <!-- Game Library Folders -->
       <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">

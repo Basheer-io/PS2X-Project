@@ -29,4 +29,9 @@ public record AppSettings
     /// UI theme name (Dark, Light, System).
     /// </summary>
     public string Theme { get; init; } = "Dark";
+
+    /// <summary>
+    /// User-selected or auto-detected PCSX2 installation.
+    /// </summary>
+    public Pcsx2Installation? Pcsx2 { get; init; }
 }
