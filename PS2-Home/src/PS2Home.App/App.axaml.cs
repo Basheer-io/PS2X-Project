@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using PS2Home.App.ViewModels;
 using PS2Home.Core;
+using PS2Home.Infrastructure;
 
 namespace PS2Home.App;
 
@@ -16,8 +17,11 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        // Core services
-        services.AddSingleton<IGameLibrary, SampleGameLibrary>();
+        // Core & Infrastructure services
+        services.AddSingleton<ISettingsStore, JsonSettingsStore>();
+        services.AddSingleton<ILibraryStore, JsonLibraryStore>();
+        services.AddSingleton<IGameScanner, FileSystemGameScanner>();
+        services.AddSingleton<IGameLibrary, RealGameLibrary>();
 
         // ViewModels
         services.AddSingleton<LibraryViewModel>();

@@ -22,8 +22,19 @@
                   BorderThickness="0"
                   CornerRadius="6"
                   ToolTip.Tip="Demonstrates error state UI"/>
-          <Button Content="🔄 Refresh"
-                  Command="{Binding RefreshLibraryCommand}"
+          <!-- Rescan / Cancel Button -->
+          <Button Content="⏹ Cancel"
+                  Command="{Binding CancelScanCommand}"
+                  IsVisible="{Binding IsScanning}"
+                  Padding="16,8"
+                  Background="#FF6B6B"
+                  Foreground="#0F1117"
+                  FontWeight="SemiBold"
+                  BorderThickness="0"
+                  CornerRadius="6"/>
+          <Button Content="🔄 Rescan Library"
+                  Command="{Binding RescanLibraryCommand}"
+                  IsVisible="{Binding !IsScanning}"
                   Padding="16,8"
                   Background="#2A2F3E"
                   Foreground="#E8E8E8"
@@ -39,7 +50,7 @@
       <Grid ColumnDefinitions="*,Auto">
         <TextBox Grid.Column="0"
                  Text="{Binding SearchText}"
-                 Watermark="🔍 Search applications by name or tagline (e.g. OPL, FMCB, ELF)..."
+                 Watermark="🔍 Search games by title or file path (e.g. Gran Turismo, Final Fantasy, .iso)..."
                  Background="#161922"
                  Foreground="#E8E8E8"
                  BorderBrush="#2A2F3E"
@@ -60,7 +71,25 @@
       </Grid>
     </Border>
 
-    <!-- Loading State -->
+    <!-- Active Scanning Progress Banner -->
+    <Border DockPanel.Dock="Top"
+            IsVisible="{Binding IsScanning}"
+            Margin="0,0,0,16"
+            Padding="20"
+            Background="#161922"
+            BorderBrush="#00D4AA"
+            BorderThickness="1"
+            CornerRadius="8">
+      <StackPanel Spacing="10" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <TextBlock Text="🔄" FontSize="16" VerticalAlignment="Center"/>
+          <TextBlock Text="{Binding ScanProgressMessage}" FontSize="14" FontWeight="SemiBold" Foreground="#00D4AA"/>
+        </StackPanel>
+        <ProgressBar IsIndeterminate="True" Width="280" Height="4" Background="#2A2F3E" Foreground="#00D4AA"/>
+      </StackPanel>
+    </Border>
+
+    <!-- Initial Loading State -->
     <Border DockPanel.Dock="Top"
             IsVisible="{Binding IsLoading}"
             Margin="0,0,0,16"
@@ -89,7 +118,7 @@
         </StackPanel>
         <Button Grid.Column="1"
                 Content="Retry"
-                Command="{Binding RefreshLibraryCommand}"
+                Command="{Binding RescanLibraryCommand}"
                 Padding="16,8"
                 Background="#FF6B6B"
                 Foreground="#0F1117"
@@ -106,9 +135,9 @@
             Background="#161922"
             CornerRadius="8">
       <StackPanel Spacing="16" HorizontalAlignment="Center">
-        <TextBlock Text="📭" FontSize="48" HorizontalAlignment="Center"/>
-        <TextBlock Text="No PS2 Applications Found" FontSize="20" FontWeight="SemiBold" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
-        <TextBlock Text="No applications match your search or have been detected in the library."
+        <TextBlock Text="💿" FontSize="48" HorizontalAlignment="Center"/>
+        <TextBlock Text="No PS2 Game Disc Images Found" FontSize="20" FontWeight="SemiBold" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
+        <TextBlock Text="Configure your game folders in Settings or click Rescan to scan for .iso files."
                    FontSize="14" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center" TextAlignment="Center"/>
         <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
           <Button Content="✕ Clear Filter"
@@ -120,8 +149,8 @@
                   BorderThickness="0"
                   CornerRadius="6"
                   FontWeight="SemiBold"/>
-          <Button Content="🔄 Rescan"
-                  Command="{Binding RefreshLibraryCommand}"
+          <Button Content="🔄 Rescan Folders"
+                  Command="{Binding RescanLibraryCommand}"
                   Padding="16,10"
                   Background="#00D4AA"
                   Foreground="#0F1117"
@@ -132,7 +161,7 @@
       </StackPanel>
     </Border>
 
-    <!-- Apps Grid -->
+    <!-- Games Grid -->
     <ScrollViewer DockPanel.Dock="Top"
                   IsVisible="{Binding HasApps}"
                   VerticalScrollBarVisibility="Auto"
@@ -157,40 +186,47 @@
                         Background="#0F1117"
                         CornerRadius="12,12,0,0">
                   <Grid>
-                    <!-- Placeholder Icon -->
-                    <TextBlock Text="🎮" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.3"/>
-                    <!-- Install Status Badge -->
+                    <!-- Disc Icon -->
+                    <TextBlock Text="💿" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.3"/>
+
+                    <!-- Missing / Status Badge -->
                     <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="12"
-                            Background="{Binding IsInstalled, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
+                            Background="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
                             CornerRadius="12" Padding="8,4">
-                      <TextBlock Text="{Binding IsInstalled, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Installed|Not Installed'}"
+                      <TextBlock Text="{Binding !IsMissing, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Ready|Missing'}"
                                  FontSize="10" FontWeight="Bold" Foreground="#0F1117"/>
+                    </Border>
+
+                    <!-- File Size Badge -->
+                    <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12"
+                            Background="#20000000" CornerRadius="4" Padding="6,2"
+                            IsVisible="{Binding FileSizeBytes, Converter={x:Static ObjectConverters.IsNotNull}}">
+                      <TextBlock Text="{Binding FormattedSize}" FontSize="10" Foreground="#A0A5B5" FontFamily="Consolas, Monospace"/>
                     </Border>
                   </Grid>
                 </Border>
 
-                <!-- App Info -->
+                <!-- Game Info -->
                 <StackPanel Grid.Row="1" Margin="16,12,16,8" Spacing="6">
-                  <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#E8E8E8" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"/>
-                  <TextBlock Text="{Binding Tagline}" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"/>
-                  <TextBlock Text="{Binding ConfigFolderName}" FontSize="10" Opacity="0.5" Foreground="#E8E8E8" FontFamily="Consolas, Monospace"/>
+                  <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Foreground="#E8E8E8" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"/>
+                  <TextBlock Text="{Binding FullPath}" FontSize="11" Opacity="0.6" Foreground="#E8E8E8" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" FontFamily="Consolas, Monospace"/>
                 </StackPanel>
 
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="16,0,16,16" HorizontalAlignment="Stretch">
-                  <Button Content="{Binding IsInstalled, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Launch|Install'}"
+                  <Button Content="{Binding !IsMissing, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Launch|Unavailable'}"
                           Command="{Binding $parent[UserControl].DataContext.LaunchAppCommand}"
                           CommandParameter="{Binding}"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Center"
                           Padding="0,10"
-                          Background="{Binding IsInstalled, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
-                          Foreground="{Binding IsInstalled, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#0F1117|#E8E8E8'}"
+                          Background="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
+                          Foreground="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#0F1117|#A0A5B5'}"
                           BorderThickness="0"
                           CornerRadius="6"
                           FontWeight="SemiBold"
                           FontSize="13"
-                          IsEnabled="{Binding IsInstalled}"/>
+                          IsEnabled="{Binding !IsMissing}"/>
                   <Button Content="⋮"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Center"
@@ -215,17 +251,17 @@
       <Grid ColumnDefinitions="*,*,*" HorizontalAlignment="Stretch">
         <StackPanel Grid.Column="0" Spacing="2" HorizontalAlignment="Center">
           <TextBlock Text="{Binding TotalApps}" FontSize="24" FontWeight="Bold" Foreground="#00D4AA" HorizontalAlignment="Center"/>
-          <TextBlock Text="Total Apps" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
+          <TextBlock Text="Total Games" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
         </StackPanel>
         <Border Grid.Column="1" Width="1" Background="#2A2F3E" VerticalAlignment="Center" Margin="0,8"/>
         <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Center">
           <TextBlock Text="{Binding InstalledApps}" FontSize="24" FontWeight="Bold" Foreground="#00D4AA" HorizontalAlignment="Center"/>
-          <TextBlock Text="Installed" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
+          <TextBlock Text="Ready" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
         </StackPanel>
         <Border Grid.Column="2" Width="1" Background="#2A2F3E" VerticalAlignment="Center" Margin="0,8"/>
         <StackPanel Grid.Column="2" Spacing="2" HorizontalAlignment="Center">
-          <TextBlock Text="{Binding TotalApps, Converter={StaticResource SubtractConverter}, ConverterParameter={Binding InstalledApps}}" FontSize="24" FontWeight="Bold" Foreground="#FF6B6B" HorizontalAlignment="Center"/>
-          <TextBlock Text="Available" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding MissingApps}" FontSize="24" FontWeight="Bold" Foreground="#FF6B6B" HorizontalAlignment="Center"/>
+          <TextBlock Text="Missing / Moved" FontSize="12" Opacity="0.7" Foreground="#E8E8E8" HorizontalAlignment="Center"/>
         </StackPanel>
       </Grid>
     </Border>

@@ -19,4 +19,28 @@ public class SampleGameLibrary : IGameLibrary
     {
         return Task.FromResult(SampleGames);
     }
+
+    public Task<IReadOnlyList<GameEntry>> GetGamesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = SampleGames.Select(s => new GameEntry
+        {
+            Id = s.ConfigFolderName,
+            Title = s.Name,
+            FullPath = $"/sample/{s.ConfigFolderName}.iso",
+            FileSizeBytes = 1024 * 1024 * 700,
+            AddedAt = DateTimeOffset.UtcNow,
+            LastScannedAt = DateTimeOffset.UtcNow,
+            IsMissing = !s.IsInstalled
+        }).ToList();
+
+        return Task.FromResult<IReadOnlyList<GameEntry>>(entries);
+    }
+
+    public Task<IReadOnlyList<GameEntry>> RescanAsync(
+        IEnumerable<string> folderPaths,
+        IProgress<ScanProgress>? progress = null,
+        CancellationToken cancellationToken = default)
+    {
+        return GetGamesAsync(cancellationToken);
+    }
 }
