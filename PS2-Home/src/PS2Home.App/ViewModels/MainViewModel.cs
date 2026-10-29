@@ -13,6 +13,7 @@ public partial class MainViewModel : ViewModelBase
     private readonly DiagnosticsViewModel _diagnosticsViewModel;
     private readonly ControllersViewModel _controllersViewModel;
     private readonly AboutViewModel _aboutViewModel;
+    private readonly DownloadsViewModel _downloadsViewModel;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsLibraryActive))]
@@ -20,6 +21,7 @@ public partial class MainViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(IsSettingsActive))]
     [NotifyPropertyChangedFor(nameof(IsDiagnosticsActive))]
     [NotifyPropertyChangedFor(nameof(IsAboutActive))]
+    [NotifyPropertyChangedFor(nameof(IsDownloadsActive))]
     private ViewModelBase _currentView;
 
     [ObservableProperty]
@@ -30,22 +32,32 @@ public partial class MainViewModel : ViewModelBase
     public bool IsSettingsActive => CurrentView == _settingsViewModel;
     public bool IsDiagnosticsActive => CurrentView == _diagnosticsViewModel;
     public bool IsAboutActive => CurrentView == _aboutViewModel;
+    public bool IsDownloadsActive => CurrentView == _downloadsViewModel;
 
     public MainViewModel(
         LibraryViewModel libraryViewModel,
         SettingsViewModel settingsViewModel,
         DiagnosticsViewModel diagnosticsViewModel,
         ControllersViewModel controllersViewModel,
-        AboutViewModel aboutViewModel)
+        AboutViewModel aboutViewModel,
+        DownloadsViewModel downloadsViewModel)
     {
         _libraryViewModel = libraryViewModel;
         _settingsViewModel = settingsViewModel;
         _diagnosticsViewModel = diagnosticsViewModel;
         _controllersViewModel = controllersViewModel;
         _aboutViewModel = aboutViewModel;
+        _downloadsViewModel = downloadsViewModel;
 
         _currentView = libraryViewModel;
         _windowTitle = "PS2 Home - Library";
+    }
+
+    [RelayCommand]
+    private void NavigateToDownloads()
+    {
+        CurrentView = _downloadsViewModel;
+        WindowTitle = "PS2 Home - Legal Downloads";
     }
 
     [RelayCommand]
