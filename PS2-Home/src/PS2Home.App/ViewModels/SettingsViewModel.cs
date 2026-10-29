@@ -13,6 +13,7 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly ISettingsStore _settingsStore;
     private readonly IPcsx2Locator _pcsx2Locator;
     private readonly ISettingsBackupService _backupService;
+    private readonly IGameLauncher _gameLauncher;
 
     [ObservableProperty]
     private ObservableCollection<string> _gameFolders = [];
@@ -72,23 +73,43 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private string _pcsx2VersionText = string.Empty;
 
+    partial void OnSelectedInstallationChanged(Pcsx2Installation? value)
+    {
+        if (value == null)
+        {
+            IsPcsx2Configured = false;
+            Pcsx2StatusText = "PCSX2 not configured";
+            Pcsx2VersionText = string.Empty;
+            return;
+        }
+
+        IsPcsx2Configured = value.IsValid;
+        Pcsx2StatusText = value.IsValid
+            ? $"Configured: {value.DisplayName}"
+            : "Selected PCSX2 installation needs verification";
+        Pcsx2VersionText = value.Version ?? string.Empty;
+    }
+
     public SettingsViewModel() : this(
         new PS2Home.Infrastructure.JsonSettingsStore(),
         new PS2Home.Infrastructure.Pcsx2Locator(),
         new PS2Home.Infrastructure.SettingsBackupService(
             new PS2Home.Infrastructure.JsonSettingsStore(),
-            new PS2Home.Infrastructure.JsonLibraryStore()))
+            new PS2Home.Infrastructure.JsonLibraryStore()),
+        new PS2Home.Infrastructure.GameLauncher(new PS2Home.Infrastructure.LaunchLogger()))
     {
     }
 
     public SettingsViewModel(
         ISettingsStore settingsStore,
         IPcsx2Locator pcsx2Locator,
-        ISettingsBackupService backupService)
+        ISettingsBackupService backupService,
+        IGameLauncher gameLauncher)
     {
         _settingsStore = settingsStore;
         _pcsx2Locator = pcsx2Locator;
         _backupService = backupService;
+        _gameLauncher = gameLauncher;
         _ = LoadSettingsAsync();
     }
 
@@ -243,6 +264,26 @@ public partial class SettingsViewModel : ViewModelBase
         finally
         {
             IsValidating = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task OpenPcsx2Async()
+    {
+        if (SelectedInstallation == null || !SelectedInstallation.IsValid)
+        {
+            StatusMessage = "Select or validate a PCSX2 installation first";
+            return;
+        }
+
+        try
+        {
+            await _gameLauncher.LaunchEmulatorAsync(SelectedInstallation);
+            StatusMessage = "PCSX2 opened successfully";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Could not open PCSX2: {ex.Message}";
         }
     }
 

@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:PS2Home.App.ViewModels"
+             x:Class="PS2Home.App.Views.DownloadsView"
+             x:DataType="vm:DownloadsViewModel">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Spacing="20" MaxWidth="800">
+      <StackPanel Spacing="4">
+        <TextBlock Text="Legal Downloads" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
+        <TextBlock Text="Get the emulator from its official source and use your own legally obtained game files."
+                   FontSize="14" Opacity="0.7" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+      </StackPanel>
+
+      <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="10" Padding="22">
+        <StackPanel Spacing="14">
+          <TextBlock Text="PCSX2 Emulator" FontSize="18" FontWeight="Bold" Foreground="#E8E8E8"/>
+          <TextBlock Text="Download PCSX2 for Linux or Windows directly from the official PCSX2 website. PS2 Home does not redistribute emulator binaries."
+                     FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="⬇ Official PCSX2 Downloads"
+                    Command="{Binding OpenPcsx2DownloadsCommand}"
+                    Background="#00D4AA" Foreground="#0F1117"
+                    FontWeight="SemiBold" Padding="14,8" CornerRadius="6"/>
+            <Button Content="📖 Setup Documentation"
+                    Command="{Binding OpenPcsx2DocsCommand}"
+                    Background="#2A2F3E" Foreground="#E8E8E8"
+                    Padding="14,8" CornerRadius="6"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border Background="#1C1826" BorderBrush="#8A63D2" BorderThickness="1" CornerRadius="10" Padding="22">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Your Game Files" FontSize="18" FontWeight="Bold" Foreground="#BFA6F2"/>
+          <TextBlock Text="PS2 Home cannot download copyrighted ROMs or ISOs. Dump or obtain game backups legally, then add their folder under Settings. The Library page will scan supported files and launch them through PCSX2."
+                     FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+          <TextBlock Text="Never download or share BIOS files. PCSX2 requires a BIOS dump from your own console."
+                     FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+          <TextBlock Text="Next step: open Settings → add your game folder → scan the Library."
+                     FontSize="13" FontWeight="SemiBold" Foreground="#00D4AA" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
+      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#00D4AA"
+                 IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -68,6 +68,11 @@
                   Classes.active="{Binding IsSettingsActive}"
                   Command="{Binding NavigateToSettingsCommand}"/>
 
+          <Button Content="⬇  Downloads"
+                  Classes="nav-button"
+                  Classes.active="{Binding IsDownloadsActive}"
+                  Command="{Binding NavigateToDownloadsCommand}"/>
+
           <Button Content="🔧  Diagnostics"
                   Classes="nav-button"
                   Classes.active="{Binding IsDiagnosticsActive}"

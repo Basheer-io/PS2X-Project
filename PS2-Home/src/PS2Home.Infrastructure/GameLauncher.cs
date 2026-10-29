@@ -16,6 +16,48 @@ public class GameLauncher : IGameLauncher
         _launchLogger = launchLogger;
     }
 
+    public Task LaunchEmulatorAsync(
+        Pcsx2Installation installation,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(installation);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (string.IsNullOrWhiteSpace(installation.Command))
+        {
+            throw new InvalidOperationException("PCSX2 is not configured with a command or executable path.");
+        }
+
+        if (installation.Kind != Pcsx2InstallKind.Flatpak && !File.Exists(installation.Command))
+        {
+            throw new FileNotFoundException(
+                $"PCSX2 executable not found at: {installation.Command}",
+                installation.Command);
+        }
+
+        var psi = new ProcessStartInfo
+        {
+            FileName = installation.Command,
+            UseShellExecute = false,
+            CreateNoWindow = false
+        };
+
+        foreach (var argument in installation.LeadingArguments)
+        {
+            psi.ArgumentList.Add(argument);
+        }
+
+        var process = new Process { StartInfo = psi };
+        if (!process.Start())
+        {
+            process.Dispose();
+            throw new InvalidOperationException($"Failed to start PCSX2 using: {installation.Command}");
+        }
+
+        process.Dispose();
+        return Task.CompletedTask;
+    }
+
     public async Task<IGameSession> LaunchGameAsync(
         LaunchRequest request,
         CancellationToken cancellationToken = default)

@@ -36,6 +36,7 @@ public partial class App : Application
         services.AddSingleton<DiagnosticsViewModel>();
         services.AddSingleton<ControllersViewModel>();
         services.AddSingleton<AboutViewModel>();
+        services.AddSingleton<DownloadsViewModel>();
         services.AddSingleton<MainViewModel>();
 
         // Set up DI container
