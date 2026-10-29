@@ -10,7 +10,7 @@
       <!-- Header -->
       <StackPanel Spacing="4">
         <TextBlock Text="Settings &amp; Setup Assistant" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
-        <TextBlock Text="Configure PCSX2 emulator integration, game directories, and preferences" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
+        <TextBlock Text="Configure PCSX2 emulator integration, game directories, couch layout, and backups" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
       </StackPanel>
 
       <!-- PCSX2 Setup Assistant Card -->
@@ -90,15 +90,15 @@
                        FontFamily="Consolas, Monospace"
                        FontSize="13"/>
               <Button Grid.Column="1"
-                      Content="✓ Test Binary"
-                      Command="{Binding ValidateCustomPathCommand}"
-                      IsEnabled="{Binding !IsValidating}"
-                      Padding="16,8"
-                      Background="#00D4AA"
-                      Foreground="#0F1117"
-                      FontWeight="SemiBold"
-                      BorderThickness="0"
-                      CornerRadius="6"/>
+                       Content="✓ Test Binary"
+                       Command="{Binding ValidateCustomPathCommand}"
+                       IsEnabled="{Binding !IsValidating}"
+                       Padding="16,8"
+                       Background="#00D4AA"
+                       Foreground="#0F1117"
+                       FontWeight="SemiBold"
+                       BorderThickness="0"
+                       CornerRadius="6"/>
             </Grid>
           </StackPanel>
 
@@ -177,32 +177,55 @@
         </StackPanel>
       </Border>
 
-      <!-- Cover Art Path -->
+      <!-- Backup & Restore Card -->
       <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
-        <StackPanel Spacing="12">
-          <StackPanel Spacing="4">
-            <TextBlock Text="Cover Art Folder" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
-            <TextBlock Text="Directory containing artwork and screenshots (Phase 6)" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+        <StackPanel Spacing="16">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Spacing="4">
+              <TextBlock Text="💾 Backup &amp; Restore" FontSize="18" FontWeight="Bold" Foreground="#E8E8E8"/>
+              <TextBlock Text="Export your settings and game library to a JSON backup file, or restore an existing backup" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+            </StackPanel>
+          </Grid>
+
+          <Border Background="#0F1117" CornerRadius="6" BorderBrush="#2A2F3E" BorderThickness="1" Padding="12">
+            <TextBlock Text="{Binding BackupStatusMessage}" FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+          </Border>
+
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <Button x:Name="ExportBackupButton"
+                    Content="📤 Export Backup..."
+                    Click="OnExportBackupClick"
+                    IsEnabled="{Binding !IsBackingUp}"
+                    Padding="16,10"
+                    Background="#2A2F3E"
+                    Foreground="#E8E8E8"
+                    BorderThickness="0"
+                    CornerRadius="6"
+                    FontWeight="SemiBold"/>
+
+            <Button x:Name="ImportBackupButton"
+                    Content="📥 Restore Backup..."
+                    Click="OnImportBackupClick"
+                    IsEnabled="{Binding !IsBackingUp}"
+                    Padding="16,10"
+                    Background="#2A2F3E"
+                    Foreground="#00D4AA"
+                    BorderThickness="1"
+                    BorderBrush="#00D4AA"
+                    CornerRadius="6"
+                    FontWeight="SemiBold"/>
           </StackPanel>
-          <TextBox Text="{Binding CoverArtPath}"
-                   Background="#0F1117"
-                   Foreground="#E8E8E8"
-                   BorderBrush="#2A2F3E"
-                   BorderThickness="1"
-                   CornerRadius="4"
-                   Padding="12,8"
-                   FontFamily="Consolas, Monospace"
-                   FontSize="13"/>
         </StackPanel>
       </Border>
 
       <!-- General Options -->
       <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
         <StackPanel Spacing="16">
-          <TextBlock Text="General" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBlock Text="General &amp; Layout" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
           <StackPanel Spacing="12">
             <CheckBox Content="Auto-scan on application startup" IsChecked="{Binding AutoScanOnStartup}" Foreground="#E8E8E8" FontSize="14"/>
             <CheckBox Content="Show missing or moved game images" IsChecked="{Binding ShowHiddenApps}" Foreground="#E8E8E8" FontSize="14"/>
+            <CheckBox Content="🛋️ Couch Mode (Enlarged 10-foot TV UI)" IsChecked="{Binding CouchMode}" Foreground="#E8E8E8" FontSize="14"/>
           </StackPanel>
         </StackPanel>
       </Border>

@@ -19,12 +19,16 @@
     <DataTemplate DataType="{x:Type vm:DiagnosticsViewModel}">
       <views:DiagnosticsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ControllersViewModel}">
+      <views:ControllersView />
+    </DataTemplate>
   </Application.DataTemplates>
 
   <Application.Resources>
     <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
     <converters:BoolToTextConverter x:Key="BoolToTextConverter"/>
     <converters:SubtractConverter x:Key="SubtractConverter"/>
+    <converters:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
 
     <!-- Theme Colors -->
     <Color x:Key="ColorAppBackground">#0F1117</Color>

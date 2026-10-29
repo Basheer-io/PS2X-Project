@@ -1,7 +1,7 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PS2Home.Core;
-using System.Collections.ObjectModel;
 
 namespace PS2Home.App.ViewModels;
 
@@ -26,7 +26,12 @@ public partial class AppItemViewModel : ObservableObject
     private string _tagline = string.Empty;
 
     [ObservableProperty]
-    private string _coverArtPath = string.Empty;
+    [NotifyPropertyChangedFor(nameof(HasCoverArt))]
+    private string? _coverArtPath;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(FormattedLastPlayed))]
+    private DateTimeOffset? _lastPlayedAt;
 
     [ObservableProperty]
     private bool _isInstalled = true;
@@ -46,9 +51,15 @@ public partial class AppItemViewModel : ObservableObject
     [ObservableProperty]
     private string _status = "Ready";
 
+    public bool HasCoverArt => !string.IsNullOrWhiteSpace(CoverArtPath) && File.Exists(CoverArtPath);
+
     public string FormattedSize => FileSizeBytes > 0
         ? $"{(double)FileSizeBytes / (1024 * 1024 * 1024):0.0} GB"
         : string.Empty;
+
+    public string FormattedLastPlayed => LastPlayedAt.HasValue
+        ? $"Played {FormatRelativeTime(LastPlayedAt.Value)}"
+        : "Never played";
 
     public string LaunchButtonText
     {
@@ -81,6 +92,16 @@ public partial class AppItemViewModel : ObservableObject
         OnPropertyChanged(nameof(CanLaunch));
     }
 
+    public static string FormatRelativeTime(DateTimeOffset dt)
+    {
+        var span = DateTimeOffset.UtcNow - dt;
+        if (span.TotalMinutes < 1) return "Just now";
+        if (span.TotalMinutes < 60) return $"{(int)span.TotalMinutes}m ago";
+        if (span.TotalHours < 24) return $"{(int)span.TotalHours}h ago";
+        if (span.TotalDays < 7) return $"{(int)span.TotalDays}d ago";
+        return dt.ToString("yyyy-MM-dd");
+    }
+
     public static AppItemViewModel FromGameEntry(GameEntry entry) => new()
     {
         Id = entry.Id,
@@ -91,7 +112,9 @@ public partial class AppItemViewModel : ObservableObject
         FileSizeBytes = entry.FileSizeBytes,
         IsInstalled = !entry.IsMissing,
         IsMissing = entry.IsMissing,
-        Status = entry.IsMissing ? "Missing file" : "Ready"
+        Status = entry.IsMissing ? "Missing file" : "Ready",
+        LastPlayedAt = entry.LastPlayedAt,
+        CoverArtPath = entry.CoverArtPath
     };
 
     public static AppItemViewModel FromGameInfo(GameInfo info) => new()
@@ -100,7 +123,7 @@ public partial class AppItemViewModel : ObservableObject
         Name = info.Name,
         ConfigFolderName = info.ConfigFolderName,
         Tagline = info.Tagline,
-        CoverArtPath = info.CoverArtPath,
+        CoverArtPath = string.IsNullOrWhiteSpace(info.CoverArtPath) ? null : info.CoverArtPath,
         IsInstalled = info.IsInstalled,
         IsMissing = !info.IsInstalled,
         Status = info.Status
@@ -114,20 +137,22 @@ public partial class AppItemViewModel : ObservableObject
         FileSizeBytes = FileSizeBytes,
         IsMissing = IsMissing,
         AddedAt = DateTimeOffset.UtcNow,
-        LastScannedAt = DateTimeOffset.UtcNow
+        LastScannedAt = DateTimeOffset.UtcNow,
+        LastPlayedAt = LastPlayedAt,
+        CoverArtPath = CoverArtPath
     };
 
     public GameInfo ToGameInfo() => new(
         Name,
         ConfigFolderName,
         Tagline,
-        CoverArtPath,
+        CoverArtPath ?? string.Empty,
         IsInstalled,
         Status);
 }
 
 /// <summary>
-/// Library view model - manages game scanning, progress reporting, cancellation, search filtering, and process launching.
+/// Library view model - manages game scanning, progress reporting, recents ordering, cover art, and process launching.
 /// </summary>
 public partial class LibraryViewModel : ViewModelBase
 {
@@ -135,6 +160,7 @@ public partial class LibraryViewModel : ViewModelBase
     private readonly ISettingsStore _settingsStore;
     private readonly IGameLauncher _gameLauncher;
     private readonly ILaunchLogger _launchLogger;
+    private readonly ICoverArtManager _coverArtManager;
     private readonly List<AppItemViewModel> _allApps = [];
     private CancellationTokenSource? _scanCts;
     private IGameSession? _activeSession;
@@ -144,6 +170,13 @@ public partial class LibraryViewModel : ViewModelBase
     private ObservableCollection<AppItemViewModel> _apps = [];
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasRecentApps))]
+    private ObservableCollection<AppItemViewModel> _recentApps = [];
+
+    [ObservableProperty]
+    private AppItemViewModel? _selectedApp;
+
+    [ObservableProperty]
     private string _searchText = string.Empty;
 
     [ObservableProperty]
@@ -151,6 +184,9 @@ public partial class LibraryViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isScanning = false;
+
+    [ObservableProperty]
+    private bool _couchMode = false;
 
     [ObservableProperty]
     private string _scanProgressMessage = string.Empty;
@@ -174,12 +210,14 @@ public partial class LibraryViewModel : ViewModelBase
     public bool IsEmpty => !IsLoading && !IsScanning && !HasError && Apps.Count == 0;
     public bool HasApps => !IsLoading && !IsScanning && !HasError && Apps.Count > 0;
     public bool HasSearchQuery => !string.IsNullOrWhiteSpace(SearchText);
+    public bool HasRecentApps => RecentApps.Count > 0 && !HasSearchQuery;
 
     public LibraryViewModel() : this(
         new SampleGameLibrary(),
         new PS2Home.Infrastructure.JsonSettingsStore(),
         new PS2Home.Infrastructure.GameLauncher(new PS2Home.Infrastructure.LaunchLogger()),
-        new PS2Home.Infrastructure.LaunchLogger())
+        new PS2Home.Infrastructure.LaunchLogger(),
+        new PS2Home.Infrastructure.CoverArtManager())
     {
     }
 
@@ -187,18 +225,21 @@ public partial class LibraryViewModel : ViewModelBase
         IGameLibrary gameLibrary,
         ISettingsStore settingsStore,
         IGameLauncher gameLauncher,
-        ILaunchLogger launchLogger)
+        ILaunchLogger launchLogger,
+        ICoverArtManager coverArtManager)
     {
         _gameLibrary = gameLibrary;
         _settingsStore = settingsStore;
         _gameLauncher = gameLauncher;
         _launchLogger = launchLogger;
+        _coverArtManager = coverArtManager;
         _ = LoadInitialLibraryAsync();
     }
 
     partial void OnSearchTextChanged(string value)
     {
         OnPropertyChanged(nameof(HasSearchQuery));
+        OnPropertyChanged(nameof(HasRecentApps));
         ApplyFilter();
     }
 
@@ -221,6 +262,27 @@ public partial class LibraryViewModel : ViewModelBase
         OnPropertyChanged(nameof(HasApps));
     }
 
+    partial void OnCouchModeChanged(bool value)
+    {
+        _ = SaveCouchModeAsync(value);
+    }
+
+    private async Task SaveCouchModeAsync(bool value)
+    {
+        try
+        {
+            var settings = await _settingsStore.LoadSettingsAsync();
+            if (settings.CouchMode != value)
+            {
+                await _settingsStore.SaveSettingsAsync(settings with { CouchMode = value });
+            }
+        }
+        catch
+        {
+            // Ignore settings save failure on toggle
+        }
+    }
+
     public async Task LoadInitialLibraryAsync()
     {
         IsLoading = true;
@@ -229,6 +291,9 @@ public partial class LibraryViewModel : ViewModelBase
 
         try
         {
+            var settings = await _settingsStore.LoadSettingsAsync();
+            CouchMode = settings.CouchMode;
+
             var entries = await _gameLibrary.GetGamesAsync();
             if (entries.Count == 0)
             {
@@ -240,10 +305,15 @@ public partial class LibraryViewModel : ViewModelBase
             else
             {
                 _allApps.Clear();
-                _allApps.AddRange(entries.Select(AppItemViewModel.FromGameEntry));
+                _allApps.AddRange(entries.Select(e =>
+                {
+                    var resolvedCover = _coverArtManager.ResolveCoverArtPath(e.Id, e.CoverArtPath);
+                    return AppItemViewModel.FromGameEntry(e with { CoverArtPath = resolvedCover });
+                }));
             }
 
             UpdateCounts();
+            UpdateRecentApps();
             ApplyFilter();
             StatusMessage = $"Loaded {TotalApps} items ({MissingApps} missing)";
         }
@@ -285,9 +355,14 @@ public partial class LibraryViewModel : ViewModelBase
             var scannedEntries = await _gameLibrary.RescanAsync(folders, progress, _scanCts.Token);
 
             _allApps.Clear();
-            _allApps.AddRange(scannedEntries.Select(AppItemViewModel.FromGameEntry));
+            _allApps.AddRange(scannedEntries.Select(e =>
+            {
+                var resolvedCover = _coverArtManager.ResolveCoverArtPath(e.Id, e.CoverArtPath);
+                return AppItemViewModel.FromGameEntry(e with { CoverArtPath = resolvedCover });
+            }));
 
             UpdateCounts();
+            UpdateRecentApps();
             ApplyFilter();
 
             StatusMessage = $"Scan completed: {TotalApps} games found ({MissingApps} missing)";
@@ -320,6 +395,12 @@ public partial class LibraryViewModel : ViewModelBase
     public void ClearSearch()
     {
         SearchText = string.Empty;
+    }
+
+    [RelayCommand]
+    public void ToggleCouchMode()
+    {
+        CouchMode = !CouchMode;
     }
 
     [RelayCommand]
@@ -380,7 +461,12 @@ public partial class LibraryViewModel : ViewModelBase
 
             app.IsLaunching = false;
             app.IsRunning = true;
+            app.LastPlayedAt = DateTimeOffset.UtcNow;
             StatusMessage = $"Playing: {app.Name}";
+
+            // Persist last played timestamp
+            _ = _gameLibrary.UpdateGamePlayedAsync(app.Id, app.LastPlayedAt.Value);
+            UpdateRecentApps();
 
             // Monitor exit asynchronously without blocking UI
             _ = HandleSessionExitAsync(app, session);
@@ -391,6 +477,45 @@ public partial class LibraryViewModel : ViewModelBase
             app.IsRunning = false;
             ErrorMessage = $"Failed to launch {app.Name}: {ex.Message}";
             StatusMessage = "Launch failed";
+        }
+    }
+
+    [RelayCommand]
+    public async Task PlaySelectedAppAsync()
+    {
+        if (SelectedApp != null && SelectedApp.CanLaunch)
+        {
+            await LaunchAppAsync(SelectedApp);
+        }
+    }
+
+    public async Task SetCoverArtAsync(AppItemViewModel app, string imagePath)
+    {
+        try
+        {
+            var newPath = await _coverArtManager.SetCoverArtAsync(app.Id, imagePath);
+            app.CoverArtPath = newPath;
+            await _gameLibrary.UpdateCoverArtAsync(app.Id, newPath);
+            StatusMessage = $"Cover art updated for {app.Name}";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to set cover art: {ex.Message}";
+        }
+    }
+
+    public async Task RemoveCoverArtAsync(AppItemViewModel app)
+    {
+        try
+        {
+            await _coverArtManager.RemoveCoverArtAsync(app.Id);
+            app.CoverArtPath = null;
+            await _gameLibrary.UpdateCoverArtAsync(app.Id, null);
+            StatusMessage = $"Cover art removed for {app.Name}";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to remove cover art: {ex.Message}";
         }
     }
 
@@ -432,6 +557,24 @@ public partial class LibraryViewModel : ViewModelBase
         MissingApps = _allApps.Count(a => a.IsMissing);
     }
 
+    public void UpdateRecentApps()
+    {
+        var entries = _allApps.Select(a => a.ToGameEntry());
+        var recentEntries = GameFilter.GetRecentlyPlayed(entries, 5);
+
+        RecentApps.Clear();
+        foreach (var entry in recentEntries)
+        {
+            var match = _allApps.FirstOrDefault(a => a.Id == entry.Id);
+            if (match != null)
+            {
+                RecentApps.Add(match);
+            }
+        }
+
+        OnPropertyChanged(nameof(HasRecentApps));
+    }
+
     private void ApplyFilter()
     {
         var entries = _allApps.Select(a => a.ToGameEntry());
@@ -442,6 +585,12 @@ public partial class LibraryViewModel : ViewModelBase
         foreach (var app in _allApps.Where(a => filteredIds.Contains(a.Id)))
         {
             Apps.Add(app);
+        }
+
+        // Set selected app to first if current selection is invalid
+        if (SelectedApp == null || !Apps.Contains(SelectedApp))
+        {
+            SelectedApp = Apps.FirstOrDefault();
         }
 
         OnPropertyChanged(nameof(IsEmpty));

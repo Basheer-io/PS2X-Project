@@ -1,7 +1,7 @@
 namespace PS2Home.Core;
 
 /// <summary>
-/// Filters games and applications by search query. Matches against title and tags/path (case-insensitive).
+/// Filters games and applications by search query and recents ordering. Matches against title and tags/path (case-insensitive).
 /// </summary>
 public static class GameFilter
 {
@@ -26,6 +26,18 @@ public static class GameFilter
             .Where(g =>
                 g.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
                 g.FullPath.Contains(query, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    /// <summary>
+    /// Filters and orders games by most recently played. Excludes unplayed or missing games.
+    /// </summary>
+    public static IReadOnlyList<GameEntry> GetRecentlyPlayed(IEnumerable<GameEntry> games, int maxCount = 5)
+    {
+        return games
+            .Where(g => g.LastPlayedAt.HasValue && !g.IsMissing)
+            .OrderByDescending(g => g.LastPlayedAt!.Value)
+            .Take(maxCount)
             .ToList();
     }
 }

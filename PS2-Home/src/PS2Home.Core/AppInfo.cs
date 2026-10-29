@@ -5,6 +5,8 @@ public static class AppInfo
 {
     public const string Name = "PS2 Home";
 
+    public const string Version = "1.0.0";
+
     /// <summary>Folder name used under the platform config directory.</summary>
     public const string ConfigFolderName = "PS2Home";
 

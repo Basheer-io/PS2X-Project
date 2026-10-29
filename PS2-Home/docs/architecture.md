@@ -7,7 +7,7 @@ PS2 Home is a launcher. PCSX2 (user-installed) runs the games.
 PS2Home.App  ──►  PS2Home.Core  ◄──  PS2Home.Infrastructure
    (UI)        (models/logic)        (files, JSON, processes, OS)
 ```
-- `Core` defines interfaces (`IGameScanner`, `IPcsx2Locator`, `IProcessRunner`, `IGameLauncher`, `ILaunchLogger`, `ISettingsStore`, `ILibraryStore`) and pure logic (game identity, CLI argument building).
+- `Core` defines interfaces (`IGameScanner`, `IPcsx2Locator`, `IProcessRunner`, `IGameLauncher`, `ILaunchLogger`, `ISettingsStore`, `ILibraryStore`, `ICoverArtManager`, `ISettingsBackupService`) and pure logic (game identity, CLI argument building, recents ordering, backup validation).
 - `Infrastructure` implements them. Linux/Windows differences live here behind small interfaces.
 - `App` wires things together (DI container with `Microsoft.Extensions.DependencyInjection`) and presents state.
 
@@ -21,7 +21,10 @@ PS2Home.App  ──►  PS2Home.Core  ◄──  PS2Home.Infrastructure
 | PCSX2 versions | Support current Qt-based PCSX2 (2.x). Document that legacy 1.6 is unsupported unless added deliberately |
 | PCSX2 install types | Windows portable/installed exe, Linux AppImage, Linux Flatpak (`flatpak run net.pcsx2.PCSX2`), distro/native binary. Model "how to launch PCSX2" as a command + leading arguments (`Pcsx2Installation`) |
 | Process launching | `ArgumentList` only; `UseShellExecute = false`; enforce timeouts (e.g. 2s for version query); capture exit code and stderr; log everything |
-| Native helper | Phase 5: C++ standalone CLI (`ps2home-diag`) probing Vulkan & CPU vector extensions; app continues gracefully if absent |
+| Native helper | Standalone C++ CLI (`ps2home-diag`) probing Vulkan & CPU vector extensions; app continues gracefully if absent |
+| Cover art | User-supplied local images only (PNG, JPG, WebP, BMP up to 10MB). Copied to `covers/` in config directory; graceful fallback disc tile on missing or corrupt art |
+| Recents & ordering | Persisted `LastPlayedAt` timestamp on `GameEntry`; `GameFilter.GetRecentlyPlayed` provides sorted recent games |
+| Backups | `ISettingsBackupService` provides atomic export/import of settings and game metadata to user JSON files with schema validation |
 | Packaging targets (Phase 7) | Linux: AppImage and/or Flatpak (+ RPM for Fedora if wanted); Windows: zip first, installer later |
 
 ## PCSX2 Discovery
@@ -45,4 +48,4 @@ Full-disk searches are strictly avoided to ensure fast startup and respect user 
 - Launches are recorded to `AppPaths.GetConfigDirectory()/logs/launch.log` with user home paths redacted (`~`) and a 1 MB size cap with `.old` rotation.
 
 ## Non-goals
-Emulating PS2 hardware, bundling PCSX2, downloading games/BIOS, anything piracy related.
+Emulating PS2 hardware, bundling PCSX2, downloading games/BIOS, scraping internet artwork without user consent, anything piracy related.

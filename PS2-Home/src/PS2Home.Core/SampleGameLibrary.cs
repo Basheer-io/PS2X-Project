@@ -43,4 +43,14 @@ public class SampleGameLibrary : IGameLibrary
     {
         return GetGamesAsync(cancellationToken);
     }
+
+    public Task UpdateGamePlayedAsync(string gameId, DateTimeOffset playedAt, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateCoverArtAsync(string gameId, string? coverArtPath, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
 }

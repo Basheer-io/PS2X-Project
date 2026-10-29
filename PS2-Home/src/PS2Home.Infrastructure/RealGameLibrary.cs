@@ -34,7 +34,7 @@ public class RealGameLibrary : IGameLibrary
 
         var merged = new List<GameEntry>();
 
-        // Incorporate freshly scanned games (preserving AddedAt and customized titles)
+        // Incorporate freshly scanned games (preserving AddedAt, titles, last played timestamp, and cover art)
         foreach (var fresh in scanned)
         {
             if (existingMap.TryGetValue(fresh.Id, out var prev))
@@ -42,7 +42,9 @@ public class RealGameLibrary : IGameLibrary
                 merged.Add(fresh with
                 {
                     AddedAt = prev.AddedAt,
-                    Title = string.IsNullOrWhiteSpace(prev.Title) ? fresh.Title : prev.Title
+                    Title = string.IsNullOrWhiteSpace(prev.Title) ? fresh.Title : prev.Title,
+                    LastPlayedAt = prev.LastPlayedAt,
+                    CoverArtPath = prev.CoverArtPath
                 });
             }
             else
@@ -69,6 +71,28 @@ public class RealGameLibrary : IGameLibrary
         return merged;
     }
 
+    public async Task UpdateGamePlayedAsync(string gameId, DateTimeOffset playedAt, CancellationToken cancellationToken = default)
+    {
+        var existing = await _libraryStore.LoadLibraryAsync(cancellationToken);
+        var updated = existing.Select(g =>
+            string.Equals(g.Id, gameId, StringComparison.OrdinalIgnoreCase)
+                ? g with { LastPlayedAt = playedAt }
+                : g).ToList();
+
+        await _libraryStore.SaveLibraryAsync(updated, cancellationToken);
+    }
+
+    public async Task UpdateCoverArtAsync(string gameId, string? coverArtPath, CancellationToken cancellationToken = default)
+    {
+        var existing = await _libraryStore.LoadLibraryAsync(cancellationToken);
+        var updated = existing.Select(g =>
+            string.Equals(g.Id, gameId, StringComparison.OrdinalIgnoreCase)
+                ? g with { CoverArtPath = coverArtPath }
+                : g).ToList();
+
+        await _libraryStore.SaveLibraryAsync(updated, cancellationToken);
+    }
+
     public async Task<IReadOnlyList<GameInfo>> GetAllGamesAsync()
     {
         var games = await GetGamesAsync();
@@ -76,7 +100,7 @@ public class RealGameLibrary : IGameLibrary
             g.Title,
             Path.GetFileName(Path.GetDirectoryName(g.FullPath)) ?? "",
             g.IsMissing ? "Missing file" : $"{g.FileSizeBytes / (1024 * 1024)} MB",
-            "",
+            g.CoverArtPath ?? "",
             !g.IsMissing,
             g.IsMissing ? "Missing" : "Ready")).ToList();
     }

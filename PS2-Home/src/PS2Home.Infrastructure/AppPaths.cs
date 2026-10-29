@@ -19,4 +19,10 @@ public static class AppPaths
 
         return Path.Combine(baseDirectory, AppInfo.ConfigFolderName);
     }
+
+    public static string GetCoversDirectory() =>
+        GetCoversDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+
+    public static string GetCoversDirectory(string baseDirectory) =>
+        Path.Combine(GetConfigDirectory(baseDirectory), "covers");
 }

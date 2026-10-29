@@ -31,6 +31,11 @@ public record AppSettings
     public string Theme { get; init; } = "Dark";
 
     /// <summary>
+    /// Whether to use the enlarged "couch" layout for 10-foot TV viewing and easier visibility.
+    /// </summary>
+    public bool CouchMode { get; init; } = false;
+
+    /// <summary>
     /// User-selected or auto-detected PCSX2 installation.
     /// </summary>
     public Pcsx2Installation? Pcsx2 { get; init; }

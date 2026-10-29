@@ -1,17 +1,18 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PS2Home.Core;
-using System.Collections.ObjectModel;
 
 namespace PS2Home.App.ViewModels;
 
 /// <summary>
-/// Settings view model - manages game folders, PCSX2 detection, setup validation, and persistence.
+/// Settings view model - manages game folders, PCSX2 detection, setup validation, couch mode, backup/restore, and persistence.
 /// </summary>
 public partial class SettingsViewModel : ViewModelBase
 {
     private readonly ISettingsStore _settingsStore;
     private readonly IPcsx2Locator _pcsx2Locator;
+    private readonly ISettingsBackupService _backupService;
 
     [ObservableProperty]
     private ObservableCollection<string> _gameFolders = [];
@@ -32,10 +33,16 @@ public partial class SettingsViewModel : ViewModelBase
     private bool _showHiddenApps = false;
 
     [ObservableProperty]
+    private bool _couchMode = false;
+
+    [ObservableProperty]
     private string _theme = "Dark";
 
     [ObservableProperty]
     private string _statusMessage = "Settings ready";
+
+    [ObservableProperty]
+    private string _backupStatusMessage = "Export or restore configuration and game library.";
 
     // PCSX2 Setup Assistant
     [ObservableProperty]
@@ -54,6 +61,9 @@ public partial class SettingsViewModel : ViewModelBase
     private bool _isValidating = false;
 
     [ObservableProperty]
+    private bool _isBackingUp = false;
+
+    [ObservableProperty]
     private bool _isPcsx2Configured = false;
 
     [ObservableProperty]
@@ -64,14 +74,21 @@ public partial class SettingsViewModel : ViewModelBase
 
     public SettingsViewModel() : this(
         new PS2Home.Infrastructure.JsonSettingsStore(),
-        new PS2Home.Infrastructure.Pcsx2Locator())
+        new PS2Home.Infrastructure.Pcsx2Locator(),
+        new PS2Home.Infrastructure.SettingsBackupService(
+            new PS2Home.Infrastructure.JsonSettingsStore(),
+            new PS2Home.Infrastructure.JsonLibraryStore()))
     {
     }
 
-    public SettingsViewModel(ISettingsStore settingsStore, IPcsx2Locator pcsx2Locator)
+    public SettingsViewModel(
+        ISettingsStore settingsStore,
+        IPcsx2Locator pcsx2Locator,
+        ISettingsBackupService backupService)
     {
         _settingsStore = settingsStore;
         _pcsx2Locator = pcsx2Locator;
+        _backupService = backupService;
         _ = LoadSettingsAsync();
     }
 
@@ -90,6 +107,7 @@ public partial class SettingsViewModel : ViewModelBase
             CoverArtPath = settings.CoverArtFolder;
             AutoScanOnStartup = settings.AutoScanOnStartup;
             ShowHiddenApps = settings.ShowHiddenApps;
+            CouchMode = settings.CouchMode;
             Theme = settings.Theme;
 
             if (settings.Pcsx2 != null && !string.IsNullOrWhiteSpace(settings.Pcsx2.Command))
@@ -125,6 +143,7 @@ public partial class SettingsViewModel : ViewModelBase
                 CoverArtFolder = CoverArtPath,
                 AutoScanOnStartup = AutoScanOnStartup,
                 ShowHiddenApps = ShowHiddenApps,
+                CouchMode = CouchMode,
                 Theme = Theme,
                 Pcsx2 = SelectedInstallation
             };
@@ -266,7 +285,64 @@ public partial class SettingsViewModel : ViewModelBase
         CoverArtPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "PS2Covers");
         AutoScanOnStartup = true;
         ShowHiddenApps = false;
+        CouchMode = false;
         Theme = "Dark";
         StatusMessage = "Settings reset to defaults (unsaved)";
+    }
+
+    public async Task ExportBackupToPathAsync(string targetFilePath)
+    {
+        IsBackingUp = true;
+        BackupStatusMessage = "Exporting backup...";
+
+        try
+        {
+            var savedPath = await _backupService.ExportBackupAsync(targetFilePath);
+            BackupStatusMessage = $"Backup exported successfully to: {Path.GetFileName(savedPath)}";
+        }
+        catch (Exception ex)
+        {
+            BackupStatusMessage = $"Export failed: {ex.Message}";
+        }
+        finally
+        {
+            IsBackingUp = false;
+        }
+    }
+
+    public async Task<bool> RestoreBackupFromPathAsync(string sourceFilePath)
+    {
+        IsBackingUp = true;
+        BackupStatusMessage = "Validating and restoring backup...";
+
+        try
+        {
+            var validation = await _backupService.ValidateBackupAsync(sourceFilePath);
+            if (!validation.IsValid)
+            {
+                BackupStatusMessage = $"Import validation failed: {validation.ErrorMessage}";
+                return false;
+            }
+
+            var success = await _backupService.RestoreBackupAsync(sourceFilePath);
+            if (success)
+            {
+                await LoadSettingsAsync();
+                BackupStatusMessage = $"Backup restored successfully ({validation.Data?.Games.Count ?? 0} games, {validation.Data?.Settings.GameFolders.Count ?? 0} folders)";
+                return true;
+            }
+
+            BackupStatusMessage = "Restore failed.";
+            return false;
+        }
+        catch (Exception ex)
+        {
+            BackupStatusMessage = $"Restore failed: {ex.Message}";
+            return false;
+        }
+        finally
+        {
+            IsBackingUp = false;
+        }
     }
 }

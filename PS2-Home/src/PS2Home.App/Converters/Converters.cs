@@ -1,7 +1,7 @@
+using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
-using System;
-using System.Globalization;
+using Avalonia.Media.Imaging;
 
 namespace PS2Home.App.Converters;
 
@@ -66,6 +66,34 @@ public class SubtractConverter : IValueConverter
             return val - param;
         }
         return 0;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+}
+
+/// <summary>
+/// Converts an image file path to an Avalonia Bitmap safely with fallback on corrupt/missing files.
+/// </summary>
+public class PathToBitmapConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string path && !string.IsNullOrWhiteSpace(path) && File.Exists(path))
+        {
+            try
+            {
+                return new Bitmap(path);
+            }
+            catch
+            {
+                // Graceful fallback for corrupt images
+                return null;
+            }
+        }
+        return null;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

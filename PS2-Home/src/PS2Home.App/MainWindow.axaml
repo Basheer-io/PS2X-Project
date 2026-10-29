@@ -31,6 +31,11 @@
       <Setter Property="Foreground" Value="#FFFFFF"/>
     </Style>
 
+    <Style Selector="Button.nav-button:focus-visible">
+      <Setter Property="BorderThickness" Value="2"/>
+      <Setter Property="BorderBrush" Value="#00D4AA"/>
+    </Style>
+
     <Style Selector="Button.nav-button.active">
       <Setter Property="Background" Value="#2A2F3E"/>
       <Setter Property="Foreground" Value="#00D4AA"/>
@@ -52,6 +57,11 @@
                   Classes="nav-button"
                   Classes.active="{Binding IsLibraryActive}"
                   Command="{Binding NavigateToLibraryCommand}"/>
+
+          <Button Content="🎮  Controllers"
+                  Classes="nav-button"
+                  Classes.active="{Binding IsControllersActive}"
+                  Command="{Binding NavigateToControllersCommand}"/>
 
           <Button Content="⚙️  Settings"
                   Classes="nav-button"

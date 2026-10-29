@@ -27,11 +27,14 @@ public partial class App : Application
         services.AddSingleton<ILibraryStore, JsonLibraryStore>();
         services.AddSingleton<IGameScanner, FileSystemGameScanner>();
         services.AddSingleton<IGameLibrary, RealGameLibrary>();
+        services.AddSingleton<ICoverArtManager, CoverArtManager>();
+        services.AddSingleton<ISettingsBackupService, SettingsBackupService>();
 
         // ViewModels
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<DiagnosticsViewModel>();
+        services.AddSingleton<ControllersViewModel>();
         services.AddSingleton<MainViewModel>();
 
         // Set up DI container

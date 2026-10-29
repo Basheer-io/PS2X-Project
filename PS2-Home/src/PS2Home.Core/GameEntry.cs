@@ -40,6 +40,16 @@ public record GameEntry
     /// </summary>
     public bool IsMissing { get; init; }
 
+    /// <summary>
+    /// Timestamp when the game was last launched, or null if never played.
+    /// </summary>
+    public DateTimeOffset? LastPlayedAt { get; init; }
+
+    /// <summary>
+    /// Path to user-assigned local cover art file, or null/empty if using fallback placeholder.
+    /// </summary>
+    public string? CoverArtPath { get; init; }
+
     public static string CreateId(string fullPath) =>
         Path.GetFullPath(fullPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 }

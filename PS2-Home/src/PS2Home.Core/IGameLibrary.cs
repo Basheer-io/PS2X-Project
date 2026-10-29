@@ -20,6 +20,16 @@ public interface IGameLibrary
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Updates the last-played timestamp for a specific game and persists the change.
+    /// </summary>
+    Task UpdateGamePlayedAsync(string gameId, DateTimeOffset playedAt, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates or clears the cover art path for a specific game and persists the change.
+    /// </summary>
+    Task UpdateCoverArtAsync(string gameId, string? coverArtPath, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Legacy compatibility method for GameInfo projection.
     /// </summary>
     Task<IReadOnlyList<GameInfo>> GetAllGamesAsync();
