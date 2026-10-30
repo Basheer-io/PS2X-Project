@@ -1,9 +1,24 @@
 $ErrorActionPreference = "Stop"
 $RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
-    throw "dotnet was not found. Install the .NET 10 SDK, then run this launcher again."
+$DotnetRoot = if ($env:DOTNET_ROOT) {
+    $env:DOTNET_ROOT
+} else {
+    Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
 }
+
+$DotnetCommand = Get-Command dotnet -ErrorAction SilentlyContinue
+$NeedsDotnet = $true
+if ($DotnetCommand) {
+    $Version = (& $DotnetCommand.Source --version 2>$null)
+    $NeedsDotnet = $Version -notmatch '^10\.'
+}
+
+if ($NeedsDotnet) {
+    & (Join-Path $RootDir "install-dotnet-windows.ps1")
+}
+
+$env:DOTNET_ROOT = $DotnetRoot
+$env:PATH = "$DotnetRoot;$env:PATH"
 
 & dotnet run `
     --project (Join-Path $RootDir "src/PS2Home.App/PS2Home.App.csproj") `

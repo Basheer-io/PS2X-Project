@@ -90,7 +90,7 @@ registry installer. User settings are stored under:
 Install:
 
 - Git
-- .NET SDK 10
+- .NET SDK 10 (the launcher can install it if missing)
 - Visual Studio 2022 Build Tools or Visual Studio with the C++ workload
 - CMake
 
@@ -100,13 +100,15 @@ Then run in PowerShell from the `PS2-Home` directory:
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-./launch-ps2home.sh
+.\launch-ps2home.ps1
 ```
 
 The repository also includes `launch-ps2home.bat` for Windows Command Prompt
 and `launch-ps2home.ps1` for PowerShell. These launchers find the project
 relative to their own location, so they can be started from any working
-directory without manually typing the `dotnet run` command.
+directory without manually typing the `dotnet run` command. If .NET 10 is
+missing, the PowerShell launcher asks for consent and installs the SDK for the
+current user using Microsoft's official installer.
 
 To create a portable Windows package:
 
@@ -208,8 +210,12 @@ cd PS2X-Project/PS2-Home
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-.\launch-ps2home.ps1
+./launch-ps2home.sh
 ```
+
+If .NET 10 is missing, `launch-ps2home.sh` asks for consent and installs the
+SDK for the current user using Microsoft's official installer. You can also
+run `./install-dotnet-linux.sh` directly.
 
 Build the optional native diagnostics helper:
 
@@ -351,6 +357,10 @@ dotnet build PS2Home.sln
 dotnet test PS2Home.sln
 ./launch-ps2home.sh
 ```
+
+If .NET 10 is missing, the Linux launcher asks for consent and installs the
+SDK for the current user using Microsoft's official installer. You can also
+run `./install-dotnet-linux.sh` directly.
 
 The solution targets `.NET 10`. Release packages are self-contained and use
 the following runtime identifiers:
