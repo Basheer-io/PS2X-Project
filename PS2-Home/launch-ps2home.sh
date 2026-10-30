@@ -3,9 +3,14 @@ set -euo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-if ! command -v dotnet >/dev/null 2>&1; then
-    printf '%s\n' "dotnet was not found. Install the .NET 10 SDK, then run this launcher again." >&2
-    exit 1
+if ! command -v dotnet >/dev/null 2>&1 ||
+   ! dotnet --version 2>/dev/null | grep -q '^10\.'; then
+    "${ROOT_DIR}/install-dotnet-linux.sh"
+fi
+
+if [[ -x "${DOTNET_ROOT:-${HOME}/.dotnet}/dotnet" ]]; then
+    export DOTNET_ROOT="${DOTNET_ROOT:-${HOME}/.dotnet}"
+    export PATH="${DOTNET_ROOT}:${PATH}"
 fi
 
 exec dotnet run \

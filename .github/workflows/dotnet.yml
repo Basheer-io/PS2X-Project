@@ -5,18 +5,14 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: PS2-Home
-
     defaults:
       run:
         working-directory: PS2-Home
@@ -28,8 +24,8 @@ jobs:
       with:
         dotnet-version: 10.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore PS2Home.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build PS2Home.sln --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test PS2Home.sln --no-build --verbosity normal

@@ -56,13 +56,32 @@ normally need to install .NET. A desktop session is required on Linux.
 
 ## Installation
 
+### Which installation should I use?
+
+| Method | .NET SDK required? | Recommended for |
+|---|---:|---|
+| Release package | No | Most users |
+| Run from source | Yes; the launcher can install .NET 10 | Developers and contributors |
+
+Release packages include the .NET runtime and can be launched immediately.
+Source launchers check for the .NET 10 SDK and ask for permission to install
+it for the current user when it is missing. In both cases, PCSX2, a BIOS dump
+from your own console, and legally obtained game images are installed
+separately.
+
 ### Windows 10 or 11 (x64)
 
 #### Install from a release ZIP
 
 1. Download the latest `ps2home-win-x64-*.zip` from the repository Releases
    page.
-2. Optionally verify the SHA-256 checksum shown in the release.
+2. Optionally verify the SHA-256 checksum shown in the release:
+
+   ```powershell
+   (Get-FileHash .\ps2home-win-x64-*.zip -Algorithm SHA256).Hash
+   ```
+
+   Compare the result with the published `.sha256` file.
 3. Extract the ZIP to a normal folder, for example:
 
    ```text
@@ -90,23 +109,33 @@ registry installer. User settings are stored under:
 Install:
 
 - Git
-- .NET SDK 10
+- .NET SDK 10 (the launcher can install it if missing)
 - Visual Studio 2022 Build Tools or Visual Studio with the C++ workload
 - CMake
 
-Then run in PowerShell from the `PS2-Home` directory:
+Clone the repository and start the launcher from PowerShell:
 
 ```powershell
-dotnet restore PS2Home.sln
-dotnet build PS2Home.sln
-dotnet test PS2Home.sln
-./launch-ps2home.sh
+git clone https://github.com/Basheer-io/PS2X-Project.git
+Set-Location .\PS2X-Project\PS2-Home
+.\launch-ps2home.ps1
 ```
 
 The repository also includes `launch-ps2home.bat` for Windows Command Prompt
 and `launch-ps2home.ps1` for PowerShell. These launchers find the project
 relative to their own location, so they can be started from any working
-directory without manually typing the `dotnet run` command.
+directory without manually typing the `dotnet run` command. If .NET 10 is
+missing, the PowerShell launcher asks for consent and installs the SDK for the
+current user using Microsoft's official installer.
+
+After the launcher has installed .NET, run the verification commands if
+needed:
+
+```powershell
+dotnet restore PS2Home.sln
+dotnet build PS2Home.sln
+dotnet test PS2Home.sln
+```
 
 To create a portable Windows package:
 
@@ -121,7 +150,11 @@ The ZIP and checksum are created in `dist\`.
 #### Install from a release tarball
 
 1. Download the latest `ps2home-linux-x64-*.tar.gz` from Releases.
-2. Verify the SHA-256 checksum if desired.
+2. Verify the SHA-256 checksum if desired:
+
+   ```bash
+   sha256sum -c ps2home-linux-x64-*.tar.gz.sha256
+   ```
 3. Extract it:
 
    ```bash
@@ -189,15 +222,16 @@ Extract and run the release tarball as shown above.
 Install:
 
 - Git
-- .NET SDK 10
+- curl (used only if the launcher needs to install .NET 10)
+- .NET SDK 10 (the launcher can install it if missing)
 - CMake
 - GCC or Clang and a standard C++ toolchain
 
-Example Ubuntu/Debian setup:
+Example Ubuntu/Debian setup for the optional native helper:
 
 ```bash
 sudo apt update
-sudo apt install git dotnet-sdk-10.0 cmake build-essential
+sudo apt install git curl cmake build-essential
 ```
 
 Build and run:
@@ -205,11 +239,32 @@ Build and run:
 ```bash
 git clone https://github.com/Basheer-io/PS2X-Project.git
 cd PS2X-Project/PS2-Home
+./launch-ps2home.sh
+```
+
+If .NET 10 is missing, `launch-ps2home.sh` asks for consent and installs the
+SDK for the current user using Microsoft's official installer. You can also
+run `./install-dotnet-linux.sh` directly.
+
+After the launcher has installed .NET, run the verification commands if
+needed:
+
+```bash
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-.\launch-ps2home.ps1
 ```
+
+The source launchers are:
+
+| Platform | Launcher |
+|---|---|
+| Linux | `./launch-ps2home.sh` |
+| Windows PowerShell | `.\launch-ps2home.ps1` |
+| Windows Command Prompt | `launch-ps2home.bat` |
+
+They locate the project relative to the launcher file, so they can be started
+from any working directory.
 
 Build the optional native diagnostics helper:
 
@@ -234,7 +289,7 @@ tarball to run on macOS because it contains Linux-native runtime components.
 macOS support would require a separate Avalonia runtime target, packaging
 workflow, and PCSX2 integration testing.
 
-## Install and configure PCSX2
+## Configure PCSX2 and launch a game
 
 ### Native execution limitation
 
@@ -278,6 +333,9 @@ Use the official PCSX2 BIOS documentation:
 4. Save the settings.
 5. Open **Library** and choose **Rescan Library**.
 6. Select a game and choose **Launch**.
+
+The first launch starts PCSX2 with the selected game image. PS2 Home does not
+run PS2 software natively; PCSX2 emulates the PS2 hardware.
 
 The current scanner focuses on `.iso` files. Other formats, including
 `.chd`, `.cso`, and `.bin/.cue`, may require additional support before they
@@ -351,6 +409,10 @@ dotnet build PS2Home.sln
 dotnet test PS2Home.sln
 ./launch-ps2home.sh
 ```
+
+If .NET 10 is missing, the Linux launcher asks for consent and installs the
+SDK for the current user using Microsoft's official installer. You can also
+run `./install-dotnet-linux.sh` directly.
 
 The solution targets `.NET 10`. Release packages are self-contained and use
 the following runtime identifiers:
