@@ -31,6 +31,15 @@
             </Border>
           </Grid>
 
+          <!-- Native execution boundary -->
+          <Border Background="#1C1826" BorderBrush="#8A63D2" BorderThickness="1" CornerRadius="6" Padding="14">
+            <StackPanel Spacing="6">
+              <TextBlock Text="ℹ️ Native execution check" FontSize="14" FontWeight="Bold" Foreground="#BFA6F2"/>
+              <TextBlock Text="PS2 games cannot run directly on a normal PC. This launcher starts them through PCSX2, which emulates the PlayStation 2 hardware. A real PS2 console or a PS2-specific native port would be required for native execution."
+                         FontSize="12" Opacity="0.9" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+            </StackPanel>
+          </Border>
+
           <!-- Status / Version readout -->
           <Border Background="#0F1117" CornerRadius="6" BorderBrush="#2A2F3E" BorderThickness="1" Padding="12">
             <StackPanel Spacing="4">

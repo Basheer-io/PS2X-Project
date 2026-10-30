@@ -100,8 +100,13 @@ Then run in PowerShell from the `PS2-Home` directory:
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-dotnet run --project src/PS2Home.App
+./launch-ps2home.sh
 ```
+
+The repository also includes `launch-ps2home.bat` for Windows Command Prompt
+and `launch-ps2home.ps1` for PowerShell. These launchers find the project
+relative to their own location, so they can be started from any working
+directory without manually typing the `dotnet run` command.
 
 To create a portable Windows package:
 
@@ -203,7 +208,7 @@ cd PS2X-Project/PS2-Home
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-dotnet run --project src/PS2Home.App
+.\launch-ps2home.ps1
 ```
 
 Build the optional native diagnostics helper:
@@ -230,6 +235,14 @@ macOS support would require a separate Avalonia runtime target, packaging
 workflow, and PCSX2 integration testing.
 
 ## Install and configure PCSX2
+
+### Native execution limitation
+
+PS2 Home cannot run PS2 games natively on a normal Windows or Linux PC. PS2
+games target PS2-specific processors and graphics hardware, so the launcher
+starts them through the user-installed PCSX2 emulator. Native execution
+requires a real PS2 console or a game-specific native port. See
+[native-execution.md](docs/native-execution.md) for the details.
 
 PCSX2 must be installed separately from its official source:
 
@@ -336,7 +349,7 @@ Run these commands from `PS2-Home`:
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-dotnet run --project src/PS2Home.App
+./launch-ps2home.sh
 ```
 
 The solution targets `.NET 10`. Release packages are self-contained and use

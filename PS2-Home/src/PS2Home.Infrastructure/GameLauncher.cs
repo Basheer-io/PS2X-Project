@@ -63,10 +63,25 @@ public class GameLauncher : IGameLauncher
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(request.Installation);
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (!File.Exists(request.GamePath))
         {
             throw new FileNotFoundException($"Game image file not found at: {request.GamePath}", request.GamePath);
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Installation.Command))
+        {
+            throw new InvalidOperationException("PCSX2 is not configured with a command or executable path.");
+        }
+
+        if (request.Installation.Kind != Pcsx2InstallKind.Flatpak &&
+            !File.Exists(request.Installation.Command))
+        {
+            throw new FileNotFoundException(
+                $"PCSX2 executable not found at: {request.Installation.Command}",
+                request.Installation.Command);
         }
 
         var args = Pcsx2ArgumentBuilder.BuildArguments(request);
