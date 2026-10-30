@@ -54,4 +54,23 @@ public class GameLauncherTests : IDisposable
         await Assert.ThrowsAsync<FileNotFoundException>(() =>
             launcher.LaunchEmulatorAsync(installation));
     }
+
+    [Fact]
+    public async Task LaunchGameAsync_WhenPcsx2ExecutableDoesNotExist_ThrowsFileNotFoundException()
+    {
+        var gamePath = Path.Combine(_tempDir, "game.iso");
+        await File.WriteAllBytesAsync(gamePath, []);
+
+        var logger = new LaunchLogger(_tempDir);
+        var launcher = new GameLauncher(logger);
+        var request = new LaunchRequest
+        {
+            Installation = Pcsx2Installation.CreateExecutable(
+                Path.Combine(_tempDir, "missing-pcsx2")),
+            GamePath = gamePath
+        };
+
+        await Assert.ThrowsAsync<FileNotFoundException>(() =>
+            launcher.LaunchGameAsync(request));
+    }
 }

@@ -231,6 +231,14 @@ workflow, and PCSX2 integration testing.
 
 ## Install and configure PCSX2
 
+### Native execution limitation
+
+PS2 Home cannot run PS2 games natively on a normal Windows or Linux PC. PS2
+games target PS2-specific processors and graphics hardware, so the launcher
+starts them through the user-installed PCSX2 emulator. Native execution
+requires a real PS2 console or a game-specific native port. See
+[native-execution.md](docs/native-execution.md) for the details.
+
 PCSX2 must be installed separately from its official source:
 
 <https://pcsx2.net/downloads/>

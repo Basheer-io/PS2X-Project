@@ -11,6 +11,16 @@
                    FontSize="14" Opacity="0.7" Foreground="#E8E8E8" TextWrapping="Wrap"/>
       </StackPanel>
 
+      <Border Background="#1C1826" BorderBrush="#8A63D2" BorderThickness="1" CornerRadius="10" Padding="22">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Can PS2 games run natively on this PC?" FontSize="18" FontWeight="Bold" Foreground="#BFA6F2"/>
+          <TextBlock Text="No. PS2 games target the PlayStation 2's Emotion Engine, I/O Processor, and graphics hardware. This project is a launcher, not a native PS2 runtime: it starts your legally obtained game image through PCSX2."
+                     FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+          <TextBlock Text="For native execution, use a real PS2 console or a game-specific native port. PS2 Home cannot convert a PS2 ROM into a native Windows or Linux program."
+                     FontSize="13" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
       <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="10" Padding="22">
         <StackPanel Spacing="14">
           <TextBlock Text="PCSX2 Emulator" FontSize="18" FontWeight="Bold" Foreground="#E8E8E8"/>
