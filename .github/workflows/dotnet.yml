@@ -17,10 +17,6 @@ jobs:
       run:
         working-directory: PS2-Home
 
-    defaults:
-      run:
-        working-directory: PS2-Home
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
