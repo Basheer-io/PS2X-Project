@@ -100,8 +100,13 @@ Then run in PowerShell from the `PS2-Home` directory:
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-dotnet run --project src/PS2Home.App
+./launch-ps2home.sh
 ```
+
+The repository also includes `launch-ps2home.bat` for Windows Command Prompt
+and `launch-ps2home.ps1` for PowerShell. These launchers find the project
+relative to their own location, so they can be started from any working
+directory without manually typing the `dotnet run` command.
 
 To create a portable Windows package:
 
@@ -203,7 +208,7 @@ cd PS2X-Project/PS2-Home
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-dotnet run --project src/PS2Home.App
+.\launch-ps2home.ps1
 ```
 
 Build the optional native diagnostics helper:
@@ -344,7 +349,7 @@ Run these commands from `PS2-Home`:
 dotnet restore PS2Home.sln
 dotnet build PS2Home.sln
 dotnet test PS2Home.sln
-dotnet run --project src/PS2Home.App
+./launch-ps2home.sh
 ```
 
 The solution targets `.NET 10`. Release packages are self-contained and use
