@@ -9,22 +9,22 @@
       <!-- Header -->
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
         <StackPanel Grid.Column="0" Spacing="4">
-          <TextBlock Text="Diagnostics" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
-          <TextBlock Text="System information, health checks, and application logs" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
+          <TextBlock Text="Diagnostics" FontSize="28" FontWeight="Bold" Foreground="#F4F0E6"/>
+          <TextBlock Text="System information, health checks, and application logs" FontSize="14" Opacity="0.7" Foreground="#F4F0E6"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-          <Button Content="🔄 Refresh Info"
+          <Button Content="Refresh information"
                   Command="{Binding RefreshSystemInfoCommand}"
                   Padding="14,8"
-                  Background="#2A2F3E"
-                  Foreground="#E8E8E8"
+                  Background="#3A332B"
+                  Foreground="#F4F0E6"
                   BorderThickness="0"
                   CornerRadius="6"/>
           <Button Content="⚡ Run Self-Test"
                   Command="{Binding RunSelfTestCommand}"
                   Padding="14,8"
-                  Background="#00D4AA"
-                  Foreground="#0F1117"
+                  Background="#D97757"
+                  Foreground="#171513"
                   FontWeight="SemiBold"
                   BorderThickness="0"
                   CornerRadius="6"/>
@@ -33,63 +33,63 @@
 
       <!-- System Summary Cards -->
       <Grid ColumnDefinitions="*,*,*" HorizontalAlignment="Stretch">
-        <Border Grid.Column="0" Background="#161922" CornerRadius="8" Padding="16" Margin="0,0,8,0" BorderThickness="1" BorderBrush="#2A2F3E">
+        <Border Grid.Column="0" Background="#211E1A" CornerRadius="8" Padding="16" Margin="0,0,8,0" BorderThickness="1" BorderBrush="#3A332B">
           <StackPanel Spacing="4">
-            <TextBlock Text="App Version" FontSize="12" Opacity="0.6" Foreground="#E8E8E8"/>
-            <TextBlock Text="{Binding AppVersion}" FontSize="20" FontWeight="Bold" Foreground="#00D4AA"/>
+            <TextBlock Text="App Version" FontSize="12" Opacity="0.6" Foreground="#F4F0E6"/>
+            <TextBlock Text="{Binding AppVersion}" FontSize="20" FontWeight="Bold" Foreground="#D97757"/>
           </StackPanel>
         </Border>
 
-        <Border Grid.Column="1" Background="#161922" CornerRadius="8" Padding="16" Margin="4,0,4,0" BorderThickness="1" BorderBrush="#2A2F3E">
+        <Border Grid.Column="1" Background="#211E1A" CornerRadius="8" Padding="16" Margin="4,0,4,0" BorderThickness="1" BorderBrush="#3A332B">
           <StackPanel Spacing="4">
-            <TextBlock Text="Memory Usage" FontSize="12" Opacity="0.6" Foreground="#E8E8E8"/>
+            <TextBlock Text="Memory Usage" FontSize="12" Opacity="0.6" Foreground="#F4F0E6"/>
             <StackPanel Orientation="Horizontal" Spacing="4">
-              <TextBlock Text="{Binding MemoryUsage}" FontSize="20" FontWeight="Bold" Foreground="#00D4AA"/>
-              <TextBlock Text="MB" FontSize="14" Opacity="0.7" Foreground="#E8E8E8" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
+              <TextBlock Text="{Binding MemoryUsage}" FontSize="20" FontWeight="Bold" Foreground="#D97757"/>
+              <TextBlock Text="MB" FontSize="14" Opacity="0.7" Foreground="#F4F0E6" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
             </StackPanel>
           </StackPanel>
         </Border>
 
-        <Border Grid.Column="2" Background="#161922" CornerRadius="8" Padding="16" Margin="8,0,0,0" BorderThickness="1" BorderBrush="#2A2F3E">
+        <Border Grid.Column="2" Background="#211E1A" CornerRadius="8" Padding="16" Margin="8,0,0,0" BorderThickness="1" BorderBrush="#3A332B">
           <StackPanel Spacing="4">
-            <TextBlock Text="Health Status" FontSize="12" Opacity="0.6" Foreground="#E8E8E8"/>
-            <TextBlock Text="{Binding StatusMessage}" FontSize="15" FontWeight="SemiBold" Foreground="#E8E8E8" TextTrimming="CharacterEllipsis"/>
+            <TextBlock Text="Health Status" FontSize="12" Opacity="0.6" Foreground="#F4F0E6"/>
+            <TextBlock Text="{Binding StatusMessage}" FontSize="15" FontWeight="SemiBold" Foreground="#F4F0E6" TextTrimming="CharacterEllipsis"/>
           </StackPanel>
         </Border>
       </Grid>
 
       <!-- Native Hardware Capabilities Card -->
-      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+      <Border Background="#211E1A" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#3A332B">
         <StackPanel Spacing="16">
           <Grid ColumnDefinitions="*,Auto">
             <StackPanel Grid.Column="0" Spacing="4">
-              <TextBlock Text="Hardware Capability Probe (Native)" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
-              <TextBlock Text="Low-level CPU vector extensions and Vulkan graphics driver status" FontSize="12" Opacity="0.7" Foreground="#E8E8E8"/>
+              <TextBlock Text="Hardware Capability Probe (Native)" FontSize="16" FontWeight="SemiBold" Foreground="#F4F0E6"/>
+              <TextBlock Text="Low-level CPU vector extensions and Vulkan graphics driver status" FontSize="12" Opacity="0.7" Foreground="#F4F0E6"/>
             </StackPanel>
             <Border Grid.Column="1"
-                    Background="{Binding HasNativeData, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#2A2F3E'}"
+                    Background="{Binding HasNativeData, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#D97757|#3A332B'}"
                     CornerRadius="12" Padding="10,4" VerticalAlignment="Center">
               <TextBlock Text="{Binding HasNativeData, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Probe Active|Fallback Mode'}"
                          FontSize="10" FontWeight="Bold"
-                         Foreground="{Binding HasNativeData, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#0F1117|#A0A5B5'}"/>
+                         Foreground="{Binding HasNativeData, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#171513|#B7AA98'}"/>
             </Border>
           </Grid>
 
           <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
             <!-- CPU Vector Extensions -->
-            <Border Grid.Column="0" Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12">
+            <Border Grid.Column="0" Background="#171513" CornerRadius="6" BorderThickness="1" BorderBrush="#3A332B" Padding="12">
               <StackPanel Spacing="6">
-                <TextBlock Text="CPU Instructions (EE/VU Recompiler)" FontSize="13" FontWeight="SemiBold" Foreground="#E8E8E8"/>
-                <TextBlock Text="{Binding CpuFeaturesSummary}" FontSize="12" Foreground="#00D4AA" FontFamily="Consolas, Monospace"/>
+                <TextBlock Text="CPU Instructions (EE/VU Recompiler)" FontSize="13" FontWeight="SemiBold" Foreground="#F4F0E6"/>
+                <TextBlock Text="{Binding CpuFeaturesSummary}" FontSize="12" Foreground="#D97757" FontFamily="Consolas, Monospace"/>
               </StackPanel>
             </Border>
 
             <!-- Vulkan Driver -->
-            <Border Grid.Column="1" Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12">
+            <Border Grid.Column="1" Background="#171513" CornerRadius="6" BorderThickness="1" BorderBrush="#3A332B" Padding="12">
               <StackPanel Spacing="6">
-                <TextBlock Text="Vulkan Graphics Driver (PCSX2 Backend)" FontSize="13" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+                <TextBlock Text="Vulkan Graphics Driver (PCSX2 Backend)" FontSize="13" FontWeight="SemiBold" Foreground="#F4F0E6"/>
                 <TextBlock Text="{Binding VulkanStatusSummary}" FontSize="12"
-                           Foreground="{Binding IsVulkanSupported, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#00D4AA|#FF6B6B'}"
+                           Foreground="{Binding IsVulkanSupported, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#D97757|#D95D54'}"
                            FontFamily="Consolas, Monospace" TextTrimming="CharacterEllipsis"/>
               </StackPanel>
             </Border>
@@ -98,19 +98,19 @@
       </Border>
 
       <!-- System Environment Details -->
-      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+      <Border Background="#211E1A" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#3A332B">
         <StackPanel Spacing="12">
-          <TextBlock Text="Environment Information" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBlock Text="Environment Information" FontSize="16" FontWeight="SemiBold" Foreground="#F4F0E6"/>
           <TextBox Text="{Binding SystemInfo}"
                    IsReadOnly="True"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
                    FontFamily="Consolas, Monospace"
                    FontSize="12"
-                   Background="#0F1117"
-                   Foreground="#00D4AA"
+                   Background="#171513"
+                   Foreground="#D97757"
                    BorderThickness="1"
-                   BorderBrush="#2A2F3E"
+                   BorderBrush="#3A332B"
                    CornerRadius="6"
                    Padding="12"
                    MinHeight="140"/>
@@ -118,16 +118,16 @@
       </Border>
 
       <!-- Activity Logs -->
-      <Border Background="#161922" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#2A2F3E">
+      <Border Background="#211E1A" CornerRadius="8" Padding="20" BorderThickness="1" BorderBrush="#3A332B">
         <StackPanel Spacing="12">
           <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0" Text="Session Logs" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Text="Session Logs" FontSize="16" FontWeight="SemiBold" Foreground="#F4F0E6" VerticalAlignment="Center"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
               <Button Content="📄 Export Launch Logs"
                       Command="{Binding ExportRedactedLogsCommand}"
                       Padding="12,6"
-                      Background="#2A2F3E"
-                      Foreground="#00D4AA"
+                      Background="#3A332B"
+                      Foreground="#D97757"
                       BorderThickness="0"
                       CornerRadius="6"
                       FontSize="12"/>
@@ -135,15 +135,15 @@
                       Command="{Binding ClearLogsCommand}"
                       Padding="12,6"
                       Background="Transparent"
-                      Foreground="#A0A5B5"
+                      Foreground="#B7AA98"
                       BorderThickness="1"
-                      BorderBrush="#2A2F3E"
+                      BorderBrush="#3A332B"
                       CornerRadius="6"
                       FontSize="12"/>
             </StackPanel>
           </Grid>
 
-          <Border Background="#0F1117" CornerRadius="6" BorderThickness="1" BorderBrush="#2A2F3E" Padding="12" MinHeight="160" MaxHeight="260">
+          <Border Background="#171513" CornerRadius="6" BorderThickness="1" BorderBrush="#3A332B" Padding="12" MinHeight="160" MaxHeight="260">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
               <ItemsControl ItemsSource="{Binding LogEntries}">
                 <ItemsControl.ItemTemplate>
@@ -151,7 +151,7 @@
                     <TextBlock Text="{Binding}"
                                FontFamily="Consolas, Monospace"
                                FontSize="12"
-                               Foreground="#E8E8E8"
+                               Foreground="#F4F0E6"
                                Margin="0,2"/>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>

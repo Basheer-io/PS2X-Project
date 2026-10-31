@@ -54,6 +54,43 @@ Interactive Entertainment or the PCSX2 team.
 PS2 Home release packages include the .NET runtime, so end users do not
 normally need to install .NET. A desktop session is required on Linux.
 
+## Download and install
+
+**[Download the latest release](https://github.com/Basheer-io/PS2X-Project/releases/latest)**
+
+| Platform | Download |
+|---|---|
+| Windows 10/11 x64 | [Download ZIP](https://github.com/Basheer-io/PS2X-Project/releases/latest/download/ps2home-win-x64-v1.0.0.zip) |
+| Linux x64 | [Download tarball](https://github.com/Basheer-io/PS2X-Project/releases/latest/download/ps2home-linux-x64-v1.0.0.tar.gz) |
+
+These are self-contained packages; install .NET separately only when running
+from source. Verify downloads with the included `SHA256SUMS.txt` file.
+
+### One-command Linux install
+
+On supported x64 Linux desktops, install PS2 Home for your user without
+`sudo`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Basheer-io/PS2X-Project/main/PS2-Home/install-linux.sh \
+  -o /tmp/ps2home-install.sh && bash /tmp/ps2home-install.sh
+```
+
+The script downloads the latest release, adds PS2 Home to the application
+menu, registers `.iso` files, and installs the `ps2home` command. Uninstall
+with:
+
+```bash
+~/.local/share/ps2home/install-linux.sh --uninstall
+```
+
+If PS2 Home is already installed but does not appear in your application menu,
+run:
+
+```bash
+bash ~/.local/share/ps2home/create-linux-app.sh
+```
+
 ## Quick start: install and play
 
 1. Install PS2 Home using a release package, or clone the repository and run
@@ -67,6 +104,22 @@ normally need to install .NET. A desktop session is required on Linux.
 6. Add the folder containing your legally obtained PS2 game images.
 7. Open **Library**, choose **Rescan Library**, select a game, and click
    **Launch**.
+
+### Launching like a regular emulator
+
+Release packages include convenient entry points for the desktop and file
+manager:
+
+- **Linux:** use the one-command installer above, or run
+  `./install-linux.sh` from an extracted release folder. PS2 Home then appears
+  in the application menu and can open `.iso` files. You can also launch
+  directly with `ps2home /path/to/game.iso`.
+- **Windows:** run `PS2Home.App.exe` directly, or use the included
+  executable with a game path:
+  `PS2Home.App.exe "C:\Games\My Game.iso"`.
+
+Direct launching still requires PCSX2 to be configured in PS2 Home. Only
+legally owned game images should be used.
 
 PS2 Home is a library and launcher; PCSX2 is the component that emulates the
 PlayStation 2 and runs the game. You must provide your own BIOS and game
@@ -180,16 +233,16 @@ The ZIP and checksum are created in `dist\`.
    cd ps2home-linux-x64
    ```
 
-4. Start the app:
+4. Install it for your user:
 
    ```bash
-   ./PS2Home.App
+   ./install-linux.sh
    ```
 
-If needed, make the files executable:
+Or start it directly without installing:
 
 ```bash
-chmod +x PS2Home.App ps2home-diag
+./PS2Home.App
 ```
 
 The app stores user settings under:
