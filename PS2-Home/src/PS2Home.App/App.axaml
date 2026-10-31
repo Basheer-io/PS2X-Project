@@ -7,6 +7,16 @@
              RequestedThemeVariant="Dark">
   <Application.Styles>
     <FluentTheme />
+    <Style Selector="Button">
+      <Setter Property="FontFamily" Value="Inter"/>
+      <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="FontFamily" Value="Inter"/>
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="FontFamily" Value="Inter"/>
+    </Style>
   </Application.Styles>
 
   <Application.DataTemplates>
@@ -44,6 +54,8 @@
     <Color x:Key="ColorError">#FF6B6B</Color>
     <Color x:Key="ColorTextPrimary">#E8E8E8</Color>
     <Color x:Key="ColorTextMuted">#A0A5B5</Color>
+    <Color x:Key="ColorSurfaceRaised">#1C2030</Color>
+    <Color x:Key="ColorAccentSoft">#193C3B</Color>
 
     <SolidColorBrush x:Key="BrushAppBackground" Color="{StaticResource ColorAppBackground}"/>
     <SolidColorBrush x:Key="BrushCardBackground" Color="{StaticResource ColorCardBackground}"/>
@@ -52,5 +64,7 @@
     <SolidColorBrush x:Key="BrushError" Color="{StaticResource ColorError}"/>
     <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource ColorTextPrimary}"/>
     <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}"/>
+    <SolidColorBrush x:Key="BrushSurfaceRaised" Color="{StaticResource ColorSurfaceRaised}"/>
+    <SolidColorBrush x:Key="BrushAccentSoft" Color="{StaticResource ColorAccentSoft}"/>
   </Application.Resources>
 </Application>

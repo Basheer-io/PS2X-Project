@@ -4,19 +4,19 @@
         x:Class="PS2Home.App.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="{Binding WindowTitle}"
-        Width="1100" Height="700" MinWidth="800" MinHeight="500"
-        Background="#0F1117">
+        Width="1180" Height="760" MinWidth="900" MinHeight="560"
+        Background="{StaticResource BrushAppBackground}">
 
   <Window.Styles>
     <Style Selector="Button.nav-button">
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="Foreground" Value="#A0A5B5"/>
-      <Setter Property="Padding" Value="14,10"/>
+      <Setter Property="Padding" Value="12,11"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="CornerRadius" Value="6"/>
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
       <Setter Property="HorizontalContentAlignment" Value="Left"/>
-      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontSize" Value="13"/>
       <Setter Property="FontWeight" Value="Medium"/>
       <Setter Property="Transitions">
         <Transitions>
@@ -37,22 +37,43 @@
     </Style>
 
     <Style Selector="Button.nav-button.active">
-      <Setter Property="Background" Value="#2A2F3E"/>
-      <Setter Property="Foreground" Value="#00D4AA"/>
+      <Setter Property="Background" Value="{StaticResource BrushAccentSoft}"/>
+      <Setter Property="Foreground" Value="{StaticResource BrushAccent}"/>
       <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="Button.nav-button.active:pointerover">
+      <Setter Property="Background" Value="#23504D"/>
     </Style>
   </Window.Styles>
 
   <Grid ColumnDefinitions="220,*">
     <!-- Sidebar -->
-    <Border Grid.Column="0" Background="#161922" Padding="16" BorderBrush="#2A2F3E" BorderThickness="0,0,1,0">
+    <Border Grid.Column="0" Background="{StaticResource BrushCardBackground}" Padding="14" BorderBrush="{StaticResource BrushBorder}" BorderThickness="0,0,1,0">
       <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,24" Spacing="4">
-          <TextBlock Text="PS2 Home" FontSize="22" FontWeight="Bold" Foreground="#E8E8E8"/>
-          <TextBlock Text="Your PS2 Homebrew Launcher" FontSize="12" Opacity="0.6" Foreground="#E8E8E8" TextWrapping="Wrap"/>
+        <StackPanel DockPanel.Dock="Top" Margin="4,4,4,28" Spacing="12">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Border Width="38" Height="38" CornerRadius="11" Background="{StaticResource BrushAccent}">
+              <TextBlock Text="PS" FontSize="14" FontWeight="Bold" Foreground="{StaticResource BrushAppBackground}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel VerticalAlignment="Center" Spacing="1">
+              <TextBlock Text="PS2 Home" FontSize="19" FontWeight="Bold" Foreground="{StaticResource BrushTextPrimary}"/>
+              <TextBlock Text="Game library" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+            </StackPanel>
+          </StackPanel>
+          <Border Background="{StaticResource BrushAccentSoft}" CornerRadius="8" Padding="10,9">
+            <StackPanel Spacing="3">
+              <TextBlock Text="READY TO PLAY" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushAccent}"/>
+              <TextBlock Text="Organize your collection and launch through PCSX2." FontSize="11"
+                         Foreground="{StaticResource BrushTextPrimary}" TextWrapping="Wrap" Opacity="0.85"/>
+            </StackPanel>
+          </Border>
         </StackPanel>
 
         <StackPanel Spacing="6" DockPanel.Dock="Top">
+          <TextBlock Text="WORKSPACE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"
+                     Margin="12,0,0,4" Opacity="0.8"/>
           <Button Content="📚  Library"
                   Classes="nav-button"
                   Classes.active="{Binding IsLibraryActive}"
@@ -84,19 +105,39 @@
                   Command="{Binding NavigateToAboutCommand}"/>
         </StackPanel>
 
-        <TextBlock DockPanel.Dock="Bottom"
-                   Text="v1.0.0"
-                   FontSize="11"
-                   Opacity="0.4"
-                   Foreground="#E8E8E8"
-                   HorizontalAlignment="Center"
-                   Margin="0,24,0,0"/>
+        <Border DockPanel.Dock="Bottom" Background="{StaticResource BrushAppBackground}" CornerRadius="8" Padding="10"
+                Margin="4,20,4,4">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2">
+              <TextBlock Text="PS2 HOME" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"/>
+              <TextBlock Text="v1.0.0 · Open source" FontSize="10" Foreground="{StaticResource BrushTextMuted}" Opacity="0.7"/>
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="●" FontSize="10" Foreground="{StaticResource BrushAccent}"
+                       VerticalAlignment="Center" ToolTip.Tip="App is ready"/>
+          </Grid>
+        </Border>
       </DockPanel>
     </Border>
 
     <!-- Main Content Area -->
-    <Border Grid.Column="1" Padding="32" Background="#0F1117">
-      <ContentControl Content="{Binding CurrentView}"/>
+    <Border Grid.Column="1" Padding="32,26,32,28" Background="{StaticResource BrushAppBackground}">
+      <Grid RowDefinitions="Auto,*" RowSpacing="20">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+          <StackPanel Spacing="3">
+            <TextBlock Text="PS2 HOME" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushAccent}"
+                       LetterSpacing="1.5"/>
+            <TextBlock Text="{Binding WindowTitle}" FontSize="13" Foreground="{StaticResource BrushTextMuted}"/>
+          </StackPanel>
+          <Border Grid.Column="1" Background="{StaticResource BrushCardBackground}" BorderBrush="{StaticResource BrushBorder}"
+                  BorderThickness="1" CornerRadius="16" Padding="10,5">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="●" FontSize="10" Foreground="{StaticResource BrushAccent}" VerticalAlignment="Center"/>
+              <TextBlock Text="Local library" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
+            </StackPanel>
+          </Border>
+        </Grid>
+        <ContentControl Grid.Row="1" Content="{Binding CurrentView}"/>
+      </Grid>
     </Border>
   </Grid>
 </Window>
