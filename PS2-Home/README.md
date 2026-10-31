@@ -54,6 +54,18 @@ Interactive Entertainment or the PCSX2 team.
 PS2 Home release packages include the .NET runtime, so end users do not
 normally need to install .NET. A desktop session is required on Linux.
 
+## Download
+
+**[Download the latest release](https://github.com/Basheer-io/PS2X-Project/releases/latest)**
+
+| Platform | Download |
+|---|---|
+| Windows 10/11 x64 | [Download ZIP](https://github.com/Basheer-io/PS2X-Project/releases/latest/download/ps2home-win-x64-v1.0.0.zip) |
+| Linux x64 | [Download tarball](https://github.com/Basheer-io/PS2X-Project/releases/latest/download/ps2home-linux-x64-v1.0.0.tar.gz) |
+
+These are self-contained packages; install .NET separately only when running
+from source. Verify downloads with the included `SHA256SUMS.txt` file.
+
 ## Quick start: install and play
 
 1. Install PS2 Home using a release package, or clone the repository and run
