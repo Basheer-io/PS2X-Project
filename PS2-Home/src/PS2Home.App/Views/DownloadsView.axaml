@@ -6,52 +6,52 @@
   <ScrollViewer VerticalScrollBarVisibility="Auto">
     <StackPanel Spacing="20" MaxWidth="800">
       <StackPanel Spacing="4">
-        <TextBlock Text="Legal Downloads" FontSize="28" FontWeight="Bold" Foreground="#F2E9D8"/>
+        <TextBlock Text="Legal Downloads" FontSize="28" FontWeight="Bold" Foreground="#F3E8D0"/>
         <TextBlock Text="Get the emulator from its official source and use your own legally obtained game files."
-                   FontSize="14" Opacity="0.7" Foreground="#F2E9D8" TextWrapping="Wrap"/>
+                   FontSize="14" Opacity="0.7" Foreground="#F3E8D0" TextWrapping="Wrap"/>
       </StackPanel>
 
-      <Border Background="#2B3328" BorderBrush="#B69B68" BorderThickness="1" CornerRadius="10" Padding="22">
+      <Border Background="#342B27" BorderBrush="#C19A5B" BorderThickness="1" CornerRadius="10" Padding="22">
         <StackPanel Spacing="10">
-          <TextBlock Text="Can PS2 games run natively on this PC?" FontSize="18" FontWeight="Bold" Foreground="#D5B56E"/>
+          <TextBlock Text="Can PS2 games run natively on this PC?" FontSize="18" FontWeight="Bold" Foreground="#D6AE62"/>
           <TextBlock Text="No. PS2 games target the PlayStation 2's Emotion Engine, I/O Processor, and graphics hardware. This project is a launcher, not a native PS2 runtime: it starts your legally obtained game image through PCSX2."
-                     FontSize="13" Foreground="#F2E9D8" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#F3E8D0" TextWrapping="Wrap"/>
           <TextBlock Text="For native execution, use a real PS2 console or a game-specific native port. PS2 Home cannot convert a PS2 ROM into a native Windows or Linux program."
-                     FontSize="13" Foreground="#F2E9D8" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#F3E8D0" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>
 
-      <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="10" Padding="22">
+      <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="10" Padding="22">
         <StackPanel Spacing="14">
-          <TextBlock Text="PCSX2 Emulator" FontSize="18" FontWeight="Bold" Foreground="#F2E9D8"/>
+          <TextBlock Text="PCSX2 Emulator" FontSize="18" FontWeight="Bold" Foreground="#F3E8D0"/>
           <TextBlock Text="Download PCSX2 for Linux or Windows directly from the official PCSX2 website. PS2 Home does not redistribute emulator binaries."
-                     FontSize="13" Foreground="#B6B7A5" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#B9AA98" TextWrapping="Wrap"/>
           <StackPanel Orientation="Horizontal" Spacing="10">
             <Button Content="Official PCSX2 downloads"
                     Command="{Binding OpenPcsx2DownloadsCommand}"
-                    Background="#C98B4A" Foreground="#151815"
+                    Background="#C96F4A" Foreground="#171616"
                     FontWeight="SemiBold" Padding="14,8" CornerRadius="6"/>
             <Button Content="Setup documentation"
                     Command="{Binding OpenPcsx2DocsCommand}"
-                    Background="#3D4939" Foreground="#F2E9D8"
+                    Background="#4A3A32" Foreground="#F3E8D0"
                     Padding="14,8" CornerRadius="6"/>
           </StackPanel>
         </StackPanel>
       </Border>
 
-      <Border Background="#2B3328" BorderBrush="#B69B68" BorderThickness="1" CornerRadius="10" Padding="22">
+      <Border Background="#342B27" BorderBrush="#C19A5B" BorderThickness="1" CornerRadius="10" Padding="22">
         <StackPanel Spacing="10">
-          <TextBlock Text="Your Game Files" FontSize="18" FontWeight="Bold" Foreground="#D5B56E"/>
+          <TextBlock Text="Your Game Files" FontSize="18" FontWeight="Bold" Foreground="#D6AE62"/>
           <TextBlock Text="PS2 Home cannot download copyrighted ROMs or ISOs. Dump or obtain game backups legally, then add their folder under Settings. The Library page will scan supported files and launch them through PCSX2."
-                     FontSize="13" Foreground="#F2E9D8" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#F3E8D0" TextWrapping="Wrap"/>
           <TextBlock Text="Never download or share BIOS files. PCSX2 requires a BIOS dump from your own console."
-                     FontSize="13" Foreground="#F2E9D8" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#F3E8D0" TextWrapping="Wrap"/>
           <TextBlock Text="Next step: open Settings → add your game folder → scan the Library."
-                     FontSize="13" FontWeight="SemiBold" Foreground="#C98B4A" TextWrapping="Wrap"/>
+                     FontSize="13" FontWeight="SemiBold" Foreground="#C96F4A" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>
 
-      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#C98B4A"
+      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#C96F4A"
                  IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
     </StackPanel>
   </ScrollViewer>

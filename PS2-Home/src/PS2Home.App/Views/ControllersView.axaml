@@ -9,31 +9,31 @@
 
       <!-- Header -->
       <StackPanel Spacing="6">
-        <TextBlock Text="Controller setup" FontSize="28" FontWeight="Bold" Foreground="#F2E9D8"/>
+        <TextBlock Text="Controller setup" FontSize="28" FontWeight="Bold" Foreground="#F3E8D0"/>
         <TextBlock Text="Step-by-step guide to connecting and configuring gamepads for PCSX2"
-                   FontSize="14" Opacity="0.7" Foreground="#F2E9D8"/>
+                   FontSize="14" Opacity="0.7" Foreground="#F3E8D0"/>
       </StackPanel>
 
       <!-- Status Banner -->
-      <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="16">
+      <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="16">
         <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
           <StackPanel Grid.Column="0" Spacing="4">
-            <TextBlock Text="PCSX2 Controller Management" FontSize="15" FontWeight="SemiBold" Foreground="#C98B4A"/>
-            <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="#B6B7A5"/>
+            <TextBlock Text="PCSX2 Controller Management" FontSize="15" FontWeight="SemiBold" Foreground="#C96F4A"/>
+            <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="#B9AA98"/>
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
             <Button Content="Open PCSX2"
                     Command="{Binding LaunchPcsx2Command}"
-                    Background="#C98B4A"
-                    Foreground="#151815"
+                    Background="#C96F4A"
+                    Foreground="#171616"
                     FontWeight="SemiBold"
                     Padding="14,8"
                     CornerRadius="6"
                     IsEnabled="{Binding !IsLaunchingPcsx2}"/>
             <Button Content="Official docs"
                     Command="{Binding OpenDocumentationCommand}"
-                    Background="#3D4939"
-                    Foreground="#F2E9D8"
+                    Background="#4A3A32"
+                    Foreground="#F3E8D0"
                     Padding="14,8"
                     CornerRadius="6"/>
           </StackPanel>
@@ -44,92 +44,92 @@
       <StackPanel Spacing="16">
 
         <!-- Step 1 -->
-        <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+        <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
           <Grid ColumnDefinitions="48,*">
-            <Border Grid.Column="0" Width="36" Height="36" Background="#3D4939" CornerRadius="18"
+            <Border Grid.Column="0" Width="36" Height="36" Background="#4A3A32" CornerRadius="18"
                     HorizontalAlignment="Left" VerticalAlignment="Top">
-              <TextBlock Text="1" FontSize="16" FontWeight="Bold" Foreground="#C98B4A"
+              <TextBlock Text="1" FontSize="16" FontWeight="Bold" Foreground="#C96F4A"
                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <StackPanel Grid.Column="1" Spacing="8">
-              <TextBlock Text="Connect Your Controller" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
+              <TextBlock Text="Connect Your Controller" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
               <TextBlock Text="Connect your gamepad before launching PCSX2. PS2 Home and PCSX2 support:"
-                         FontSize="13" Foreground="#B6B7A5"/>
+                         FontSize="13" Foreground="#B9AA98"/>
               <StackPanel Spacing="4" Margin="8,0,0,0">
-                <TextBlock Text="• Sony PlayStation DualShock 4 &amp; DualSense (USB or Bluetooth)" FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="• Microsoft Xbox One / Series X|S / 360 Controllers (XInput)" FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="• Nintendo Switch Pro Controller &amp; Joy-Cons" FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="• Generic DirectInput &amp; SDL2 compatible gamepads (8BitDo, Logitech)" FontSize="13" Foreground="#F2E9D8"/>
+                <TextBlock Text="• Sony PlayStation DualShock 4 &amp; DualSense (USB or Bluetooth)" FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="• Microsoft Xbox One / Series X|S / 360 Controllers (XInput)" FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="• Nintendo Switch Pro Controller &amp; Joy-Cons" FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="• Generic DirectInput &amp; SDL2 compatible gamepads (8BitDo, Logitech)" FontSize="13" Foreground="#F3E8D0"/>
               </StackPanel>
             </StackPanel>
           </Grid>
         </Border>
 
         <!-- Step 2 -->
-        <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+        <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
           <Grid ColumnDefinitions="48,*">
-            <Border Grid.Column="0" Width="36" Height="36" Background="#3D4939" CornerRadius="18"
+            <Border Grid.Column="0" Width="36" Height="36" Background="#4A3A32" CornerRadius="18"
                     HorizontalAlignment="Left" VerticalAlignment="Top">
-              <TextBlock Text="2" FontSize="16" FontWeight="Bold" Foreground="#C98B4A"
+              <TextBlock Text="2" FontSize="16" FontWeight="Bold" Foreground="#C96F4A"
                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <StackPanel Grid.Column="1" Spacing="8">
-              <TextBlock Text="Open PCSX2 Controller Settings" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
+              <TextBlock Text="Open PCSX2 Controller Settings" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
               <TextBlock Text="Click the 'Open PCSX2' button above to start the emulator. Once PCSX2 appears, open:"
-                         FontSize="13" Foreground="#B6B7A5"/>
-              <Border Background="#151815" CornerRadius="6" Padding="12,8" HorizontalAlignment="Left">
-                <TextBlock Text="Settings  →  Controllers" FontSize="13" FontFamily="Consolas, Monospace" Foreground="#C98B4A" FontWeight="SemiBold"/>
+                         FontSize="13" Foreground="#B9AA98"/>
+              <Border Background="#171616" CornerRadius="6" Padding="12,8" HorizontalAlignment="Left">
+                <TextBlock Text="Settings  →  Controllers" FontSize="13" FontFamily="Consolas, Monospace" Foreground="#C96F4A" FontWeight="SemiBold"/>
               </Border>
             </StackPanel>
           </Grid>
         </Border>
 
         <!-- Step 3 -->
-        <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+        <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
           <Grid ColumnDefinitions="48,*">
-            <Border Grid.Column="0" Width="36" Height="36" Background="#3D4939" CornerRadius="18"
+            <Border Grid.Column="0" Width="36" Height="36" Background="#4A3A32" CornerRadius="18"
                     HorizontalAlignment="Left" VerticalAlignment="Top">
-              <TextBlock Text="3" FontSize="16" FontWeight="Bold" Foreground="#C98B4A"
+              <TextBlock Text="3" FontSize="16" FontWeight="Bold" Foreground="#C96F4A"
                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <StackPanel Grid.Column="1" Spacing="8">
-              <TextBlock Text="Map Controller Port 1" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
-              <TextBlock Text="In the Controller Settings dialog:" FontSize="13" Foreground="#B6B7A5"/>
+              <TextBlock Text="Map Controller Port 1" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
+              <TextBlock Text="In the Controller Settings dialog:" FontSize="13" Foreground="#B9AA98"/>
               <StackPanel Spacing="4" Margin="8,0,0,0">
-                <TextBlock Text="1. Select 'Controller Port 1' on the left navigation panel." FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="2. Ensure Controller Type is set to 'DualShock 2'." FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="3. Click 'Automatic Mapping' in the top-right corner to map standard Xbox/PlayStation layouts automatically." FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="4. To customize individual buttons (D-Pad, Cross, Circle, Square, Triangle, L1-L3, R1-R3), click any button on screen and press the corresponding input on your controller." FontSize="13" Foreground="#F2E9D8"/>
+                <TextBlock Text="1. Select 'Controller Port 1' on the left navigation panel." FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="2. Ensure Controller Type is set to 'DualShock 2'." FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="3. Click 'Automatic Mapping' in the top-right corner to map standard Xbox/PlayStation layouts automatically." FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="4. To customize individual buttons (D-Pad, Cross, Circle, Square, Triangle, L1-L3, R1-R3), click any button on screen and press the corresponding input on your controller." FontSize="13" Foreground="#F3E8D0"/>
               </StackPanel>
             </StackPanel>
           </Grid>
         </Border>
 
         <!-- Step 4 -->
-        <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+        <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
           <Grid ColumnDefinitions="48,*">
-            <Border Grid.Column="0" Width="36" Height="36" Background="#3D4939" CornerRadius="18"
+            <Border Grid.Column="0" Width="36" Height="36" Background="#4A3A32" CornerRadius="18"
                     HorizontalAlignment="Left" VerticalAlignment="Top">
-              <TextBlock Text="4" FontSize="16" FontWeight="Bold" Foreground="#C98B4A"
+              <TextBlock Text="4" FontSize="16" FontWeight="Bold" Foreground="#C96F4A"
                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <StackPanel Grid.Column="1" Spacing="8">
-              <TextBlock Text="Haptic Rumble &amp; Deadzone Calibration" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
-              <TextBlock Text="Under the Motors / Rumble tab in PCSX2:" FontSize="13" Foreground="#B6B7A5"/>
+              <TextBlock Text="Haptic Rumble &amp; Deadzone Calibration" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
+              <TextBlock Text="Under the Motors / Rumble tab in PCSX2:" FontSize="13" Foreground="#B9AA98"/>
               <StackPanel Spacing="4" Margin="8,0,0,0">
-                <TextBlock Text="• Assign the Large Motor and Small Motor to your controller's rumble motors." FontSize="13" Foreground="#F2E9D8"/>
-                <TextBlock Text="• If you experience analog stick drift in games, increase the Deadzone setting from 0% to 5–10%." FontSize="13" Foreground="#F2E9D8"/>
+                <TextBlock Text="• Assign the Large Motor and Small Motor to your controller's rumble motors." FontSize="13" Foreground="#F3E8D0"/>
+                <TextBlock Text="• If you experience analog stick drift in games, increase the Deadzone setting from 0% to 5–10%." FontSize="13" Foreground="#F3E8D0"/>
               </StackPanel>
             </StackPanel>
           </Grid>
         </Border>
 
         <!-- Note -->
-        <Border Background="#151815" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="16">
+        <Border Background="#171616" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="6">
-            <TextBlock Text="Configuration integrity" FontSize="13" FontWeight="Bold" Foreground="#B6B7A5"/>
+            <TextBlock Text="Configuration integrity" FontSize="13" FontWeight="Bold" Foreground="#B9AA98"/>
             <TextBlock Text="PS2 Home avoids editing PCSX2 configuration files directly. This ensures compatibility across PCSX2 Qt 2.x versions, preserves custom input bindings, and prevents configuration corruption."
-                       FontSize="12" Foreground="#B6B7A5" TextWrapping="Wrap"/>
+                       FontSize="12" Foreground="#B9AA98" TextWrapping="Wrap"/>
           </StackPanel>
         </Border>
 

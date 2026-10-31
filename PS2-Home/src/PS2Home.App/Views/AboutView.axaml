@@ -8,23 +8,23 @@
     <StackPanel Spacing="24" MaxWidth="800" HorizontalAlignment="Left">
 
       <!-- Header Card -->
-      <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="12" Padding="28">
+      <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="12" Padding="28">
         <StackPanel Spacing="16">
           <Grid ColumnDefinitions="Auto,*">
-            <Border Grid.Column="0" Width="64" Height="64" Background="#3D4939" CornerRadius="16" Margin="0,0,20,0">
+            <Border Grid.Column="0" Width="64" Height="64" Background="#4A3A32" CornerRadius="16" Margin="0,0,20,0">
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
               <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                <TextBlock Text="{Binding AppName}" FontSize="24" FontWeight="Bold" Foreground="#F2E9D8"/>
-                <Border Background="#C98B4A" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding Version}" FontSize="12" FontWeight="Bold" Foreground="#151815"/>
+                <TextBlock Text="{Binding AppName}" FontSize="24" FontWeight="Bold" Foreground="#F3E8D0"/>
+                <Border Background="#C96F4A" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Version}" FontSize="12" FontWeight="Bold" Foreground="#171616"/>
                 </Border>
-                <Border Background="#3D4939" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
-                  <TextBlock Text="{Binding License}" FontSize="12" Foreground="#B6B7A5"/>
+                <Border Background="#4A3A32" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding License}" FontSize="12" Foreground="#B9AA98"/>
                 </Border>
               </StackPanel>
-              <TextBlock Text="{Binding Tagline}" FontSize="14" Opacity="0.75" Foreground="#F2E9D8"/>
-              <TextBlock Text="{Binding Copyright}" FontSize="12" Opacity="0.5" Foreground="#F2E9D8"/>
+              <TextBlock Text="{Binding Tagline}" FontSize="14" Opacity="0.75" Foreground="#F3E8D0"/>
+              <TextBlock Text="{Binding Copyright}" FontSize="12" Opacity="0.5" Foreground="#F3E8D0"/>
             </StackPanel>
           </Grid>
 
@@ -32,23 +32,23 @@
           <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0">
             <Button Content="GitHub repository"
                     Command="{Binding OpenGitHubCommand}"
-                    Background="#C98B4A"
-                    Foreground="#151815"
+                    Background="#C96F4A"
+                    Foreground="#171616"
                     FontWeight="SemiBold"
                     Padding="14,8"
                     CornerRadius="6"/>
 
             <Button Content="PCSX2 website"
                     Command="{Binding OpenPcsx2Command}"
-                    Background="#3D4939"
-                    Foreground="#F2E9D8"
+                    Background="#4A3A32"
+                    Foreground="#F3E8D0"
                     Padding="14,8"
                     CornerRadius="6"/>
 
             <Button Content="BIOS dumping guide"
                     Command="{Binding OpenBiosGuideCommand}"
-                    Background="#3D4939"
-                    Foreground="#F2E9D8"
+                    Background="#4A3A32"
+                    Foreground="#F3E8D0"
                     Padding="14,8"
                     CornerRadius="6"/>
           </StackPanel>
@@ -56,66 +56,66 @@
       </Border>
 
       <!-- Legal & Trademark Disclaimer Card -->
-      <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+      <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
         <StackPanel Spacing="12">
-          <TextBlock Text="Trademark and non-affiliation" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
+          <TextBlock Text="Trademark and non-affiliation" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
           <TextBlock Text="PS2 Home is an independent open-source project and is not affiliated with, authorized, maintained, sponsored, or endorsed by Sony Interactive Entertainment Inc. or the PCSX2 development team."
-                     FontSize="13" Foreground="#B6B7A5" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#B9AA98" TextWrapping="Wrap"/>
           <TextBlock Text="'PlayStation', 'PS2', 'DualShock', and 'DualSense' are registered trademarks or trademarks of Sony Interactive Entertainment Inc. All product and company names are trademarks™ or registered® trademarks of their respective holders."
-                     FontSize="12" Foreground="#B6B7A5" TextWrapping="Wrap"/>
+                     FontSize="12" Foreground="#B9AA98" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>
 
       <!-- Anti-Piracy / Ethical Statement -->
-      <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+      <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
         <StackPanel Spacing="12">
-          <TextBlock Text="Legal notice" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
+          <TextBlock Text="Legal notice" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
           <TextBlock Text="PS2 Home strictly adheres to digital preservation and legal homebrew ethics. PS2 Home does not include, bundle, download, or link to copyrighted game disc images, BIOS dumps, or PCSX2 binaries."
-                     FontSize="13" Foreground="#B6B7A5" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#B9AA98" TextWrapping="Wrap"/>
           <TextBlock Text="Users are solely responsible for dumping their own BIOS from their physical PlayStation 2 console and using legally obtained disc backups."
-                     FontSize="13" Foreground="#B6B7A5" TextWrapping="Wrap"/>
+                     FontSize="13" Foreground="#B9AA98" TextWrapping="Wrap"/>
         </StackPanel>
       </Border>
 
       <!-- Third-Party Open Source Components -->
-      <Border Background="#20261F" BorderBrush="#3D4939" BorderThickness="1" CornerRadius="8" Padding="20">
+      <Border Background="#25201D" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="20">
         <StackPanel Spacing="14">
-          <TextBlock Text="Open-source dependencies" FontSize="16" FontWeight="SemiBold" Foreground="#F2E9D8"/>
+          <TextBlock Text="Open-source dependencies" FontSize="16" FontWeight="SemiBold" Foreground="#F3E8D0"/>
 
           <Grid ColumnDefinitions="*,150,150" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
             <!-- Headers -->
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Component" FontWeight="Bold" Foreground="#F2E9D8" FontSize="13"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Role" FontWeight="Bold" Foreground="#F2E9D8" FontSize="13"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="License" FontWeight="Bold" Foreground="#F2E9D8" FontSize="13"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Component" FontWeight="Bold" Foreground="#F3E8D0" FontSize="13"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Role" FontWeight="Bold" Foreground="#F3E8D0" FontSize="13"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="License" FontWeight="Bold" Foreground="#F3E8D0" FontSize="13"/>
 
             <!-- Avalonia -->
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Avalonia UI" Foreground="#C98B4A" FontSize="13"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="Cross-Platform GUI" Foreground="#B6B7A5" FontSize="13"/>
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="MIT" Foreground="#F2E9D8" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Avalonia UI" Foreground="#C96F4A" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Cross-Platform GUI" Foreground="#B9AA98" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="MIT" Foreground="#F3E8D0" FontSize="13"/>
 
             <!-- CommunityToolkit -->
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="CommunityToolkit.Mvvm" Foreground="#C98B4A" FontSize="13"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="MVVM Architecture" Foreground="#B6B7A5" FontSize="13"/>
-            <TextBlock Grid.Row="2" Grid.Column="2" Text="MIT" Foreground="#F2E9D8" FontSize="13"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="CommunityToolkit.Mvvm" Foreground="#C96F4A" FontSize="13"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="MVVM Architecture" Foreground="#B9AA98" FontSize="13"/>
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="MIT" Foreground="#F3E8D0" FontSize="13"/>
 
             <!-- Microsoft DI -->
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Microsoft.Extensions.DI" Foreground="#C98B4A" FontSize="13"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="Dependency Injection" Foreground="#B6B7A5" FontSize="13"/>
-            <TextBlock Grid.Row="3" Grid.Column="2" Text="MIT" Foreground="#F2E9D8" FontSize="13"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Microsoft.Extensions.DI" Foreground="#C96F4A" FontSize="13"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Dependency Injection" Foreground="#B9AA98" FontSize="13"/>
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="MIT" Foreground="#F3E8D0" FontSize="13"/>
 
             <!-- Inter Font -->
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Inter Typeface" Foreground="#C98B4A" FontSize="13"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="Typography" Foreground="#B6B7A5" FontSize="13"/>
-            <TextBlock Grid.Row="4" Grid.Column="2" Text="SIL OFL 1.1" Foreground="#F2E9D8" FontSize="13"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Inter Typeface" Foreground="#C96F4A" FontSize="13"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="Typography" Foreground="#B9AA98" FontSize="13"/>
+            <TextBlock Grid.Row="4" Grid.Column="2" Text="SIL OFL 1.1" Foreground="#F3E8D0" FontSize="13"/>
           </Grid>
 
           <TextBlock Text="For complete legal details and copyright notices, see THIRD-PARTY-NOTICES.md."
-                     FontSize="12" Opacity="0.6" Foreground="#F2E9D8" Margin="0,4,0,0"/>
+                     FontSize="12" Opacity="0.6" Foreground="#F3E8D0" Margin="0,4,0,0"/>
         </StackPanel>
       </Border>
 
       <!-- Status Feedback -->
-      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#C98B4A"
+      <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#C96F4A"
                  IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
     </StackPanel>
