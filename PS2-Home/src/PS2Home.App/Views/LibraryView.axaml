@@ -20,8 +20,8 @@
     <Style Selector="Border.game-card">
       <Setter Property="Width" Value="260"/>
       <Setter Property="Height" Value="350"/>
-      <Setter Property="Background" Value="#211E1A"/>
-      <Setter Property="BorderBrush" Value="#3A332B"/>
+      <Setter Property="Background" Value="#25201D"/>
+      <Setter Property="BorderBrush" Value="#4A3A32"/>
       <Setter Property="BorderThickness" Value="1"/>
       <Setter Property="CornerRadius" Value="12"/>
       <Setter Property="Transitions">
@@ -39,24 +39,24 @@
 
     <!-- Focused / Selected Card Highlight -->
     <Style Selector="ListBoxItem:focus-visible Border.game-card">
-      <Setter Property="BorderBrush" Value="#D97757"/>
+      <Setter Property="BorderBrush" Value="#C96F4A"/>
       <Setter Property="BorderThickness" Value="2"/>
     </Style>
     <Style Selector="ListBoxItem:selected Border.game-card">
-      <Setter Property="BorderBrush" Value="#D97757"/>
+      <Setter Property="BorderBrush" Value="#C96F4A"/>
       <Setter Property="BorderThickness" Value="2"/>
     </Style>
 
     <Style Selector="Button.couch-toggle.active">
-      <Setter Property="Background" Value="#D97757"/>
-      <Setter Property="Foreground" Value="#171513"/>
+      <Setter Property="Background" Value="#C96F4A"/>
+      <Setter Property="Foreground" Value="#171616"/>
       <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
 
     <Style Selector="TextBlock.eyebrow">
       <Setter Property="FontSize" Value="10"/>
       <Setter Property="FontWeight" Value="Bold"/>
-      <Setter Property="Foreground" Value="#D97757"/>
+      <Setter Property="Foreground" Value="#C96F4A"/>
       <Setter Property="LetterSpacing" Value="1.2"/>
     </Style>
   </UserControl.Styles>
@@ -66,8 +66,16 @@
     <Border DockPanel.Dock="Top" Margin="0,0,0,16">
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
         <StackPanel Grid.Column="0" Spacing="4">
-          <TextBlock Text="Library" FontSize="30" FontWeight="Bold" Foreground="#F4F0E6"/>
-          <TextBlock Text="{Binding StatusMessage}" FontSize="13" Opacity="0.7" Foreground="#B7AA98"/>
+          <TextBlock Text="Library" FontSize="30" FontWeight="Bold" Foreground="#F3E8D0"/>
+          <TextBlock Text="{Binding StatusMessage}" FontSize="13" Opacity="0.7" Foreground="#B9AA98"/>
+          <StackPanel Orientation="Horizontal" Spacing="14" Margin="0,5,0,0">
+            <TextBlock Text="{Binding TotalApps, StringFormat='{}{0} games'}"
+                       FontSize="11" Foreground="#C96F4A"/>
+            <TextBlock Text="{Binding InstalledApps, StringFormat='{}{0} ready'}"
+                       FontSize="11" Foreground="#B9AA98"/>
+            <TextBlock Text="{Binding MissingApps, StringFormat='{}{0} missing'}"
+                       FontSize="11" Foreground="#B94F45"/>
+          </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
           <Button Content="Couch mode"
@@ -75,8 +83,8 @@
                   Classes="couch-toggle"
                   Classes.active="{Binding CouchMode}"
                   Padding="14,9"
-                  Background="#3A332B"
-                  Foreground="#F4F0E6"
+                  Background="#4A3A32"
+                  Foreground="#F3E8D0"
                   FontSize="12"
                   BorderThickness="0"
                   CornerRadius="6"
@@ -85,8 +93,8 @@
                   Command="{Binding CancelScanCommand}"
                   IsVisible="{Binding IsScanning}"
                   Padding="16,9"
-                  Background="#D95D54"
-                  Foreground="#171513"
+                  Background="#B94F45"
+                  Foreground="#171616"
                   FontWeight="SemiBold"
                   BorderThickness="0"
                   CornerRadius="6"/>
@@ -94,8 +102,8 @@
                   Command="{Binding RescanLibraryCommand}"
                   IsVisible="{Binding !IsScanning}"
                   Padding="16,9"
-                  Background="#3A332B"
-                  Foreground="#F4F0E6"
+                  Background="#4A3A32"
+                  Foreground="#F3E8D0"
                   BorderThickness="0"
                   CornerRadius="6"
                   IsEnabled="{Binding !IsLoading}"/>
@@ -110,9 +118,9 @@
                  x:Name="SearchTextBox"
                  Text="{Binding SearchText}"
                  Watermark="Search your games..."
-                 Background="#211E1A"
-                 Foreground="#F4F0E6"
-                 BorderBrush="#3A332B"
+                 Background="#25201D"
+                 Foreground="#F3E8D0"
+                 BorderBrush="#4A3A32"
                  BorderThickness="1"
                  CornerRadius="6"
                  Padding="13,11"
@@ -121,9 +129,9 @@
                  ItemsSource="{Binding SortModes}"
                  SelectedItem="{Binding SortMode}"
                  Width="150"
-                 Background="#211E1A"
-                 Foreground="#F4F0E6"
-                 BorderBrush="#3A332B"
+                 Background="#25201D"
+                 Foreground="#F3E8D0"
+                 BorderBrush="#4A3A32"
                  BorderThickness="1"
                  CornerRadius="6"
                  Padding="10,8"
@@ -132,9 +140,9 @@
                  ItemsSource="{Binding FilterModes}"
                  SelectedItem="{Binding FilterMode}"
                  Width="125"
-                 Background="#211E1A"
-                 Foreground="#F4F0E6"
-                 BorderBrush="#3A332B"
+                 Background="#25201D"
+                 Foreground="#F3E8D0"
+                 BorderBrush="#4A3A32"
                  BorderThickness="1"
                  CornerRadius="6"
                  Padding="10,8"
@@ -145,8 +153,8 @@
                 IsVisible="{Binding HasSearchQuery}"
                 Margin="8,0,0,0"
                 Padding="13,9"
-                Background="#3A332B"
-                Foreground="#F4F0E6"
+                Background="#4A3A32"
+                Foreground="#F3E8D0"
                 BorderThickness="0"
                 CornerRadius="6"/>
       </Grid>
@@ -158,25 +166,25 @@
             Margin="0,0,0,16"
             Padding="18"
             Background="#30251F"
-            BorderBrush="#D97757"
+            BorderBrush="#C96F4A"
             BorderThickness="1"
             CornerRadius="10">
       <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
-        <Border Width="38" Height="38" CornerRadius="19" Background="#D97757" VerticalAlignment="Top">
-          <TextBlock Text="✓" FontSize="20" FontWeight="Bold" Foreground="#171513"
+        <Border Width="38" Height="38" CornerRadius="19" Background="#C96F4A" VerticalAlignment="Top">
+          <TextBlock Text="✓" FontSize="20" FontWeight="Bold" Foreground="#171616"
                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
         <StackPanel Grid.Column="1" Spacing="4">
-          <TextBlock Text="Finish setting up your library" FontSize="16" FontWeight="Bold" Foreground="#F4F0E6"/>
+          <TextBlock Text="Finish setting up your library" FontSize="16" FontWeight="Bold" Foreground="#F3E8D0"/>
           <TextBlock Text="Connect PCSX2 and add a game folder in Settings. Then scan here to build your collection."
                      FontSize="12" Foreground="#E8D8C4" TextWrapping="Wrap"/>
-          <TextBlock Text="Ctrl+O opens Settings · R rescans the library" FontSize="11" Foreground="#D97757"/>
+          <TextBlock Text="Ctrl+O opens Settings · R rescans the library" FontSize="11" Foreground="#C96F4A"/>
         </StackPanel>
         <Button Grid.Column="2" Content="Open Settings"
                 Click="OnOpenSettingsClick"
                 Padding="14,9"
-                Background="#D97757"
-                Foreground="#171513"
+                Background="#C96F4A"
+                Foreground="#171616"
                 FontWeight="SemiBold"
                 BorderThickness="0"
                 CornerRadius="6"
@@ -189,16 +197,16 @@
             IsVisible="{Binding IsScanning}"
             Margin="0,0,0,16"
             Padding="20"
-            Background="#211E1A"
-            BorderBrush="#D97757"
+            Background="#25201D"
+            BorderBrush="#C96F4A"
             BorderThickness="1"
             CornerRadius="8">
       <StackPanel Spacing="10" HorizontalAlignment="Center">
         <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-          <TextBlock Text="Scanning" FontSize="12" Foreground="#B7AA98" VerticalAlignment="Center"/>
-          <TextBlock Text="{Binding ScanProgressMessage}" FontSize="14" FontWeight="SemiBold" Foreground="#D97757"/>
+          <TextBlock Text="Scanning" FontSize="12" Foreground="#B9AA98" VerticalAlignment="Center"/>
+          <TextBlock Text="{Binding ScanProgressMessage}" FontSize="14" FontWeight="SemiBold" Foreground="#C96F4A"/>
         </StackPanel>
-        <ProgressBar IsIndeterminate="True" Width="280" Height="4" Background="#3A332B" Foreground="#D97757"/>
+        <ProgressBar IsIndeterminate="True" Width="280" Height="4" Background="#4A3A32" Foreground="#C96F4A"/>
       </StackPanel>
     </Border>
 
@@ -207,11 +215,11 @@
             IsVisible="{Binding IsLoading}"
             Margin="0,0,0,16"
             Padding="24"
-            Background="#211E1A"
+            Background="#25201D"
             CornerRadius="8">
       <StackPanel Spacing="12" HorizontalAlignment="Center">
-        <ProgressBar IsIndeterminate="True" Width="200" Height="4" Background="#3A332B" Foreground="#D97757"/>
-        <TextBlock Text="{Binding StatusMessage}" FontSize="14" Foreground="#F4F0E6" HorizontalAlignment="Center"/>
+        <ProgressBar IsIndeterminate="True" Width="200" Height="4" Background="#4A3A32" Foreground="#C96F4A"/>
+        <TextBlock Text="{Binding StatusMessage}" FontSize="14" Foreground="#F3E8D0" HorizontalAlignment="Center"/>
       </StackPanel>
     </Border>
 
@@ -221,20 +229,20 @@
             Margin="0,0,0,16"
             Padding="20"
             Background="#3A211F"
-            BorderBrush="#D95D54"
+            BorderBrush="#B94F45"
             BorderThickness="1"
             CornerRadius="8">
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
         <StackPanel Grid.Column="0" Spacing="4">
-          <TextBlock Text="Something went wrong" FontSize="16" FontWeight="Bold" Foreground="#D95D54"/>
-          <TextBlock Text="{Binding ErrorMessage}" FontSize="13" Foreground="#F4F0E6" TextWrapping="Wrap"/>
+          <TextBlock Text="Something went wrong" FontSize="16" FontWeight="Bold" Foreground="#B94F45"/>
+          <TextBlock Text="{Binding ErrorMessage}" FontSize="13" Foreground="#F3E8D0" TextWrapping="Wrap"/>
         </StackPanel>
         <Button Grid.Column="1"
                 Content="Dismiss"
                 Command="{Binding ToggleErrorStateCommand}"
                 Padding="16,8"
-                Background="#D95D54"
-                Foreground="#171513"
+                Background="#B94F45"
+                Foreground="#171616"
                 FontWeight="SemiBold"
                 BorderThickness="0"
                 CornerRadius="6"/>
@@ -246,16 +254,16 @@
             IsVisible="{Binding HasRecentApps}"
             Margin="0,0,0,20"
             Padding="16"
-            Background="#211E1A"
-            BorderBrush="#3A332B"
+            Background="#25201D"
+            BorderBrush="#4A3A32"
             BorderThickness="1"
             CornerRadius="10">
       <StackPanel Spacing="12">
         <Grid ColumnDefinitions="*,Auto">
           <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-            <TextBlock Text="Recently Played" FontSize="16" FontWeight="Bold" Foreground="#F4F0E6" VerticalAlignment="Center"/>
+            <TextBlock Text="Recently Played" FontSize="16" FontWeight="Bold" Foreground="#F3E8D0" VerticalAlignment="Center"/>
           </StackPanel>
-          <TextBlock Grid.Column="1" Text="Jump right back in" FontSize="12" Opacity="0.6" Foreground="#F4F0E6" VerticalAlignment="Center"/>
+          <TextBlock Grid.Column="1" Text="Jump right back in" FontSize="12" Opacity="0.6" Foreground="#F3E8D0" VerticalAlignment="Center"/>
         </Grid>
 
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
@@ -267,13 +275,13 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:AppItemViewModel">
-                <Border Width="220" Background="#171513" BorderBrush="#3A332B" BorderThickness="1" CornerRadius="8" Padding="12">
+                <Border Width="220" Background="#171616" BorderBrush="#4A3A32" BorderThickness="1" CornerRadius="8" Padding="12">
                   <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
                     <!-- Title & Last Played -->
                     <StackPanel Grid.Row="0" Spacing="2">
-                      <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Foreground="#F4F0E6"
+                      <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" Foreground="#F3E8D0"
                                  TextTrimming="CharacterEllipsis" MaxLines="1"/>
-                      <TextBlock Text="{Binding FormattedLastPlayed}" FontSize="11" Foreground="#D97757"/>
+                      <TextBlock Text="{Binding FormattedLastPlayed}" FontSize="11" Foreground="#C96F4A"/>
                     </StackPanel>
 
                     <!-- Launch Button -->
@@ -284,8 +292,8 @@
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
                             Padding="0,6"
-                            Background="#D97757"
-                            Foreground="#171513"
+                            Background="#C96F4A"
+                            Foreground="#171616"
                             FontWeight="SemiBold"
                             FontSize="12"
                             CornerRadius="4"
@@ -305,29 +313,29 @@
             IsVisible="{Binding HasSelectedApp}"
             Margin="0,0,0,20"
             Padding="16"
-            Background="#211E1A"
-            BorderBrush="#3A332B"
+            Background="#25201D"
+            BorderBrush="#4A3A32"
             BorderThickness="1"
             CornerRadius="10">
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
         <StackPanel Spacing="5">
           <TextBlock Text="SELECTED GAME" Classes="eyebrow"/>
-          <TextBlock Text="{Binding SelectedApp.Name}" FontSize="20" FontWeight="Bold" Foreground="#F4F0E6"
+          <TextBlock Text="{Binding SelectedApp.Name}" FontSize="20" FontWeight="Bold" Foreground="#F3E8D0"
                      TextTrimming="CharacterEllipsis"/>
-          <TextBlock Text="{Binding SelectedApp.FullPath}" FontSize="11" Foreground="#B7AA98"
+          <TextBlock Text="{Binding SelectedApp.FullPath}" FontSize="11" Foreground="#B9AA98"
                      FontFamily="Consolas, Monospace" TextTrimming="CharacterEllipsis"/>
           <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,6,0,0">
-            <TextBlock Text="{Binding SelectedApp.FormattedSize}" FontSize="12" Foreground="#D97757"/>
-            <TextBlock Text="{Binding SelectedApp.FormattedLastPlayed}" FontSize="12" Foreground="#B7AA98"/>
-            <TextBlock Text="{Binding SelectedApp.Status}" FontSize="12" Foreground="#B7AA98"/>
+            <TextBlock Text="{Binding SelectedApp.FormattedSize}" FontSize="12" Foreground="#C96F4A"/>
+            <TextBlock Text="{Binding SelectedApp.FormattedLastPlayed}" FontSize="12" Foreground="#B9AA98"/>
+            <TextBlock Text="{Binding SelectedApp.Status}" FontSize="12" Foreground="#B9AA98"/>
           </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
           <Button Content="Set cover"
                   Click="OnSelectedSetCoverClick"
                   Padding="12,8"
-                  Background="#3A332B"
-                  Foreground="#F4F0E6"
+                  Background="#4A3A32"
+                  Foreground="#F3E8D0"
                   BorderThickness="0"
                   CornerRadius="6"
                   ToolTip.Tip="Choose custom cover art"/>
@@ -336,8 +344,8 @@
                   CommandParameter="{Binding SelectedApp}"
                   IsEnabled="{Binding SelectedApp.CanLaunch}"
                   Padding="14,8"
-                  Background="#D97757"
-                  Foreground="#171513"
+                  Background="#C96F4A"
+                  Foreground="#171616"
                   FontWeight="SemiBold"
                   BorderThickness="0"
                   CornerRadius="6"/>
@@ -349,29 +357,29 @@
     <Border DockPanel.Dock="Top"
             IsVisible="{Binding IsEmpty}"
             Padding="56"
-            Background="#211E1A"
-            BorderBrush="#3A332B"
+            Background="#25201D"
+            BorderBrush="#4A3A32"
             BorderThickness="1"
             CornerRadius="8">
       <StackPanel Spacing="16" HorizontalAlignment="Center">
-        <TextBlock Text="Your library is empty" FontSize="20" FontWeight="SemiBold" Foreground="#F4F0E6" HorizontalAlignment="Center"/>
+        <TextBlock Text="Your library is empty" FontSize="20" FontWeight="SemiBold" Foreground="#F3E8D0" HorizontalAlignment="Center"/>
         <TextBlock Text="Add a game folder in Settings, then rescan for .iso files."
-                   FontSize="14" Opacity="0.7" Foreground="#F4F0E6" HorizontalAlignment="Center" TextAlignment="Center"/>
+                   FontSize="14" Opacity="0.7" Foreground="#F3E8D0" HorizontalAlignment="Center" TextAlignment="Center"/>
         <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
           <Button Content="Clear filter"
                   Command="{Binding ClearSearchCommand}"
                   IsVisible="{Binding HasSearchQuery}"
                   Padding="16,10"
-                  Background="#3A332B"
-                  Foreground="#F4F0E6"
+                  Background="#4A3A32"
+                  Foreground="#F3E8D0"
                   BorderThickness="0"
                   CornerRadius="6"
                   FontWeight="SemiBold"/>
           <Button Content="Rescan folders"
                   Command="{Binding RescanLibraryCommand}"
                   Padding="16,10"
-                  Background="#D97757"
-                  Foreground="#171513"
+                  Background="#C96F4A"
+                  Foreground="#171616"
                   BorderThickness="0"
                   CornerRadius="6"
                   FontWeight="SemiBold"/>
@@ -415,7 +423,7 @@
               <Grid RowDefinitions="180,*,Auto">
                 <!-- Cover Art / Fallback Image Area -->
                 <Border Grid.Row="0"
-                        Background="#171513"
+                        Background="#171616"
                         CornerRadius="12,12,0,0"
                         ClipToBounds="True">
                   <Grid>
@@ -426,7 +434,7 @@
 
                     <!-- Graceful Fallback Disc Tile -->
                     <Grid IsVisible="{Binding !HasCoverArt}">
-                      <TextBlock Text="No cover" FontSize="12" Foreground="#B7AA98"
+                      <TextBlock Text="No cover" FontSize="12" Foreground="#B9AA98"
                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
 
@@ -437,7 +445,7 @@
                               Click="OnSetCoverClick"
                               Padding="6,4"
                               Background="#30000000"
-                              Foreground="#F4F0E6"
+                              Foreground="#F3E8D0"
                               BorderThickness="0"
                               CornerRadius="4"
                               FontSize="12"/>
@@ -447,7 +455,7 @@
                               IsVisible="{Binding HasCoverArt}"
                               Padding="6,4"
                               Background="#30000000"
-                              Foreground="#D95D54"
+                              Foreground="#B94F45"
                               BorderThickness="0"
                               CornerRadius="4"
                               FontSize="12"/>
@@ -455,26 +463,26 @@
 
                     <!-- Running / Missing Status Badge (Top Right) -->
                     <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8"
-                            Background="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#D97757|#D95D54'}"
+                            Background="{Binding !IsMissing, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#C96F4A|#B94F45'}"
                             CornerRadius="10" Padding="8,3">
                       <TextBlock Text="{Binding !IsMissing, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Ready|Missing'}"
-                                 FontSize="10" FontWeight="Bold" Foreground="#171513"/>
+                                 FontSize="10" FontWeight="Bold" Foreground="#171616"/>
                     </Border>
 
                     <!-- File Size & Last Played Badge (Bottom) -->
                     <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8"
                             Background="#80000000" CornerRadius="4" Padding="6,2">
-                      <TextBlock Text="{Binding FormattedSize}" FontSize="10" Foreground="#B7AA98" FontFamily="Consolas, Monospace"/>
+                      <TextBlock Text="{Binding FormattedSize}" FontSize="10" Foreground="#B9AA98" FontFamily="Consolas, Monospace"/>
                     </Border>
                   </Grid>
                 </Border>
 
                 <!-- Game Info -->
                 <StackPanel Grid.Row="1" Margin="16,12,16,8" Spacing="4">
-                  <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Foreground="#F4F0E6"
+                  <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="Bold" Foreground="#F3E8D0"
                              TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"/>
-                  <TextBlock Text="{Binding FormattedLastPlayed}" FontSize="11" Foreground="#D97757" Opacity="0.9"/>
-                  <TextBlock Text="{Binding FullPath}" FontSize="11" Opacity="0.6" Foreground="#F4F0E6"
+                  <TextBlock Text="{Binding FormattedLastPlayed}" FontSize="11" Foreground="#C96F4A" Opacity="0.9"/>
+                  <TextBlock Text="{Binding FullPath}" FontSize="11" Opacity="0.6" Foreground="#F3E8D0"
                              TextWrapping="Wrap" MaxLines="1" TextTrimming="CharacterEllipsis" FontFamily="Consolas, Monospace"/>
                 </StackPanel>
 
@@ -486,8 +494,8 @@
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Center"
                           Padding="0,10"
-                          Background="{Binding CanLaunch, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#D97757|#3A332B'}"
-                          Foreground="{Binding CanLaunch, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#171513|#B7AA98'}"
+                          Background="{Binding CanLaunch, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#C96F4A|#4A3A32'}"
+                          Foreground="{Binding CanLaunch, Converter={StaticResource BoolToBrushConverter}, ConverterParameter='#171616|#B9AA98'}"
                           BorderThickness="0"
                           CornerRadius="6"
                           FontWeight="SemiBold"
@@ -502,21 +510,21 @@
     </ScrollViewer>
 
     <!-- Stats Footer -->
-    <Border DockPanel.Dock="Bottom" Margin="0,24,0,0" Padding="16" Background="#211E1A" CornerRadius="8">
+    <Border DockPanel.Dock="Bottom" Margin="0,24,0,0" Padding="16" Background="#25201D" CornerRadius="8">
       <Grid ColumnDefinitions="*,*,*" HorizontalAlignment="Stretch">
         <StackPanel Grid.Column="0" Spacing="2" HorizontalAlignment="Center">
-          <TextBlock Text="{Binding TotalApps}" FontSize="24" FontWeight="Bold" Foreground="#D97757" HorizontalAlignment="Center"/>
-          <TextBlock Text="Total Games" FontSize="12" Opacity="0.7" Foreground="#F4F0E6" HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding TotalApps}" FontSize="24" FontWeight="Bold" Foreground="#C96F4A" HorizontalAlignment="Center"/>
+          <TextBlock Text="Total Games" FontSize="12" Opacity="0.7" Foreground="#F3E8D0" HorizontalAlignment="Center"/>
         </StackPanel>
-        <Border Grid.Column="1" Width="1" Background="#3A332B" VerticalAlignment="Center" Margin="0,8"/>
+        <Border Grid.Column="1" Width="1" Background="#4A3A32" VerticalAlignment="Center" Margin="0,8"/>
         <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Center">
-          <TextBlock Text="{Binding InstalledApps}" FontSize="24" FontWeight="Bold" Foreground="#D97757" HorizontalAlignment="Center"/>
-          <TextBlock Text="Ready" FontSize="12" Opacity="0.7" Foreground="#F4F0E6" HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding InstalledApps}" FontSize="24" FontWeight="Bold" Foreground="#C96F4A" HorizontalAlignment="Center"/>
+          <TextBlock Text="Ready" FontSize="12" Opacity="0.7" Foreground="#F3E8D0" HorizontalAlignment="Center"/>
         </StackPanel>
-        <Border Grid.Column="2" Width="1" Background="#3A332B" VerticalAlignment="Center" Margin="0,8"/>
+        <Border Grid.Column="2" Width="1" Background="#4A3A32" VerticalAlignment="Center" Margin="0,8"/>
         <StackPanel Grid.Column="2" Spacing="2" HorizontalAlignment="Center">
-          <TextBlock Text="{Binding MissingApps}" FontSize="24" FontWeight="Bold" Foreground="#D95D54" HorizontalAlignment="Center"/>
-          <TextBlock Text="Missing / Moved" FontSize="12" Opacity="0.7" Foreground="#F4F0E6" HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding MissingApps}" FontSize="24" FontWeight="Bold" Foreground="#B94F45" HorizontalAlignment="Center"/>
+          <TextBlock Text="Missing / Moved" FontSize="12" Opacity="0.7" Foreground="#F3E8D0" HorizontalAlignment="Center"/>
         </StackPanel>
       </Grid>
     </Border>
