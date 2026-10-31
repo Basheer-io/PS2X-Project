@@ -54,7 +54,7 @@ Interactive Entertainment or the PCSX2 team.
 PS2 Home release packages include the .NET runtime, so end users do not
 normally need to install .NET. A desktop session is required on Linux.
 
-## Download
+## Download and install
 
 **[Download the latest release](https://github.com/Basheer-io/PS2X-Project/releases/latest)**
 
@@ -65,6 +65,24 @@ normally need to install .NET. A desktop session is required on Linux.
 
 These are self-contained packages; install .NET separately only when running
 from source. Verify downloads with the included `SHA256SUMS.txt` file.
+
+### One-command Linux install
+
+On supported x64 Linux desktops, install PS2 Home for your user without
+`sudo`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Basheer-io/PS2X-Project/main/PS2-Home/install-linux.sh \
+  -o /tmp/ps2home-install.sh && bash /tmp/ps2home-install.sh
+```
+
+The script downloads the latest release, adds PS2 Home to the application
+menu, registers `.iso` files, and installs the `ps2home` command. Uninstall
+with:
+
+```bash
+~/.local/share/ps2home/install-linux.sh --uninstall
+```
 
 ## Quick start: install and play
 
@@ -85,9 +103,10 @@ from source. Verify downloads with the included `SHA256SUMS.txt` file.
 Release packages include convenient entry points for the desktop and file
 manager:
 
-- **Linux:** run `./install-linux.sh` once from the extracted release folder.
-  PS2 Home then appears in the application menu and can be registered for
-  `.iso` files. You can also launch directly with `ps2home /path/to/game.iso`.
+- **Linux:** use the one-command installer above, or run
+  `./install-linux.sh` from an extracted release folder. PS2 Home then appears
+  in the application menu and can open `.iso` files. You can also launch
+  directly with `ps2home /path/to/game.iso`.
 - **Windows:** run `PS2Home.App.exe` directly, or use the included
   executable with a game path:
   `PS2Home.App.exe "C:\Games\My Game.iso"`.
@@ -207,16 +226,16 @@ The ZIP and checksum are created in `dist\`.
    cd ps2home-linux-x64
    ```
 
-4. Start the app:
+4. Install it for your user:
 
    ```bash
-   ./PS2Home.App
+   ./install-linux.sh
    ```
 
-If needed, make the files executable:
+Or start it directly without installing:
 
 ```bash
-chmod +x PS2Home.App ps2home-diag
+./PS2Home.App
 ```
 
 The app stores user settings under:
