@@ -47,15 +47,15 @@
     <converters:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
 
     <!-- Theme Colors -->
-    <Color x:Key="ColorAppBackground">#171513</Color>
-    <Color x:Key="ColorCardBackground">#211E1A</Color>
-    <Color x:Key="ColorBorder">#3A332B</Color>
-    <Color x:Key="ColorAccent">#D97757</Color>
-    <Color x:Key="ColorError">#D95D54</Color>
-    <Color x:Key="ColorTextPrimary">#F4F0E6</Color>
-    <Color x:Key="ColorTextMuted">#B7AA98</Color>
-    <Color x:Key="ColorSurfaceRaised">#2B2520</Color>
-    <Color x:Key="ColorAccentSoft">#3C2923</Color>
+    <Color x:Key="ColorAppBackground">#151815</Color>
+    <Color x:Key="ColorCardBackground">#20261F</Color>
+    <Color x:Key="ColorBorder">#3D4939</Color>
+    <Color x:Key="ColorAccent">#C98B4A</Color>
+    <Color x:Key="ColorError">#C45B4D</Color>
+    <Color x:Key="ColorTextPrimary">#F2E9D8</Color>
+    <Color x:Key="ColorTextMuted">#B6B7A5</Color>
+    <Color x:Key="ColorSurfaceRaised">#2B3328</Color>
+    <Color x:Key="ColorAccentSoft">#34402D</Color>
 
     <SolidColorBrush x:Key="BrushAppBackground" Color="{StaticResource ColorAppBackground}"/>
     <SolidColorBrush x:Key="BrushCardBackground" Color="{StaticResource ColorCardBackground}"/>

@@ -10,7 +10,7 @@
   <Window.Styles>
     <Style Selector="Button.nav-button">
       <Setter Property="Background" Value="Transparent"/>
-      <Setter Property="Foreground" Value="#B7AA98"/>
+      <Setter Property="Foreground" Value="#B6B7A5"/>
       <Setter Property="Padding" Value="12,11"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="CornerRadius" Value="6"/>
@@ -27,13 +27,13 @@
     </Style>
 
     <Style Selector="Button.nav-button:pointerover">
-      <Setter Property="Background" Value="#302B25"/>
-      <Setter Property="Foreground" Value="#FFFFFF"/>
+      <Setter Property="Background" Value="#3A4635"/>
+      <Setter Property="Foreground" Value="#FFF8EA"/>
     </Style>
 
     <Style Selector="Button.nav-button:focus-visible">
       <Setter Property="BorderThickness" Value="2"/>
-      <Setter Property="BorderBrush" Value="#D97757"/>
+      <Setter Property="BorderBrush" Value="#C98B4A"/>
     </Style>
 
     <Style Selector="Button.nav-button.active">
@@ -43,7 +43,7 @@
     </Style>
 
     <Style Selector="Button.nav-button.active:pointerover">
-      <Setter Property="Background" Value="#8B4F3D"/>
+      <Setter Property="Background" Value="#8B673F"/>
     </Style>
   </Window.Styles>
 
