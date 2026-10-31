@@ -84,6 +84,13 @@ with:
 ~/.local/share/ps2home/install-linux.sh --uninstall
 ```
 
+If PS2 Home is already installed but does not appear in your application menu,
+run:
+
+```bash
+bash ~/.local/share/ps2home/create-linux-app.sh
+```
+
 ## Quick start: install and play
 
 1. Install PS2 Home using a release package, or clone the repository and run

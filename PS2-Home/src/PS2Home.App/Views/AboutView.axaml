@@ -12,7 +12,6 @@
         <StackPanel Spacing="16">
           <Grid ColumnDefinitions="Auto,*">
             <Border Grid.Column="0" Width="64" Height="64" Background="#2A2F3E" CornerRadius="16" Margin="0,0,20,0">
-              <TextBlock Text="🎮" FontSize="34" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
               <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
@@ -39,7 +38,7 @@
                     Padding="14,8"
                     CornerRadius="6"/>
 
-            <Button Content="🎮 PCSX2 Website"
+            <Button Content="PCSX2 website"
                     Command="{Binding OpenPcsx2Command}"
                     Background="#2A2F3E"
                     Foreground="#E8E8E8"
@@ -59,7 +58,7 @@
       <!-- Legal & Trademark Disclaimer Card -->
       <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="8" Padding="20">
         <StackPanel Spacing="12">
-          <TextBlock Text="⚖️ Trademark &amp; Non-Affiliation Disclaimer" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBlock Text="Trademark and non-affiliation" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
           <TextBlock Text="PS2 Home is an independent open-source project and is not affiliated with, authorized, maintained, sponsored, or endorsed by Sony Interactive Entertainment Inc. or the PCSX2 development team."
                      FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
           <TextBlock Text="'PlayStation', 'PS2', 'DualShock', and 'DualSense' are registered trademarks or trademarks of Sony Interactive Entertainment Inc. All product and company names are trademarks™ or registered® trademarks of their respective holders."
@@ -70,7 +69,7 @@
       <!-- Anti-Piracy / Ethical Statement -->
       <Border Background="#161922" BorderBrush="#2A2F3E" BorderThickness="1" CornerRadius="8" Padding="20">
         <StackPanel Spacing="12">
-          <TextBlock Text="🛡️ Anti-Piracy Notice" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
+          <TextBlock Text="Legal notice" FontSize="16" FontWeight="SemiBold" Foreground="#E8E8E8"/>
           <TextBlock Text="PS2 Home strictly adheres to digital preservation and legal homebrew ethics. PS2 Home does not include, bundle, download, or link to copyrighted game disc images, BIOS dumps, or PCSX2 binaries."
                      FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
           <TextBlock Text="Users are solely responsible for dumping their own BIOS from their physical PlayStation 2 console and using legally obtained disc backups."

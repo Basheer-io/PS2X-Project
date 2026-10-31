@@ -51,8 +51,10 @@ jobs:
           cp README.md LICENSE THIRD-PARTY-NOTICES.md "../dist/ps2home-${{ matrix.rid }}/"
           if [ "${{ matrix.rid }}" = "linux-x64" ]; then
             cp install-linux.sh "../dist/ps2home-${{ matrix.rid }}/"
+            cp create-linux-app.sh "../dist/ps2home-${{ matrix.rid }}/"
             cp -r assets "../dist/ps2home-${{ matrix.rid }}/"
             chmod +x "../dist/ps2home-${{ matrix.rid }}/install-linux.sh"
+            chmod +x "../dist/ps2home-${{ matrix.rid }}/create-linux-app.sh"
           fi
         shell: bash
 

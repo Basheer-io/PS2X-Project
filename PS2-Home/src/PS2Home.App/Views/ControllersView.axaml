@@ -9,7 +9,7 @@
 
       <!-- Header -->
       <StackPanel Spacing="6">
-        <TextBlock Text="🎮 Controller Setup" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
+        <TextBlock Text="Controller setup" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
         <TextBlock Text="Step-by-step guide to connecting and configuring gamepads for PCSX2"
                    FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
       </StackPanel>

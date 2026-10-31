@@ -13,7 +13,7 @@
           <TextBlock Text="System information, health checks, and application logs" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-          <Button Content="🔄 Refresh Info"
+          <Button Content="Refresh information"
                   Command="{Binding RefreshSystemInfoCommand}"
                   Padding="14,8"
                   Background="#2A2F3E"

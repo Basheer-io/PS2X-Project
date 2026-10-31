@@ -34,7 +34,7 @@
           <!-- Native execution boundary -->
           <Border Background="#1C1826" BorderBrush="#8A63D2" BorderThickness="1" CornerRadius="6" Padding="14">
             <StackPanel Spacing="6">
-              <TextBlock Text="ℹ️ Native execution check" FontSize="14" FontWeight="Bold" Foreground="#BFA6F2"/>
+              <TextBlock Text="How games run" FontSize="14" FontWeight="Bold" Foreground="#BFA6F2"/>
               <TextBlock Text="PS2 games cannot run directly on a normal PC. This launcher starts them through PCSX2, which emulates the PlayStation 2 hardware. A real PS2 console or a PS2-specific native port would be required for native execution."
                          FontSize="12" Opacity="0.9" Foreground="#E8E8E8" TextWrapping="Wrap"/>
             </StackPanel>
@@ -62,7 +62,7 @@
                     BorderThickness="0"
                     CornerRadius="6"/>
             <Button Grid.Column="2"
-                    Content="▶ Open PCSX2"
+                    Content="Open PCSX2"
                     Command="{Binding OpenPcsx2Command}"
                     IsEnabled="{Binding IsPcsx2Configured}"
                     Padding="14,8"
@@ -109,7 +109,7 @@
                        FontFamily="Consolas, Monospace"
                        FontSize="13"/>
               <Button Grid.Column="1"
-                       Content="✓ Test Binary"
+                       Content="Test binary"
                        Command="{Binding ValidateCustomPathCommand}"
                        IsEnabled="{Binding !IsValidating}"
                        Padding="16,8"
@@ -124,7 +124,7 @@
           <!-- BIOS Guidance Box -->
           <Border Background="#1C1826" BorderBrush="#8A63D2" BorderThickness="1" CornerRadius="6" Padding="14">
             <StackPanel Spacing="6">
-              <TextBlock Text="ℹ️ PlayStation 2 BIOS Requirement" FontSize="14" FontWeight="Bold" Foreground="#BFA6F2"/>
+              <TextBlock Text="PlayStation 2 BIOS requirement" FontSize="14" FontWeight="Bold" Foreground="#BFA6F2"/>
               <TextBlock Text="PCSX2 requires a genuine BIOS dump from your own PlayStation 2 console to run commercial games. PS2 Home does not and will never distribute, bundle, or download BIOS files."
                          FontSize="12" Opacity="0.85" Foreground="#E8E8E8" TextWrapping="Wrap"/>
               <TextBlock Text="Learn how to legally dump your PS2 BIOS at: https://pcsx2.net/docs/setup/bios/"
@@ -156,7 +156,7 @@
                      FontFamily="Consolas, Monospace"
                      FontSize="13"/>
             <Button Grid.Column="1"
-                    Content="➕ Add Folder"
+                    Content="Add folder"
                     Command="{Binding AddFolderCommand}"
                     Padding="16,8"
                     Background="#00D4AA"
@@ -179,7 +179,7 @@
                                FontSize="13"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
-                            Content="✕ Remove"
+                            Content="Remove"
                             Command="{Binding $parent[UserControl].DataContext.RemoveFolderCommand}"
                             CommandParameter="{Binding}"
                             Padding="8,4"
@@ -212,7 +212,7 @@
 
           <StackPanel Orientation="Horizontal" Spacing="12">
             <Button x:Name="ExportBackupButton"
-                    Content="📤 Export Backup..."
+                    Content="Export backup..."
                     Click="OnExportBackupClick"
                     IsEnabled="{Binding !IsBackingUp}"
                     Padding="16,10"
@@ -223,7 +223,7 @@
                     FontWeight="SemiBold"/>
 
             <Button x:Name="ImportBackupButton"
-                    Content="📥 Restore Backup..."
+                    Content="Restore backup..."
                     Click="OnImportBackupClick"
                     IsEnabled="{Binding !IsBackingUp}"
                     Padding="16,10"
@@ -244,7 +244,7 @@
           <StackPanel Spacing="12">
             <CheckBox Content="Auto-scan on application startup" IsChecked="{Binding AutoScanOnStartup}" Foreground="#E8E8E8" FontSize="14"/>
             <CheckBox Content="Show missing or moved game images" IsChecked="{Binding ShowHiddenApps}" Foreground="#E8E8E8" FontSize="14"/>
-            <CheckBox Content="🛋️ Couch Mode (Enlarged 10-foot TV UI)" IsChecked="{Binding CouchMode}" Foreground="#E8E8E8" FontSize="14"/>
+            <CheckBox Content="Couch mode (enlarged TV layout)" IsChecked="{Binding CouchMode}" Foreground="#E8E8E8" FontSize="14"/>
           </StackPanel>
         </StackPanel>
       </Border>

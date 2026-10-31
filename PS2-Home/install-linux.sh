@@ -60,27 +60,16 @@ mkdir -p "${INSTALL_DIR}" "${BIN_DIR}" "${DESKTOP_DIR}"
 find "${SOURCE_DIR}" -mindepth 1 -maxdepth 1 ! -name "install-linux.sh" \
     -exec cp -a {} "${INSTALL_DIR}/" \;
 cp -a "${SOURCE_DIR}/install-linux.sh" "${INSTALL_DIR}/"
+if [[ -f "${SOURCE_DIR}/create-linux-app.sh" ]]; then
+    cp -a "${SOURCE_DIR}/create-linux-app.sh" "${INSTALL_DIR}/"
+else
+    cp -a "$(dirname -- "${BASH_SOURCE[0]}")/create-linux-app.sh" "${INSTALL_DIR}/"
+fi
 chmod +x "${INSTALL_DIR}/PS2Home.App"
+chmod +x "${INSTALL_DIR}/create-linux-app.sh"
 
 ln -sfn "${INSTALL_DIR}/PS2Home.App" "${BIN_DIR}/ps2home"
-
-cat > "${DESKTOP_DIR}/ps2home.desktop" <<EOF
-[Desktop Entry]
-Type=Application
-Name=PS2 Home
-Comment=Organize and launch legally owned PlayStation 2 game images
-Exec=${BIN_DIR}/ps2home %f
-Icon=${INSTALL_DIR}/assets/ps2home.svg
-Terminal=false
-Categories=Game;Emulator;
-MimeType=application/x-iso9660-image;application/x-cd-image;
-Keywords=PlayStation;PS2;PCSX2;Emulator;Games;
-StartupNotify=true
-EOF
-
-if command -v update-desktop-database >/dev/null 2>&1; then
-    update-desktop-database "${DESKTOP_DIR}" >/dev/null 2>&1 || true
-fi
+"${INSTALL_DIR}/create-linux-app.sh"
 
 echo "${APP_NAME} installed for your user."
 echo "Launch it from your application menu or with: ${BIN_DIR}/ps2home"

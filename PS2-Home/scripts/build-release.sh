@@ -36,8 +36,10 @@ cp "${ROOT_DIR}/README.md" "${STAGE_DIR}/"
 cp "${ROOT_DIR}/LICENSE" "${STAGE_DIR}/"
 cp "${ROOT_DIR}/THIRD-PARTY-NOTICES.md" "${STAGE_DIR}/"
 cp "${ROOT_DIR}/install-linux.sh" "${STAGE_DIR}/"
+cp "${ROOT_DIR}/create-linux-app.sh" "${STAGE_DIR}/"
 cp -r "${ROOT_DIR}/assets" "${STAGE_DIR}/"
 chmod +x "${STAGE_DIR}/install-linux.sh"
+chmod +x "${STAGE_DIR}/create-linux-app.sh"
 
 # 4. Create Archive
 echo "--- Packaging Tarball ---"

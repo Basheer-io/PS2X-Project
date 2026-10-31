@@ -64,8 +64,8 @@
           </StackPanel>
           <Border Background="{StaticResource BrushAccentSoft}" CornerRadius="8" Padding="10,9">
             <StackPanel Spacing="3">
-              <TextBlock Text="READY TO PLAY" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushAccent}"/>
-              <TextBlock Text="Organize your collection and launch through PCSX2." FontSize="11"
+              <TextBlock Text="Library status" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushAccent}"/>
+              <TextBlock Text="Games are launched through PCSX2." FontSize="11"
                          Foreground="{StaticResource BrushTextPrimary}" TextWrapping="Wrap" Opacity="0.85"/>
             </StackPanel>
           </Border>
@@ -74,32 +74,32 @@
         <StackPanel Spacing="6" DockPanel.Dock="Top">
           <TextBlock Text="WORKSPACE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"
                      Margin="12,0,0,4" Opacity="0.8"/>
-          <Button Content="📚  Library"
+          <Button Content="Library"
                   Classes="nav-button"
                   Classes.active="{Binding IsLibraryActive}"
                   Command="{Binding NavigateToLibraryCommand}"/>
 
-          <Button Content="🎮  Controllers"
+          <Button Content="Controllers"
                   Classes="nav-button"
                   Classes.active="{Binding IsControllersActive}"
                   Command="{Binding NavigateToControllersCommand}"/>
 
-          <Button Content="⚙️  Settings"
+          <Button Content="Settings"
                   Classes="nav-button"
                   Classes.active="{Binding IsSettingsActive}"
                   Command="{Binding NavigateToSettingsCommand}"/>
 
-          <Button Content="⬇  Downloads"
+          <Button Content="Downloads"
                   Classes="nav-button"
                   Classes.active="{Binding IsDownloadsActive}"
                   Command="{Binding NavigateToDownloadsCommand}"/>
 
-          <Button Content="🔧  Diagnostics"
+          <Button Content="Diagnostics"
                   Classes="nav-button"
                   Classes.active="{Binding IsDiagnosticsActive}"
                   Command="{Binding NavigateToDiagnosticsCommand}"/>
 
-          <Button Content="ℹ️  About"
+          <Button Content="About"
                   Classes="nav-button"
                   Classes.active="{Binding IsAboutActive}"
                   Command="{Binding NavigateToAboutCommand}"/>
@@ -110,7 +110,7 @@
           <Grid ColumnDefinitions="*,Auto">
             <StackPanel Spacing="2">
               <TextBlock Text="PS2 HOME" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"/>
-              <TextBlock Text="v1.0.0 · Open source" FontSize="10" Foreground="{StaticResource BrushTextMuted}" Opacity="0.7"/>
+              <TextBlock Text="v1.0.0" FontSize="10" Foreground="{StaticResource BrushTextMuted}" Opacity="0.7"/>
             </StackPanel>
             <TextBlock Grid.Column="1" Text="●" FontSize="10" Foreground="{StaticResource BrushAccent}"
                        VerticalAlignment="Center" ToolTip.Tip="App is ready"/>

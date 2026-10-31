@@ -27,7 +27,7 @@
           <TextBlock Text="Download PCSX2 for Linux or Windows directly from the official PCSX2 website. PS2 Home does not redistribute emulator binaries."
                      FontSize="13" Foreground="#A0A5B5" TextWrapping="Wrap"/>
           <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="⬇ Official PCSX2 Downloads"
+            <Button Content="Official PCSX2 downloads"
                     Command="{Binding OpenPcsx2DownloadsCommand}"
                     Background="#00D4AA" Foreground="#0F1117"
                     FontWeight="SemiBold" Padding="14,8" CornerRadius="6"/>
