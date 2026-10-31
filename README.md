@@ -6,16 +6,16 @@ Remember when playing a game meant picking it up and pressing a button? PS2 Home
 
 It's free, open source, and built for **Linux and Windows**.
 
-> 🚧 **Where things stand:** PS2 Home is in its very early days. The project foundation is being laid right now, so there's nothing to play with yet. If you're here early, welcome! Come back soon, or follow along and help shape it.
+> **Where things stand:** PS2 Home is in its very early days. The project foundation is being laid right now, so there's nothing to play with yet. If you're here early, welcome! Come back soon, or follow along and help shape it.
 
 ---
 
 ## What PS2 Home is
 
-- 📚 **A game library.** Scan your folders, search your collection, and have it all still there next time you open the app.
-- ▶️ **A one-click launcher.** Select a game and play it, with preferences like fullscreen remembered per game.
-- 🧭 **A setup helper.** It helps you find PCSX2, checks what's missing, and explains the fix without the jargon.
-- 🔍 **A friendly troubleshooter.** When something goes wrong, you get a clear message and useful logs instead of silence.
+- **A game library.** Scan your folders, search your collection, and have it all still there next time you open the app.
+-  **A one-click launcher.** Select a game and play it, with preferences like fullscreen remembered per game.
+  -  **A setup helper.** It helps you find PCSX2, checks what's missing, and explains the fix without the jargon.
+-  **A friendly troubleshooter.** When something goes wrong, you get a clear message and useful logs instead of silence.
 
 ## What PS2 Home is *not*
 
