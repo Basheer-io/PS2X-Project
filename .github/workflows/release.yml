@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Package ${{ matrix.rid }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: windows-latest
+            rid: win-x64
+
+    defaults:
+      run:
+        working-directory: PS2-Home
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Test solution
+        run: |
+          dotnet restore PS2Home.sln
+          dotnet test PS2Home.sln --configuration Release --no-restore
+
+      - name: Publish application
+        run: |
+          dotnet publish src/PS2Home.App/PS2Home.App.csproj \
+            --configuration Release \
+            --runtime ${{ matrix.rid }} \
+            --self-contained true \
+            --output "../dist/ps2home-${{ matrix.rid }}"
+        shell: bash
+
+      - name: Bundle release files
+        run: |
+          cp README.md LICENSE THIRD-PARTY-NOTICES.md "../dist/ps2home-${{ matrix.rid }}/"
+          if [ "${{ matrix.rid }}" = "linux-x64" ]; then
+            cp install-linux.sh "../dist/ps2home-${{ matrix.rid }}/"
+            cp -r assets "../dist/ps2home-${{ matrix.rid }}/"
+            chmod +x "../dist/ps2home-${{ matrix.rid }}/install-linux.sh"
+          fi
+        shell: bash
+
+      - name: Archive Linux package
+        if: runner.os == 'Linux'
+        run: |
+          cd ../dist
+          tar -czf "ps2home-${{ matrix.rid }}-${{ github.ref_name }}.tar.gz" "ps2home-${{ matrix.rid }}"
+          sha256sum "ps2home-${{ matrix.rid }}-${{ github.ref_name }}.tar.gz" > "ps2home-${{ matrix.rid }}-${{ github.ref_name }}.tar.gz.sha256"
+        shell: bash
+
+      - name: Archive Windows package
+        if: runner.os == 'Windows'
+        run: |
+          Compress-Archive -Path "../dist/ps2home-${{ matrix.rid }}/*" -DestinationPath "../dist/ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip" -CompressionLevel Optimal
+          $hash = (Get-FileHash -Path "../dist/ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip" -Algorithm SHA256).Hash
+          "$hash  ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip" | Out-File -FilePath "../dist/ps2home-${{ matrix.rid }}-${{ github.ref_name }}.zip.sha256" -Encoding ascii
+        shell: pwsh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.rid }}
+          path: dist/*
+
+  publish:
+    name: Publish GitHub release
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-files
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-files/*
+          generate_release_notes: true

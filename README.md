@@ -6,6 +6,19 @@ Remember when playing a game meant picking it up and pressing a button? PS2 Home
 
 It's free, open source, and built for **Linux and Windows**.
 
+## Download
+
+**[Download the latest release](https://github.com/Basheer-io/PS2X-Project/releases/latest)**
+
+| Platform | Download |
+|---|---|
+| Windows 10/11 x64 | [Download ZIP](https://github.com/Basheer-io/PS2X-Project/releases/latest/download/ps2home-win-x64-v1.0.1.zip) |
+| Linux x64 | [Download tarball](https://github.com/Basheer-io/PS2X-Project/releases/latest/download/ps2home-linux-x64-v1.0.1.tar.gz) |
+
+The packages include the .NET runtime. On Linux, run `install-linux.sh` once
+after extracting to add PS2 Home to the application menu and open `.iso`
+files from the file manager.
+
 > **Where things stand:** PS2 Home is in its very early days. The project foundation is being laid right now, so there's nothing to play with yet. If you're here early, welcome! Come back soon, or follow along and help shape it.
 
 ---
