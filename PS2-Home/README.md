@@ -54,6 +54,24 @@ Interactive Entertainment or the PCSX2 team.
 PS2 Home release packages include the .NET runtime, so end users do not
 normally need to install .NET. A desktop session is required on Linux.
 
+## Quick start: install and play
+
+1. Install PS2 Home using a release package, or clone the repository and run
+   the platform launcher described in the [Installation](#installation)
+   section.
+2. Install PCSX2 from <https://pcsx2.net/downloads/>.
+3. Configure PCSX2 with a BIOS dumped from your own PlayStation 2. PS2 Home
+   cannot provide a BIOS.
+4. Start PS2 Home and open **Settings**.
+5. Choose **Scan for PCSX2**, or browse to the PCSX2 executable manually.
+6. Add the folder containing your legally obtained PS2 game images.
+7. Open **Library**, choose **Rescan Library**, select a game, and click
+   **Launch**.
+
+PS2 Home is a library and launcher; PCSX2 is the component that emulates the
+PlayStation 2 and runs the game. You must provide your own BIOS and game
+backups. Do not download copyrighted games or BIOS files.
+
 ## Installation
 
 ### Which installation should I use?
@@ -104,7 +122,7 @@ registry installer. User settings are stored under:
 %APPDATA%\PS2Home
 ```
 
-#### Build and run from source on Windows
+#### Run from source on Windows
 
 Install:
 
@@ -217,7 +235,7 @@ sudo pacman -S libx11 libx11-xcb libxcb fontconfig freetype2 \
 
 Extract and run the release tarball as shown above.
 
-#### Build and run from source on Linux
+#### Run from source on Linux
 
 Install:
 
@@ -289,19 +307,21 @@ tarball to run on macOS because it contains Linux-native runtime components.
 macOS support would require a separate Avalonia runtime target, packaging
 workflow, and PCSX2 integration testing.
 
-## Configure PCSX2 and launch a game
+## How to play
 
-### Native execution limitation
-
-PS2 Home cannot run PS2 games natively on a normal Windows or Linux PC. PS2
-games target PS2-specific processors and graphics hardware, so the launcher
-starts them through the user-installed PCSX2 emulator. Native execution
-requires a real PS2 console or a game-specific native port. See
-[native-execution.md](docs/native-execution.md) for the details.
+### Prepare PCSX2
 
 PCSX2 must be installed separately from its official source:
 
 <https://pcsx2.net/downloads/>
+
+Open PCSX2 once and complete its first-run setup. When prompted, select a
+genuine BIOS dump from your own PlayStation 2 console. Follow the official
+BIOS documentation:
+
+<https://pcsx2.net/docs/setup/bios/>
+
+### Configure PS2 Home
 
 Start PS2 Home, then:
 
@@ -320,22 +340,27 @@ Common executable locations:
 | Linux Flatpak | `flatpak run net.pcsx2.PCSX2` |
 | Windows | `C:\Program Files\PCSX2\pcsx2-qt.exe` |
 
-PCSX2 also requires a genuine BIOS dump from your own PlayStation 2 console.
-Use the official PCSX2 BIOS documentation:
-
-<https://pcsx2.net/docs/setup/bios/>
-
-## Add games
+### Add and launch a game
 
 1. Place your legally obtained game images in a folder.
-2. Open **Settings** in PS2 Home.
-3. Add the folder under **PS2 Game Directories**.
-4. Save the settings.
-5. Open **Library** and choose **Rescan Library**.
-6. Select a game and choose **Launch**.
+2. In PS2 Home, open **Settings** and add that folder under
+   **PS2 Game Directories**.
+3. Save the settings.
+4. Open **Library** and choose **Rescan Library**.
+5. Select a game and choose **Launch**.
 
-The first launch starts PCSX2 with the selected game image. PS2 Home does not
-run PS2 software natively; PCSX2 emulates the PS2 hardware.
+The first launch starts PCSX2 with the selected image. If the game does not
+appear, confirm that the file is an `.iso`; the current scanner focuses on ISO
+files. Support for `.chd`, `.cso`, and `.bin/.cue` may require additional
+work.
+
+### Native execution limitation
+
+PS2 Home cannot run PS2 games natively on a normal Windows or Linux PC. PS2
+games target PS2-specific processors and graphics hardware, so the launcher
+starts them through the user-installed PCSX2 emulator. Native execution
+requires a real PS2 console or a game-specific native port. See
+[native-execution.md](docs/native-execution.md) for the details.
 
 The current scanner focuses on `.iso` files. Other formats, including
 `.chd`, `.cso`, and `.bin/.cue`, may require additional support before they
