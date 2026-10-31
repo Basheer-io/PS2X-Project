@@ -174,10 +174,17 @@ public partial class LibraryViewModel : ViewModelBase
     private ObservableCollection<AppItemViewModel> _recentApps = [];
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasSelectedApp))]
     private AppItemViewModel? _selectedApp;
 
     [ObservableProperty]
     private string _searchText = string.Empty;
+
+    [ObservableProperty]
+    private string _sortMode = "Recently played";
+
+    [ObservableProperty]
+    private string _filterMode = "All games";
 
     [ObservableProperty]
     private bool _isLoading = false;
@@ -206,11 +213,17 @@ public partial class LibraryViewModel : ViewModelBase
     [ObservableProperty]
     private int _missingApps = 0;
 
+    [ObservableProperty]
+    private bool _isSetupNeeded;
+
     public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
     public bool IsEmpty => !IsLoading && !IsScanning && !HasError && Apps.Count == 0;
     public bool HasApps => !IsLoading && !IsScanning && !HasError && Apps.Count > 0;
     public bool HasSearchQuery => !string.IsNullOrWhiteSpace(SearchText);
     public bool HasRecentApps => RecentApps.Count > 0 && !HasSearchQuery;
+    public bool HasSelectedApp => SelectedApp != null;
+    public string[] SortModes { get; } = ["Recently played", "A-Z", "Z-A", "File size"];
+    public string[] FilterModes { get; } = ["All games", "Ready", "Missing"];
 
     public LibraryViewModel() : this(
         new SampleGameLibrary(),
@@ -241,6 +254,15 @@ public partial class LibraryViewModel : ViewModelBase
         OnPropertyChanged(nameof(HasSearchQuery));
         OnPropertyChanged(nameof(HasRecentApps));
         ApplyFilter();
+    }
+
+    partial void OnSortModeChanged(string value) => ApplyFilter();
+
+    partial void OnFilterModeChanged(string value) => ApplyFilter();
+
+    partial void OnSelectedAppChanged(AppItemViewModel? value)
+    {
+        OnPropertyChanged(nameof(HasSelectedApp));
     }
 
     partial void OnIsLoadingChanged(bool value)
@@ -293,6 +315,8 @@ public partial class LibraryViewModel : ViewModelBase
         {
             var settings = await _settingsStore.LoadSettingsAsync();
             CouchMode = settings.CouchMode;
+            IsSetupNeeded = settings.GameFolders.Count == 0 || settings.Pcsx2 == null ||
+                            string.IsNullOrWhiteSpace(settings.Pcsx2.Command);
 
             var entries = await _gameLibrary.GetGamesAsync();
             if (entries.Count == 0)
@@ -366,6 +390,7 @@ public partial class LibraryViewModel : ViewModelBase
             ApplyFilter();
 
             StatusMessage = $"Scan completed: {TotalApps} games found ({MissingApps} missing)";
+            IsSetupNeeded = false;
         }
         catch (OperationCanceledException)
         {
@@ -395,6 +420,12 @@ public partial class LibraryViewModel : ViewModelBase
     public void ClearSearch()
     {
         SearchText = string.Empty;
+    }
+
+    [RelayCommand]
+    public void ClearSelection()
+    {
+        SelectedApp = null;
     }
 
     [RelayCommand]
@@ -579,6 +610,19 @@ public partial class LibraryViewModel : ViewModelBase
     {
         var entries = _allApps.Select(a => a.ToGameEntry());
         var filtered = GameFilter.Apply(entries, SearchText);
+        filtered = FilterMode switch
+        {
+            "Ready" => filtered.Where(g => !g.IsMissing).ToList(),
+            "Missing" => filtered.Where(g => g.IsMissing).ToList(),
+            _ => filtered
+        };
+        filtered = SortMode switch
+        {
+            "A-Z" => filtered.OrderBy(g => g.Title, StringComparer.OrdinalIgnoreCase).ToList(),
+            "Z-A" => filtered.OrderByDescending(g => g.Title, StringComparer.OrdinalIgnoreCase).ToList(),
+            "File size" => filtered.OrderByDescending(g => g.FileSizeBytes).ToList(),
+            _ => filtered.OrderByDescending(g => g.LastPlayedAt ?? DateTimeOffset.MinValue).ToList()
+        };
         var filteredIds = new HashSet<string>(filtered.Select(g => g.Id));
 
         Apps.Clear();

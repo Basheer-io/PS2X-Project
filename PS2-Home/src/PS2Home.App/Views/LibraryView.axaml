@@ -52,6 +52,13 @@
       <Setter Property="Foreground" Value="#0F1117"/>
       <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
+
+    <Style Selector="TextBlock.eyebrow">
+      <Setter Property="FontSize" Value="10"/>
+      <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="Foreground" Value="#00D4AA"/>
+      <Setter Property="LetterSpacing" Value="1.2"/>
+    </Style>
   </UserControl.Styles>
 
   <DockPanel>
@@ -59,15 +66,15 @@
     <Border DockPanel.Dock="Top" Margin="0,0,0,16">
       <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
         <StackPanel Grid.Column="0" Spacing="4">
-          <TextBlock Text="Library" FontSize="28" FontWeight="Bold" Foreground="#E8E8E8"/>
-          <TextBlock Text="{Binding StatusMessage}" FontSize="14" Opacity="0.7" Foreground="#E8E8E8"/>
+          <TextBlock Text="Your library" FontSize="30" FontWeight="Bold" Foreground="#E8E8E8"/>
+          <TextBlock Text="{Binding StatusMessage}" FontSize="13" Opacity="0.7" Foreground="#A0A5B5"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
           <Button Content="🛋️ Couch Mode"
                   Command="{Binding ToggleCouchModeCommand}"
                   Classes="couch-toggle"
                   Classes.active="{Binding CouchMode}"
-                  Padding="14,8"
+                  Padding="14,9"
                   Background="#2A2F3E"
                   Foreground="#E8E8E8"
                   FontSize="12"
@@ -76,7 +83,7 @@
                   ToolTip.Tip="Toggle 10-foot enlarged layout for TV / gamepad use"/>
           <Button Content="⚠️ Toggle Error"
                   Command="{Binding ToggleErrorStateCommand}"
-                  Padding="12,8"
+                  Padding="13,9"
                   Background="#2A2F3E"
                   Foreground="#A0A5B5"
                   FontSize="12"
@@ -86,7 +93,7 @@
           <Button Content="⏹ Cancel"
                   Command="{Binding CancelScanCommand}"
                   IsVisible="{Binding IsScanning}"
-                  Padding="16,8"
+                  Padding="16,9"
                   Background="#FF6B6B"
                   Foreground="#0F1117"
                   FontWeight="SemiBold"
@@ -95,7 +102,7 @@
           <Button Content="🔄 Rescan Library"
                   Command="{Binding RescanLibraryCommand}"
                   IsVisible="{Binding !IsScanning}"
-                  Padding="16,8"
+                  Padding="16,9"
                   Background="#2A2F3E"
                   Foreground="#E8E8E8"
                   BorderThickness="0"
@@ -107,28 +114,82 @@
 
     <!-- Search Box -->
     <Border DockPanel.Dock="Top" Margin="0,0,0,16">
-      <Grid ColumnDefinitions="*,Auto">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
         <TextBox Grid.Column="0"
                  x:Name="SearchTextBox"
                  Text="{Binding SearchText}"
-                 Watermark="🔍 Search games (Esc to clear, Arrow keys to navigate, Enter to play)..."
+                 Watermark="Search your games..."
                  Background="#161922"
                  Foreground="#E8E8E8"
                  BorderBrush="#2A2F3E"
                  BorderThickness="1"
                  CornerRadius="6"
-                 Padding="12,10"
+                 Padding="13,11"
                  FontSize="13"/>
-        <Button Grid.Column="1"
-                Content="✕ Clear"
+        <ComboBox Grid.Column="1"
+                 ItemsSource="{Binding SortModes}"
+                 SelectedItem="{Binding SortMode}"
+                 Width="150"
+                 Background="#161922"
+                 Foreground="#E8E8E8"
+                 BorderBrush="#2A2F3E"
+                 BorderThickness="1"
+                 CornerRadius="6"
+                 Padding="10,8"
+                 ToolTip.Tip="Sort the library"/>
+        <ComboBox Grid.Column="2"
+                 ItemsSource="{Binding FilterModes}"
+                 SelectedItem="{Binding FilterMode}"
+                 Width="125"
+                 Background="#161922"
+                 Foreground="#E8E8E8"
+                 BorderBrush="#2A2F3E"
+                 BorderThickness="1"
+                 CornerRadius="6"
+                 Padding="10,8"
+                 ToolTip.Tip="Filter ready or missing games"/>
+        <Button Grid.Column="3"
+                Content="Clear search"
                 Command="{Binding ClearSearchCommand}"
                 IsVisible="{Binding HasSearchQuery}"
                 Margin="8,0,0,0"
-                Padding="12,8"
+                Padding="13,9"
                 Background="#2A2F3E"
                 Foreground="#E8E8E8"
                 BorderThickness="0"
                 CornerRadius="6"/>
+      </Grid>
+    </Border>
+
+    <!-- First-run onboarding -->
+    <Border DockPanel.Dock="Top"
+            IsVisible="{Binding IsSetupNeeded}"
+            Margin="0,0,0,16"
+            Padding="18"
+            Background="#172B31"
+            BorderBrush="#00D4AA"
+            BorderThickness="1"
+            CornerRadius="10">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+        <Border Width="38" Height="38" CornerRadius="19" Background="#00D4AA" VerticalAlignment="Top">
+          <TextBlock Text="✓" FontSize="20" FontWeight="Bold" Foreground="#0F1117"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="4">
+          <TextBlock Text="Finish setting up your library" FontSize="16" FontWeight="Bold" Foreground="#E8E8E8"/>
+          <TextBlock Text="Connect PCSX2 and add a game folder in Settings. Then scan here to build your collection."
+                     FontSize="12" Foreground="#C5D8D6" TextWrapping="Wrap"/>
+          <TextBlock Text="Tip: Ctrl+O opens Settings · R rescans the library" FontSize="11" Foreground="#00D4AA"/>
+        </StackPanel>
+        <Button Grid.Column="2" Content="Open Settings"
+                Click="OnOpenSettingsClick"
+                Padding="14,9"
+                Background="#00D4AA"
+                Foreground="#0F1117"
+                FontWeight="SemiBold"
+                BorderThickness="0"
+                CornerRadius="6"
+                ToolTip.Tip="Configure PCSX2 and game folders"/>
       </Grid>
     </Border>
 
@@ -241,6 +302,7 @@
                             IsEnabled="{Binding CanLaunch}"/>
                   </Grid>
                 </Border>
+
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
@@ -248,11 +310,58 @@
       </StackPanel>
     </Border>
 
+    <!-- Selected Game Details -->
+    <Border DockPanel.Dock="Top"
+            IsVisible="{Binding HasSelectedApp}"
+            Margin="0,0,0,20"
+            Padding="16"
+            Background="#161922"
+            BorderBrush="#2A2F3E"
+            BorderThickness="1"
+            CornerRadius="10">
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
+        <StackPanel Spacing="5">
+          <TextBlock Text="SELECTED GAME" Classes="eyebrow"/>
+          <TextBlock Text="{Binding SelectedApp.Name}" FontSize="20" FontWeight="Bold" Foreground="#E8E8E8"
+                     TextTrimming="CharacterEllipsis"/>
+          <TextBlock Text="{Binding SelectedApp.FullPath}" FontSize="11" Foreground="#A0A5B5"
+                     FontFamily="Consolas, Monospace" TextTrimming="CharacterEllipsis"/>
+          <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,6,0,0">
+            <TextBlock Text="{Binding SelectedApp.FormattedSize}" FontSize="12" Foreground="#00D4AA"/>
+            <TextBlock Text="{Binding SelectedApp.FormattedLastPlayed}" FontSize="12" Foreground="#A0A5B5"/>
+            <TextBlock Text="{Binding SelectedApp.Status}" FontSize="12" Foreground="#A0A5B5"/>
+          </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+          <Button Content="Set cover"
+                  Click="OnSelectedSetCoverClick"
+                  Padding="12,8"
+                  Background="#2A2F3E"
+                  Foreground="#E8E8E8"
+                  BorderThickness="0"
+                  CornerRadius="6"
+                  ToolTip.Tip="Choose custom cover art"/>
+          <Button Content="{Binding SelectedApp.LaunchButtonText}"
+                  Command="{Binding LaunchAppCommand}"
+                  CommandParameter="{Binding SelectedApp}"
+                  IsEnabled="{Binding SelectedApp.CanLaunch}"
+                  Padding="14,8"
+                  Background="#00D4AA"
+                  Foreground="#0F1117"
+                  FontWeight="SemiBold"
+                  BorderThickness="0"
+                  CornerRadius="6"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
     <!-- Empty State -->
     <Border DockPanel.Dock="Top"
             IsVisible="{Binding IsEmpty}"
-            Padding="48"
+            Padding="56"
             Background="#161922"
+            BorderBrush="#2A2F3E"
+            BorderThickness="1"
             CornerRadius="8">
       <StackPanel Spacing="16" HorizontalAlignment="Center">
         <TextBlock Text="💿" FontSize="48" HorizontalAlignment="Center"/>
@@ -302,6 +411,18 @@
             <Border Classes="game-card"
                     Classes.couch="{Binding $parent[UserControl].DataContext.CouchMode}"
                     ClipToBounds="True">
+              <Border.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Launch"
+                            Click="OnContextLaunchClick"
+                            IsEnabled="{Binding CanLaunch}"/>
+                  <MenuItem Header="Set cover art"
+                            Click="OnContextSetCoverClick"/>
+                  <MenuItem Header="Remove cover art"
+                            Click="OnContextRemoveCoverClick"
+                            IsVisible="{Binding HasCoverArt}"/>
+                </ContextMenu>
+              </Border.ContextMenu>
               <Grid RowDefinitions="180,*,Auto">
                 <!-- Cover Art / Fallback Image Area -->
                 <Border Grid.Row="0"
