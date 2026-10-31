@@ -49,6 +49,14 @@ public partial class App : Application
             {
                 DataContext = mainViewModel
             };
+
+            var gamePath = desktop.Args?.FirstOrDefault(arg =>
+                !arg.StartsWith("-", StringComparison.Ordinal) &&
+                string.Equals(Path.GetExtension(arg), ".iso", StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(gamePath))
+            {
+                _ = mainViewModel.OpenGamePathAsync(gamePath);
+            }
         }
 
         base.OnFrameworkInitializationCompleted();

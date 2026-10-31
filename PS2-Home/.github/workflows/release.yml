@@ -59,6 +59,11 @@ jobs:
             cp "${{ matrix.diag-bin }}" "dist/ps2home-${{ matrix.rid }}/${{ matrix.diag-dest }}"
           fi
           cp README.md LICENSE THIRD-PARTY-NOTICES.md "dist/ps2home-${{ matrix.rid }}/"
+          if [ "${{ matrix.rid }}" = "linux-x64" ]; then
+            cp install-linux.sh "dist/ps2home-${{ matrix.rid }}/"
+            cp -r assets "dist/ps2home-${{ matrix.rid }}/"
+            chmod +x "dist/ps2home-${{ matrix.rid }}/install-linux.sh"
+          fi
         shell: bash
 
       - name: Archive Package (Linux)

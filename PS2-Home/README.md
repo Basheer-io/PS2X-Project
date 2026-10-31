@@ -68,6 +68,21 @@ normally need to install .NET. A desktop session is required on Linux.
 7. Open **Library**, choose **Rescan Library**, select a game, and click
    **Launch**.
 
+### Launching like a regular emulator
+
+Release packages include convenient entry points for the desktop and file
+manager:
+
+- **Linux:** run `./install-linux.sh` once from the extracted release folder.
+  PS2 Home then appears in the application menu and can be registered for
+  `.iso` files. You can also launch directly with `ps2home /path/to/game.iso`.
+- **Windows:** run `PS2Home.App.exe` directly, or use the included
+  executable with a game path:
+  `PS2Home.App.exe "C:\Games\My Game.iso"`.
+
+Direct launching still requires PCSX2 to be configured in PS2 Home. Only
+legally owned game images should be used.
+
 PS2 Home is a library and launcher; PCSX2 is the component that emulates the
 PlayStation 2 and runs the game. You must provide your own BIOS and game
 backups. Do not download copyrighted games or BIOS files.

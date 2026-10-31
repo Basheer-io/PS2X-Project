@@ -39,6 +39,7 @@ if (-not (Test-Path "$StageDir/ps2home-diag.exe")) {
 Copy-Item "$RootDir/README.md" -Destination $StageDir
 Copy-Item "$RootDir/LICENSE" -Destination $StageDir
 Copy-Item "$RootDir/THIRD-PARTY-NOTICES.md" -Destination $StageDir
+Copy-Item "$RootDir/launch-ps2home.bat" -Destination $StageDir
 
 # 4. Create ZIP Archive
 Write-Host "--- Packaging ZIP Archive ---" -ForegroundColor Yellow

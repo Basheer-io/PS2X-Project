@@ -53,6 +53,13 @@ public partial class MainViewModel : ViewModelBase
         _windowTitle = "PS2 Home - Library";
     }
 
+    public async Task OpenGamePathAsync(string gamePath)
+    {
+        CurrentView = _libraryViewModel;
+        WindowTitle = "PS2 Home - Library";
+        await _libraryViewModel.LaunchGamePathAsync(gamePath);
+    }
+
     [RelayCommand]
     private void NavigateToDownloads()
     {

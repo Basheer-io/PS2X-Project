@@ -165,6 +165,7 @@ public partial class LibraryViewModel : ViewModelBase
     private CancellationTokenSource? _scanCts;
     private IGameSession? _activeSession;
     private AppItemViewModel? _activeGame;
+    private readonly Task _initialLoadTask;
 
     [ObservableProperty]
     private ObservableCollection<AppItemViewModel> _apps = [];
@@ -246,7 +247,7 @@ public partial class LibraryViewModel : ViewModelBase
         _gameLauncher = gameLauncher;
         _launchLogger = launchLogger;
         _coverArtManager = coverArtManager;
-        _ = LoadInitialLibraryAsync();
+        _initialLoadTask = LoadInitialLibraryAsync();
     }
 
     partial void OnSearchTextChanged(string value)
@@ -509,6 +510,43 @@ public partial class LibraryViewModel : ViewModelBase
             ErrorMessage = $"Failed to launch {app.Name}: {ex.Message}";
             StatusMessage = "Launch failed";
         }
+    }
+
+    public async Task LaunchGamePathAsync(string gamePath)
+    {
+        await _initialLoadTask;
+
+        var fullPath = Path.GetFullPath(gamePath);
+        if (!File.Exists(fullPath))
+        {
+            ErrorMessage = $"Game file was not found: {fullPath}";
+            StatusMessage = "Unable to open game";
+            return;
+        }
+
+        if (!string.Equals(Path.GetExtension(fullPath), ".iso", StringComparison.OrdinalIgnoreCase))
+        {
+            ErrorMessage = "PS2 Home currently accepts .iso game images.";
+            StatusMessage = "Unsupported game file";
+            return;
+        }
+
+        var app = _allApps.FirstOrDefault(item =>
+            string.Equals(Path.GetFullPath(item.FullPath), fullPath, StringComparison.OrdinalIgnoreCase));
+
+        app ??= new AppItemViewModel
+        {
+            Id = fullPath,
+            Name = Path.GetFileNameWithoutExtension(fullPath),
+            FullPath = fullPath,
+            ConfigFolderName = Path.GetFileNameWithoutExtension(fullPath),
+            FileSizeBytes = new FileInfo(fullPath).Length,
+            IsInstalled = true,
+            Status = "Ready"
+        };
+
+        SelectedApp = app;
+        await LaunchAppAsync(app);
     }
 
     [RelayCommand]
