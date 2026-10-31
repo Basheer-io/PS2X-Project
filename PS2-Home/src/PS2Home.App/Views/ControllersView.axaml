@@ -22,7 +22,7 @@
             <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="#B7AA98"/>
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
-            <Button Content="🚀 Open PCSX2"
+            <Button Content="Open PCSX2"
                     Command="{Binding LaunchPcsx2Command}"
                     Background="#D97757"
                     Foreground="#171513"
@@ -30,7 +30,7 @@
                     Padding="14,8"
                     CornerRadius="6"
                     IsEnabled="{Binding !IsLaunchingPcsx2}"/>
-            <Button Content="📖 Official Docs"
+            <Button Content="Official docs"
                     Command="{Binding OpenDocumentationCommand}"
                     Background="#3A332B"
                     Foreground="#F4F0E6"
@@ -127,7 +127,7 @@
         <!-- Note -->
         <Border Background="#171513" BorderBrush="#3A332B" BorderThickness="1" CornerRadius="8" Padding="16">
           <StackPanel Spacing="6">
-            <TextBlock Text="🔒 Configuration Integrity" FontSize="13" FontWeight="Bold" Foreground="#B7AA98"/>
+            <TextBlock Text="Configuration integrity" FontSize="13" FontWeight="Bold" Foreground="#B7AA98"/>
             <TextBlock Text="PS2 Home avoids editing PCSX2 configuration files directly. This ensures compatibility across PCSX2 Qt 2.x versions, preserves custom input bindings, and prevents configuration corruption."
                        FontSize="12" Foreground="#B7AA98" TextWrapping="Wrap"/>
           </StackPanel>

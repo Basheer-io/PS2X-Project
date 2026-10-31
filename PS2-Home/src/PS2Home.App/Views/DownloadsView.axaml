@@ -31,7 +31,7 @@
                     Command="{Binding OpenPcsx2DownloadsCommand}"
                     Background="#D97757" Foreground="#171513"
                     FontWeight="SemiBold" Padding="14,8" CornerRadius="6"/>
-            <Button Content="📖 Setup Documentation"
+            <Button Content="Setup documentation"
                     Command="{Binding OpenPcsx2DocsCommand}"
                     Background="#3A332B" Foreground="#F4F0E6"
                     Padding="14,8" CornerRadius="6"/>

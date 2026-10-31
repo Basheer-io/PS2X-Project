@@ -53,7 +53,7 @@
           <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
             <TextBlock Grid.Column="0" Text="Detected Installations" FontSize="14" FontWeight="SemiBold" Foreground="#F4F0E6" VerticalAlignment="Center"/>
             <Button Grid.Column="1"
-                    Content="🔍 Scan for PCSX2"
+                    Content="Scan for PCSX2"
                     Command="{Binding DetectPcsx2Command}"
                     IsEnabled="{Binding !IsDetecting}"
                     Padding="14,8"
